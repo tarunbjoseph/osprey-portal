@@ -1,0 +1,16 @@
+code: "SAF-03"
+name: "Content Safety & Misuse Prevention"
+framework: "agsc"
+pillar: "Safety"
+tier: "T1"
+purpose: "Ensure the AI system has appropriate content safety protections, misuse prevention measures, and escalation paths before it is used in a real business setting."
+evidence:
+  - "Documented content safety rules or policy"
+  - "Evidence of implemented safeguards"
+  - "Results of misuse and safety testing"
+  - "Defined process for handling unsafe outputs"
+surfaces:
+  - "safety-layer"
+ospreyCoverage: "partial"
+coverageNote: "Only partly covered. OSPREY governs actions rather than generated content, so content classification sits outside the current scope. This is the one Tier 1 control the build does not fully reach."
+order: 13

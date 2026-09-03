@@ -1,0 +1,15 @@
+code: "ALN-04"
+name: "Model Explainability"
+framework: "agsc"
+pillar: "Alignment"
+tier: "T3"
+purpose: "Ensure the AI system has an explanation approach appropriate to its risk, use case and audience, including decision traces and tool-use records for agentic systems."
+evidence:
+  - "Documented explanation method"
+  - "Decision traces, tool-use records or action history"
+  - "Records of explanation-quality or audit reviews"
+surfaces:
+  - "telemetry"
+ospreyCoverage: "indirect"
+coverageNote: "The session trace OSPREY needs for detection is the same trace this control needs for explanation. Shared dependency, different consumer."
+order: 24

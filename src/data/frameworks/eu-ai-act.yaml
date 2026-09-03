@@ -1,0 +1,11 @@
+name: "EU Artificial Intelligence Act"
+shortName: "EU AI Act"
+version: "Regulation (EU) 2024/1689"
+validated: "2026-09-03"
+publisher: "European Union"
+url: "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+citation: "Regulation (EU) 2024/1689 (Artificial Intelligence Act)."
+role: "regulatory"
+idPattern: "Art."
+order: 60
+summary: "Binding obligations for high-risk AI, including human oversight (Art. 14), accuracy and robustness (Art. 15), logging (Art. 12), transparency (Art. 13 and 50), post-market monitoring (Art. 72) and serious-incident reporting (Art. 73). Article references on this portal follow the per-control mappings published in AGSC and ADG rather than an independent legal reading, and are cited as pointers rather than as compliance conclusions."

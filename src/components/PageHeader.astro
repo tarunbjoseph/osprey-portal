@@ -1,0 +1,40 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lede?: string;
+  /** Small key/value facts. Kept to framework versions and counts — never
+   *  internal review metadata like owner or approval status. */
+  facts?: { k: string; v: string; href?: string }[];
+}
+const { eyebrow, title, lede, facts = [] } = Astro.props;
+---
+
+<header class="ph">
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <h1>{title}</h1>
+  {lede && <p class="lede ph-lede">{lede}</p>}
+  {facts.length > 0 && (
+    <dl class="facts">
+      {facts.map((f) => (
+        <div class="fact">
+          <dt class="label">{f.k}</dt>
+          <dd>{f.href ? <a href={f.href}>{f.v}</a> : f.v}</dd>
+        </div>
+      ))}
+    </dl>
+  )}
+</header>
+
+<style>
+  .ph { padding: var(--sp-7) 0 var(--sp-5); border-bottom: 2px solid var(--rule-strong); }
+  .ph h1 { margin-top: 8px; }
+  .ph-lede { margin-top: var(--sp-3); }
+  .facts {
+    display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6);
+    margin: var(--sp-5) 0 0;
+  }
+  .fact { display: flex; flex-direction: column; gap: 3px; }
+  .fact dd { margin: 0; font-family: var(--f-mono); font-size: 12px; color: var(--ink-2); }
+  .fact dd a { color: var(--accent); }
+</style>

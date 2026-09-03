@@ -1,0 +1,15 @@
+code: "GOV-07"
+name: "AI Lifecycle & Registry Management"
+framework: "agsc"
+pillar: "Governance"
+tier: "T3"
+purpose: "Ensure models, prompts, tools, datasets, retrieval sources and memory are inventoried across their lifecycle."
+evidence:
+  - "AI system and component registry"
+  - "Version and lifecycle records"
+surfaces:
+  - "model"
+  - "tools"
+ospreyCoverage: "indirect"
+coverageNote: "OSP-12 compares observed components against the registry. Maintaining the registry is a governance task, not a runtime one."
+order: 37

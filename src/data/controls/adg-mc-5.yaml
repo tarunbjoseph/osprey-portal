@@ -1,0 +1,14 @@
+code: "MC-5"
+name: "Change Control"
+framework: "adg"
+pillar: "Adopt"
+purpose: "Manage changes to prompts, tools, models and retrieval sources through a governed change process."
+evidence:
+  - "Change log with approval records; no uncontrolled production changes"
+surfaces:
+  - "prompt"
+  - "tools"
+  - "model"
+ospreyCoverage: "partial"
+coverageNote: "OSP-12 detections are change-control failures observed at runtime and belong in the same log."
+order: 5

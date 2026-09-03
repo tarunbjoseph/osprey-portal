@@ -1,0 +1,10 @@
+name: "Identity"
+framework: "adg"
+pillars:
+  - "Govern"
+  - "Defend"
+scope: "Credentials, service accounts, delegated authority, secrets, trust relationships, agent identity."
+objective: "Prevent privilege misuse, preserve accountability, trace agent actions to human authority."
+coverage: "direct"
+coverageNote: "OSP-05 and OSP-13. Both are deterministic checks, which makes this the highest-value quick win once an agent identity register exists."
+order: 60

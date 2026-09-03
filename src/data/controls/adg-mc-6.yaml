@@ -1,0 +1,12 @@
+code: "MC-6"
+name: "Context Policy"
+framework: "adg"
+pillar: "Govern"
+purpose: "Define provenance, retention, access restrictions, and trust ordering for all context inputs."
+evidence:
+  - "Published context policy per system; annual review"
+surfaces:
+  - "context"
+ospreyCoverage: "direct"
+coverageNote: "OSP-03, OSP-08 and OSP-15 produce the provenance and memory-write records. The dependency also runs backwards: without this policy’s provenance field, those labels cannot be classified."
+order: 6

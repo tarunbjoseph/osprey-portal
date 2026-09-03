@@ -1,0 +1,286 @@
+---
+import Base from '@/layouts/Base.astro';
+import ActionLadder from '@/components/ActionLadder.astro';
+import AutonomyTier from '@/components/AutonomyTier.astro';
+import AnchorList from '@/components/AnchorList.astro';
+import {
+  allThreats, allControls, allSurfaces, surfacesForThreat, url,
+} from '@/lib/data';
+import {
+  ACTION_LABELS, TIER_LABELS, TIER_DEFINITIONS, HARM_LABELS, HARM_DEFINITIONS,
+  INSTRUMENT_LABELS, DIFFICULTY_LABELS, SEVERITY_DEFINITIONS,
+} from '@/site.config';
+
+export async function getStaticPaths() {
+  const threats = await allThreats();
+  return threats.map((t, i) => ({
+    params: { id: t.id },
+    props: {
+      threat: t,
+      prev: threats[i - 1] ?? null,
+      next: threats[i + 1] ?? null,
+    },
+  }));
+}
+
+const { threat, prev, next } = Astro.props;
+const d = threat.data;
+
+const controls = await allControls();
+const surfaces = await allSurfaces();
+const surfaceIds = await surfacesForThreat(threat);
+const mySurfaces = surfaces.filter((s) => surfaceIds.includes(s.id));
+
+const controlAnchors = d.anchors.filter((a) => a.framework.id === 'agsc' || a.framework.id === 'adg');
+const linkedControls = controlAnchors
+  .map((a) => controls.find((c) => c.data.framework.id === a.framework.id && c.data.code === a.id))
+  .filter((c): c is NonNullable<typeof c> => Boolean(c));
+
+const sevLabel = d.severity.replace('-', '–');
+---
+
+<Base
+  title={`${d.code} · ${d.name}`}
+  section="/threats"
+  description={d.behaviour}
+>
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href={url('/threats')}>Threat register</a>
+    <span aria-hidden="true">/</span>
+    <span class="mono">{d.code}</span>
+  </nav>
+
+  <header class="hd" data-sev={d.severity}>
+    <div class="hd-main">
+      <p class="mono code">{d.code}</p>
+      <h1>{d.name}</h1>
+      <p class="lede">{d.behaviour}</p>
+      <div class="badges">
+        <span class="pill" data-sev={d.severity}>{sevLabel}</span>
+        <span class="chip"><span class="k">Scope</span>{d.scope}</span>
+        <span class="chip"><span class="k">Detection</span>{INSTRUMENT_LABELS[d.detection.instrument]}</span>
+        {d.detection.inGate1 && <span class="chip chip--accent">In the evaluation gate</span>}
+        {d.addedIn && <span class="chip"><span class="k">Added</span>{d.addedIn}</span>}
+      </div>
+    </div>
+  </header>
+
+  <div class="grid">
+    <main class="col">
+      <section id="signals">
+        <h2>Possible signals</h2>
+        <p class="sub">What a detector could actually look at. This list is the requirements handed to the telemetry workstream.</p>
+        <ul class="signals">
+          {d.signals.map((s) => <li>{s}</li>)}
+        </ul>
+      </section>
+
+      <section id="response">
+        <h2>Policy response</h2>
+        <div class="resp-grid">
+          <div>
+            <p class="label">Action ladder — escalates as far as {ACTION_LABELS[d.action.peak]}</p>
+            <ActionLadder peak={d.action.peak} />
+          </div>
+          <div>
+            <p class="label">Autonomy after detection</p>
+            <AutonomyTier tier={d.action.tier} showCaption={false} />
+            <p class="sub tiny">{TIER_LABELS[d.action.tier]} — {TIER_DEFINITIONS[d.action.tier]}</p>
+          </div>
+        </div>
+        <p class="body">{d.action.summary}</p>
+        <div class="panel panel--note review">
+          <p class="label">Human review — {d.action.humanReview}</p>
+          <p class="body">{d.action.reviewNote}</p>
+        </div>
+      </section>
+
+      <section id="detection">
+        <h2>How this is detected</h2>
+        <dl class="kv">
+          <div>
+            <dt>Primary instrument</dt>
+            <dd>{INSTRUMENT_LABELS[d.detection.instrument]} — {d.detection.method}</dd>
+          </div>
+          <div>
+            <dt>SLM difficulty</dt>
+            <dd>
+              {d.detection.slmDifficulty
+                ? DIFFICULTY_LABELS[d.detection.slmDifficulty]
+                : 'Not a model output'}
+            </dd>
+          </div>
+          <div>
+            <dt>Evaluation gate</dt>
+            <dd>{d.detection.inGate1
+              ? 'Included — classifier accuracy is measured over this label.'
+              : 'Excluded — measured by containment rather than classifier accuracy.'}</dd>
+          </div>
+        </dl>
+        <p class="body">{d.detection.rationale}</p>
+        {d.detection.dependsOn.length > 0 && (
+          <div class="dep">
+            <p class="label">Cannot be scored without</p>
+            <ul>{d.detection.dependsOn.map((x) => <li>{x}</li>)}</ul>
+          </div>
+        )}
+      </section>
+
+      <section id="anchoring">
+        <h2>Governance and security anchoring</h2>
+        <p class="sub">
+          Internal controls first, then the external frameworks that validate them. Each identifier
+          carries the version it was checked against and its verification state.
+        </p>
+        <AnchorList anchors={d.anchors} variant="table" />
+      </section>
+
+      {d.regulatory.length > 0 && (
+        <section id="regulatory">
+          <h2>Regulatory references</h2>
+          <p class="sub">
+            Pointers inherited from the AGSC and ADG per-control mappings, cited for traceability
+            rather than as a compliance conclusion.
+          </p>
+          <ul class="reg">{d.regulatory.map((r) => <li class="mono">{r}</li>)}</ul>
+        </section>
+      )}
+    </main>
+
+    <aside class="col side">
+      <div class="card">
+        <p class="label">Severity</p>
+        <p class="body tiny">{SEVERITY_DEFINITIONS[d.severity]}</p>
+        {d.severityNote && <p class="body tiny em">{d.severityNote}</p>}
+      </div>
+
+      <div class="card">
+        <p class="label">Harm classes</p>
+        <ul class="harm">
+          {d.harmClasses.map((h) => (
+            <li><b>{HARM_LABELS[h]}</b><span>{HARM_DEFINITIONS[h]}</span></li>
+          ))}
+        </ul>
+        {d.harmNote && <p class="body tiny em">{d.harmNote}</p>}
+      </div>
+
+      {mySurfaces.length > 0 && (
+        <div class="card">
+          <p class="label">Governance surfaces</p>
+          <div class="chips">
+            {mySurfaces.map((s) => (
+              <a class="chip" href={url(`/coverage#${s.id}`)}>{s.data.name}</a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {linkedControls.length > 0 && (
+        <div class="card">
+          <p class="label">Controls this provides evidence for</p>
+          <ul class="ctrl">
+            {linkedControls.map((c) => (
+              <li>
+                <a href={url(`/frameworks/${c.data.framework.id}#${c.data.code}`)}>
+                  <span class="mono">{c.data.code}</span> {c.data.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {d.evidence.length > 0 && (
+        <div class="card">
+          <p class="label">Evidence this produces</p>
+          <ul class="ev">{d.evidence.map((e) => <li>{e}</li>)}</ul>
+        </div>
+      )}
+    </aside>
+  </div>
+
+  <nav class="pager" aria-label="Threat navigation">
+    {prev ? (
+      <a href={url(`/threats/${prev.id}`)} class="pg">
+        <span class="label">Previous</span>
+        <b>{prev.data.code} · {prev.data.name}</b>
+      </a>
+    ) : <span />}
+    {next && (
+      <a href={url(`/threats/${next.id}`)} class="pg pg--n">
+        <span class="label">Next</span>
+        <b>{next.data.code} · {next.data.name}</b>
+      </a>
+    )}
+  </nav>
+</Base>
+
+<style>
+  .crumbs {
+    display: flex; gap: 8px; align-items: center;
+    padding: var(--sp-5) 0 0; font-size: 12.5px; color: var(--ink-3);
+  }
+  .crumbs a { color: var(--ink-2); text-decoration: none; }
+  .crumbs a:hover { color: var(--accent); }
+
+  .hd { padding: var(--sp-4) 0 var(--sp-5); border-bottom: 2px solid var(--rule-strong); }
+  .code { font-size: 13px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+  .hd h1 { margin: 6px 0 var(--sp-3); }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: var(--sp-4); }
+
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: var(--sp-7); padding-top: var(--sp-6); }
+  @media (max-width: 940px) { .grid { grid-template-columns: 1fr; gap: var(--sp-5); } }
+
+  section + section { margin-top: var(--sp-7); }
+  section h2 { margin-bottom: 6px; }
+  .sub { font-size: 13.5px; color: var(--ink-3); max-width: var(--measure); margin-bottom: var(--sp-4); }
+  .sub.tiny { font-size: 12.5px; margin: 6px 0 0; }
+  .body { font-size: 14.5px; color: var(--ink-2); line-height: 1.55; max-width: var(--measure); }
+  .body.tiny { font-size: 12.5px; }
+  .body.em { color: var(--ink-3); margin-top: 8px; }
+
+  .signals { margin: 0; padding-left: 1.1em; color: var(--ink-2); font-size: 14.5px; }
+  .signals li + li { margin-top: 7px; }
+
+  .resp-grid {
+    display: grid; grid-template-columns: minmax(280px, 380px) 1fr;
+    gap: var(--sp-5); margin-bottom: var(--sp-4);
+  }
+  @media (max-width: 700px) { .resp-grid { grid-template-columns: 1fr; } }
+  .review { margin-top: var(--sp-4); }
+  .review .body { margin-top: 5px; }
+
+  .kv { margin: 0 0 var(--sp-4); display: grid; gap: 9px; }
+  .kv div { display: grid; grid-template-columns: 150px 1fr; gap: var(--sp-4); align-items: baseline; }
+  @media (max-width: 620px) { .kv div { grid-template-columns: 1fr; gap: 2px; } }
+  .kv dt { font-family: var(--f-mono); font-size: 10px; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); }
+  .kv dd { margin: 0; font-size: 14px; color: var(--ink); }
+
+  .dep { margin-top: var(--sp-4); background: var(--panel-2); border-radius: var(--r-md); padding: var(--sp-3) var(--sp-4); }
+  .dep ul { margin: 6px 0 0; padding-left: 1.1em; font-size: 13.5px; color: var(--ink-2); }
+  .dep li + li { margin-top: 4px; }
+
+  .reg { margin: 0; padding: 0; list-style: none; display: grid; gap: 5px; font-size: 13px; color: var(--ink-2); }
+
+  .side { display: grid; gap: var(--sp-3); align-content: start; }
+  @media (min-width: 941px) { .side { position: sticky; top: 78px; } }
+  .card { background: var(--panel); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--sp-4); }
+  .card .label { margin-bottom: 7px; display: block; }
+  .harm { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .harm b { display: block; font-size: 13px; color: var(--ink); }
+  .harm span { font-size: 12px; color: var(--ink-3); line-height: 1.45; }
+  .ctrl, .ev { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 13px; color: var(--ink-2); }
+  .ctrl a { text-decoration: none; color: var(--ink-2); }
+  .ctrl a:hover { color: var(--accent); }
+  .ctrl .mono { color: var(--accent); font-size: 11.5px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+
+  .pager {
+    display: flex; justify-content: space-between; gap: var(--sp-4);
+    margin-top: var(--sp-7); padding-top: var(--sp-5); border-top: 1px solid var(--rule);
+  }
+  .pg { text-decoration: none; color: var(--ink-2); max-width: 46%; }
+  .pg--n { text-align: right; margin-left: auto; }
+  .pg b { display: block; font-family: var(--f-display); font-weight: 600; font-size: 15px; color: var(--ink); margin-top: 3px; }
+  .pg:hover b { color: var(--accent); }
+</style>

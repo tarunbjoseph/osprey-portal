@@ -1,0 +1,16 @@
+code: "SAF-04"
+name: "Output Factual Accuracy & Anti-Hallucination"
+framework: "agsc"
+pillar: "Safety"
+tier: "T2"
+purpose: "Ensure fact-bearing AI outputs are grounded, checked, and presented with appropriate source support or uncertainty indicators."
+evidence:
+  - "Documented accuracy expectations"
+  - "Sample outputs demonstrating sourcing or uncertainty indicators"
+  - "Records of identified inaccuracies and corrective actions"
+surfaces:
+  - "safety-layer"
+  - "telemetry"
+ospreyCoverage: "partial"
+coverageNote: "OSP-16 covers the agentic slice: claims of completed work the trace does not support. General factual accuracy of generated prose is out of scope."
+order: 14

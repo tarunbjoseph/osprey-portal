@@ -1,0 +1,16 @@
+code: "SEC-06"
+name: "AI Security Testing & Red-Teaming"
+framework: "agsc"
+pillar: "Security"
+tier: "T2"
+purpose: "Ensure AI systems are tested against misuse, adversarial inputs, jailbreaks, data leakage and unsafe behaviour before release, with clear pass/fail thresholds."
+evidence:
+  - "AI security test plan or red-team scope"
+  - "Latest test results with pass/fail status"
+  - "Regression test history"
+surfaces:
+  - "safety-layer"
+  - "model"
+ospreyCoverage: "direct"
+coverageNote: "The containment benchmarks measure this control directly — whether the platform stopped the attack, not whether a model named it."
+order: 46

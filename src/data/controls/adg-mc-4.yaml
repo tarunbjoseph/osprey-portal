@@ -1,0 +1,13 @@
+code: "MC-4"
+name: "Pre-Production Evaluation"
+framework: "adg"
+pillar: "Adopt"
+purpose: "Complete quality, safety, security, fairness and failure-mode testing before any production deployment."
+evidence:
+  - "Signed evaluation report covering all four harm classes before go-live"
+surfaces:
+  - "model"
+  - "safety-layer"
+ospreyCoverage: "partial"
+coverageNote: "Adversarial regression results from OSP-02 and OSP-07 feed the security portion of this report."
+order: 4

@@ -1,0 +1,10 @@
+name: "Model"
+framework: "adg"
+pillars:
+  - "Adopt"
+  - "Govern"
+scope: "Foundation models, fine-tuned models, adapters, routers, versions, diffusion models, composite model chains."
+objective: "Use only approved models with known risk posture, provenance, and change traceability."
+coverage: "indirect"
+coverageNote: "Reached only through OSP-12 when a model or adapter version changes unexpectedly at inference. OSPREY governs runtime behaviour, not model provenance — that sits with the governance workstream under ADG MC-1 and MC-5."
+order: 10

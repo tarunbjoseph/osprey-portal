@@ -1,0 +1,16 @@
+code: "ALN-02"
+name: "Human Oversight & Intervention"
+framework: "agsc"
+pillar: "Alignment"
+tier: "T1"
+purpose: "Ensure human oversight is accessible, timely, and meaningful, occurring before high-impact or irreversible actions rather than only after the fact."
+evidence:
+  - "Oversight and escalation process"
+  - "Defined reviewer roles and decision rights"
+  - "Evidence of approval gates for sensitive actions"
+surfaces:
+  - "orchestration"
+  - "safety-layer"
+ospreyCoverage: "direct"
+coverageNote: "The autonomy-tier downgrade rule is this control expressed as a runtime mechanism. Every threat row states the tier the agent holds after detection."
+order: 22

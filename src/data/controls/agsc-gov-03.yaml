@@ -1,0 +1,16 @@
+code: "GOV-03"
+name: "Third-Party & Supply-Chain Oversight"
+framework: "agsc"
+pillar: "Governance"
+tier: "T3"
+purpose: "Ensure external models, vendors, APIs, datasets, platforms and tools are assessed and monitored."
+evidence:
+  - "Third-party component register"
+  - "Vendor assessment records"
+  - "Change approvals for external components"
+surfaces:
+  - "tools"
+  - "model"
+ospreyCoverage: "direct"
+coverageNote: "OSP-12 produces the runtime half of this evidence: which components changed between runs, and whether the change was approved."
+order: 33

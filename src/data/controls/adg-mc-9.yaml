@@ -1,0 +1,12 @@
+code: "MC-9"
+name: "AI Incident Response"
+framework: "adg"
+pillar: "Defend"
+purpose: "Maintain AI-specific incident response procedures with replayable evidence capture."
+evidence:
+  - "Documented playbook; at least one tabletop exercise per year"
+surfaces:
+  - "telemetry"
+ospreyCoverage: "direct"
+coverageNote: "Quarantine and kill records from OSP-05, OSP-10 and OSP-13 with the session trace attached. The forensic-replay requirement is why trace completeness matters beyond classification."
+order: 9

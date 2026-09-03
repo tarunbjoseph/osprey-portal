@@ -1,0 +1,91 @@
+code: "OSP-11"
+name: "Human-Agent Trust Exploitation"
+order: 13
+scope: "secondary"
+behaviour: "The agent presents a misleading summary or a confident recommendation that causes a human to approve something they would otherwise refuse. The failure lands on the human, not the machine."
+signals:
+  - "Mismatch between the agent’s summary text and its executed actions"
+  - "Approval requests framed with urgency"
+  - "Evidence links that do not resolve to the cited source"
+  - "Confidence language unsupported by the grounding actually retrieved"
+severity: "medium"
+harmClasses:
+  - "societal"
+  - "operational"
+action:
+  peak: "review"
+  summary: "Review. The MOM Assistant must show the executed action alongside the agent’s summary so the reviewer compares both."
+  tier: "HOTL"
+  humanReview: "always"
+  reviewNote: "Required by design. This category is a dashboard requirement rather than a runtime block — the human is the control, not a fallback."
+detection:
+  instrument: "hybrid"
+  method: "Mechanical summary-versus-action comparison, model judges materiality"
+  slmDifficulty: "hard"
+  rationale: "Comparing what the agent said it did against what it actually did is mechanical. Judging whether the gap is material is the model’s part, and labelled examples barely exist."
+  inGate1: false
+  dependsOn:
+    - "Agent summary text captured alongside the action trace"
+evidence:
+  - "Output labelling and action attribution records (AGSC ALN-05)"
+  - "Governance review inputs (ADG MC-10)"
+anchors:
+  -
+    framework: "agsc"
+    id: "ALN-05"
+    label: "Output Labeling & Action Attribution"
+    weight: "primary"
+    rationale: "Attribution is what lets a reviewer see the gap between claim and action."
+    verification: "verified"
+    checked: "2026-09-03"
+  -
+    framework: "agsc"
+    id: "SAF-04"
+    label: "Output Factual Accuracy & Anti-Hallucination"
+    weight: "supporting"
+    rationale: "A confident, unsupported recommendation is the failure this control names."
+    verification: "verified"
+    checked: "2026-09-03"
+  -
+    framework: "adg"
+    id: "MC-8"
+    label: "Runtime Monitoring"
+    weight: "primary"
+    rationale: "Detecting the mismatch is monitoring work."
+    verification: "verified"
+    checked: "2026-09-03"
+  -
+    framework: "adg"
+    id: "MC-10"
+    label: "Periodic Governance Review"
+    weight: "supporting"
+    rationale: "Patterns of misleading approval requests belong in the review."
+    verification: "verified"
+    checked: "2026-09-03"
+  -
+    framework: "owasp-llm"
+    id: "LLM07"
+    label: "Misinformation"
+    weight: "primary"
+    rationale: "Overreliance and unsupported decision support: humans treating fluent output as authoritative."
+    verification: "verified"
+    checked: "2026-09-03"
+  -
+    framework: "owasp-asi"
+    id: "ASI09"
+    label: "Human-Agent Trust Exploitation"
+    weight: "primary"
+    rationale: "The direct agentic counterpart."
+    verification: "verified"
+    checked: "2026-09-03"
+  -
+    framework: "mitre-atlas"
+    id: "AML.T0100 / T0052.001"
+    label: "Agent-driven social engineering entries"
+    weight: "supporting"
+    verification: "pending"
+    rationale: "Identifiers carried from an earlier revision and not re-confirmed in the latest validation pass."
+regulatory:
+  - "EU AI Act Art. 13, 14, 50"
+  - "NIST AI RMF GOVERN 1; MEASURE 2.9"
+  - "ISO/IEC 42001 A.8"

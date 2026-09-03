@@ -1,0 +1,16 @@
+code: "SEC-01"
+name: "Multi-Agent Coordination Security"
+framework: "agsc"
+pillar: "Security"
+tier: "T2"
+purpose: "Ensure multi-agent interactions are mapped, tested and governed so coordination stays predictable, secure and aligned with the intended business process."
+evidence:
+  - "Versioned agent interaction map"
+  - "Inter-agent communication or coordination protocol"
+  - "Records of topology, hierarchy or coordination changes"
+surfaces:
+  - "orchestration"
+  - "identity"
+ospreyCoverage: "direct"
+coverageNote: "OSP-09 and OSP-10 produce the inter-agent authorization records and the workflow-level containment evidence."
+order: 41

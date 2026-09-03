@@ -1,0 +1,17 @@
+code: "SEC-05"
+name: "AI Threat Modeling"
+framework: "agsc"
+pillar: "Security"
+tier: "T2"
+purpose: "Ensure AI-specific threats are identified before deployment, mapped to mitigations, and refreshed when the system materially changes."
+evidence:
+  - "Versioned AI threat model"
+  - "Threat-to-control or mitigation matrix"
+  - "Refresh history tied to change events"
+surfaces:
+  - "orchestration"
+  - "tools"
+  - "context"
+ospreyCoverage: "direct"
+coverageNote: "The threat register on this portal is the versioned threat model this control asks for, and the anchoring tables are the threat-to-control matrix."
+order: 45

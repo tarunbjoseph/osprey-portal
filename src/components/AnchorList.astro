@@ -1,0 +1,98 @@
+---
+import { getCollection } from 'astro:content';
+import { VERIFICATION_LABELS } from '@/site.config';
+
+interface Anchor {
+  framework: { id: string };
+  id: string;
+  label?: string;
+  weight?: string;
+  rationale?: string;
+  verification?: string;
+  checked?: string;
+}
+
+interface Props {
+  anchors: Anchor[];
+  /** "chips" for a compact row, "table" for the full anchoring view. */
+  variant?: 'chips' | 'table';
+}
+
+const { anchors, variant = 'chips' } = Astro.props;
+const frameworks = await getCollection('frameworks');
+const fw = new Map(frameworks.map((f) => [f.id, f.data]));
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Group by framework so the reader sees one row per source, not 30 loose chips.
+const groups = new Map<string, Anchor[]>();
+for (const a of anchors) {
+  const k = a.framework.id;
+  if (!groups.has(k)) groups.set(k, []);
+  groups.get(k)!.push(a);
+}
+const ordered = [...groups.entries()].sort(
+  (a, b) => (fw.get(a[0])?.order ?? 99) - (fw.get(b[0])?.order ?? 99),
+);
+---
+
+{variant === 'chips' ? (
+  <div class="chips">
+    {ordered.map(([fid, list]) => (
+      <a class="chip" href={`${base}/frameworks/${fid}`}>
+        <span class="k">{fw.get(fid)?.shortName ?? fid}</span>
+        {list.map((a) => a.id).join(' · ')}
+      </a>
+    ))}
+  </div>
+) : (
+  <div class="tablewrap">
+    <table class="data">
+      <thead>
+        <tr>
+          <th>Framework</th>
+          <th>Version</th>
+          <th>Element</th>
+          <th>Why it applies</th>
+          <th>Identifier</th>
+        </tr>
+      </thead>
+      <tbody>
+        {ordered.map(([fid, list]) =>
+          list.map((a, i) => (
+            <tr>
+              {i === 0 && (
+                <td rowspan={list.length}>
+                  <a href={`${base}/frameworks/${fid}`}><strong>{fw.get(fid)?.shortName ?? fid}</strong></a>
+                </td>
+              )}
+              {i === 0 && (
+                <td rowspan={list.length} class="mono">{fw.get(fid)?.version ?? '—'}</td>
+              )}
+              <td class="mono">
+                <strong>{a.id}</strong>
+                {a.label && <><br />{a.label}</>}
+                {a.weight === 'supporting' && <span class="sup"> supporting</span>}
+              </td>
+              <td>{a.rationale ?? '—'}</td>
+              <td>
+                <span class="pill" data-v={a.verification}>
+                  {VERIFICATION_LABELS[a.verification ?? 'pending']}
+                </span>
+                {a.checked && <div class="chk mono">{a.checked}</div>}
+              </td>
+            </tr>
+          )),
+        )}
+      </tbody>
+    </table>
+  </div>
+)}
+
+<style>
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .sup {
+    font-family: var(--f-mono); font-size: 9px; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--ink-3);
+  }
+  .chk { font-size: 10px; color: var(--ink-3); margin-top: 4px; }
+</style>

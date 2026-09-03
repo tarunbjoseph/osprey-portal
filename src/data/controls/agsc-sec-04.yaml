@@ -1,0 +1,17 @@
+code: "SEC-04"
+name: "Observability, Anomaly Detection & Incident Response"
+framework: "agsc"
+pillar: "Security"
+tier: "T1"
+purpose: "Ensure AI systems generate usable telemetry, support anomaly detection, and connect to an AI-specific incident response process."
+evidence:
+  - "Trace or logging schema"
+  - "Monitoring coverage report"
+  - "Anomaly detection configuration and sample alerts"
+  - "AI incident response runbook"
+surfaces:
+  - "telemetry"
+  - "orchestration"
+ospreyCoverage: "direct"
+coverageNote: "This is the control OSPREY exists to satisfy. Every category in the register produces evidence against it."
+order: 44

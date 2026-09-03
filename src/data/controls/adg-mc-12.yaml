@@ -1,0 +1,13 @@
+code: "MC-12"
+name: "Shared Responsibility Documentation"
+framework: "adg"
+pillar: "Govern"
+purpose: "For vendor or SaaS AI, document accountability boundaries, contractual obligations and assurance requirements."
+evidence:
+  - "Signed responsibility matrix; vendor due diligence records"
+surfaces:
+  - "tools"
+  - "model"
+ospreyCoverage: "partial"
+coverageNote: "OSP-12 surfaces when a third-party component changes, which is the trigger for revisiting the responsibility matrix."
+order: 12

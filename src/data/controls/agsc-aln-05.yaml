@@ -1,0 +1,16 @@
+code: "ALN-05"
+name: "Output Labeling & Action Attribution"
+framework: "agsc"
+pillar: "Alignment"
+tier: "T2"
+purpose: "Ensure AI-generated content is labelled where human origin may be assumed, and that autonomous actions are attributed to the responsible AI system, workflow, or service account."
+evidence:
+  - "Documented labelling and attribution standard"
+  - "Agent action records showing the responsible system or workflow"
+  - "Audit logs linking outputs or actions to the AI system"
+surfaces:
+  - "telemetry"
+  - "identity"
+ospreyCoverage: "direct"
+coverageNote: "OSP-11 and OSP-16 both turn on attribution: comparing what the agent said it did against what the trace shows it did."
+order: 25

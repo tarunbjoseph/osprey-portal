@@ -1,0 +1,10 @@
+name: "Orchestration"
+framework: "adg"
+pillars:
+  - "Adopt"
+  - "Defend"
+scope: "Planners, workflow graphs, retry logic, multi-agent flows, model routing, agent-to-agent communication."
+objective: "Bound agent behaviour, prevent cascading failures, ensure deterministic control."
+coverage: "direct"
+coverageNote: "OSP-01, OSP-09, OSP-10, OSP-14 and OSP-16. Every one of these is a sequence or aggregate problem, so all of them need full trajectory telemetry rather than isolated call records."
+order: 50

@@ -1,0 +1,16 @@
+code: "GOV-02"
+name: "AI Change Governance"
+framework: "agsc"
+pillar: "Governance"
+tier: "T2"
+purpose: "Ensure changes to models, prompts, data, tools and configurations pass through a governed change process."
+evidence:
+  - "Change log with approval records"
+  - "Evidence that no uncontrolled production changes occurred"
+surfaces:
+  - "model"
+  - "prompt"
+  - "tools"
+ospreyCoverage: "indirect"
+coverageNote: "OSP-12 detects change-control failures at runtime — a component that changed without passing the gate."
+order: 32

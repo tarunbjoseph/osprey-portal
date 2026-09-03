@@ -1,0 +1,10 @@
+name: "Context"
+framework: "adg"
+pillars:
+  - "Govern"
+  - "Defend"
+scope: "Retrieval sources, session state, memory, hidden context, user metadata, cross-session data."
+objective: "Prevent poisoning, leakage, cross-session contamination, and privacy violations."
+coverage: "direct"
+coverageNote: "OSP-03, OSP-08 and OSP-15. Coverage depends entirely on the provenance telemetry field — the same field ADG MC-6 exists to establish. Without it, classification degrades to guessing."
+order: 30

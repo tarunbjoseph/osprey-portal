@@ -1,0 +1,14 @@
+code: "GOV-08"
+name: "Environmental & Carbon Governance"
+framework: "agsc"
+pillar: "Governance"
+tier: "T3"
+purpose: "Ensure material compute usage is measured and governed across training, hosting and inference."
+evidence:
+  - "Compute and energy usage records"
+  - "Efficiency or reduction measures"
+surfaces:
+  - "telemetry"
+ospreyCoverage: "partial"
+coverageNote: "OSP-14 counts per-session compute and spend for security reasons; the same counters serve this control’s efficiency reporting."
+order: 38

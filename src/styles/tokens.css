@@ -1,0 +1,147 @@
+/* ==========================================================================
+   OSPREY Governance Portal — design tokens
+
+   One palette, three theme states: bare :root is light, the media query
+   handles the un-stamped "system" default, and [data-theme] handles an
+   explicit choice. Every colour is declared in :root first so nothing is
+   defined only inside a conditional block.
+
+   Semantic severity colours are deliberately separate from the accent, so a
+   Critical row never reads as "branded" and the accent never reads as alarm.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* Neutrals, biased cool toward the accent rather than pure grey */
+  --ground:      #F4F6F9;
+  --panel:       #FFFFFF;
+  --panel-2:     #EDF1F6;
+  --panel-3:     #E3EAF2;
+
+  --ink:         #161B21;
+  --ink-2:       #4A5560;
+  --ink-3:       #77828E;
+  --ink-inv:     #F4F6F9;
+
+  --rule:        #D8E0E9;
+  --rule-2:      #E9EEF4;
+  --rule-strong: #161B21;
+
+  /* Accent — steel blue. Used for identity, links, and focus only. */
+  --accent:      #2D5F8A;
+  --accent-2:    #1E4970;
+  --accent-soft: #E1EAF3;
+  --accent-ink:  #1E4970;
+
+  /* Semantic severity ramp — never reused as brand colour */
+  --crit:        #A3243B;  --crit-bg:    #F7E7EA;
+  --high:        #BC5A26;  --high-bg:    #FAEDE4;
+  --medhigh:     #8F6B10;  --medhigh-bg: #F8F2DF;
+  --med:         #3F7183;  --med-bg:     #E6F0F3;
+  --low:         #4C6B57;  --low-bg:     #E8F0EA;
+
+  /* Verification / status states */
+  --ok:          #2F6B4F;  --ok-bg:      #E4F0E9;
+  --warn:        #8F6B10;  --warn-bg:    #F8F2DF;
+  --gapc:        #6C5A8F;  --gap-bg:     #EEEAF6;
+
+  --shadow-1: 0 1px 2px rgba(22, 27, 33, .05);
+  --shadow-2: 0 1px 2px rgba(22, 27, 33, .06), 0 8px 24px -14px rgba(22, 27, 33, .22);
+
+  /* Type */
+  --f-display: Archivo, "Arial Narrow", "Helvetica Neue", sans-serif;
+  --f-body:    "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Scale */
+  --t-xs:  11px;
+  --t-sm:  12.5px;
+  --t-base: 15px;
+  --t-md:  17px;
+  --t-lg:  21px;
+  --t-xl:  27px;
+  --t-2xl: 34px;
+  --t-3xl: clamp(32px, 5vw, 48px);
+
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px;
+
+  --r-sm: 2px; --r-md: 3px; --r-lg: 6px;
+  --measure: 66ch;
+  --shell: 1220px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --ground:      #11151A;
+    --panel:       #181E25;
+    --panel-2:     #1F262E;
+    --panel-3:     #273039;
+
+    --ink:         #E6ECF2;
+    --ink-2:       #A7B3BF;
+    --ink-3:       #7C8894;
+    --ink-inv:     #11151A;
+
+    --rule:        #2B343E;
+    --rule-2:      #222A32;
+    --rule-strong: #E6ECF2;
+
+    --accent:      #6FA6D6;
+    --accent-2:    #9CC5E8;
+    --accent-soft: #1C2B39;
+    --accent-ink:  #9CC5E8;
+
+    --crit:        #E8798E;  --crit-bg:    #2E1A20;
+    --high:        #E0975F;  --high-bg:    #2E2018;
+    --medhigh:     #D4B34F;  --medhigh-bg: #2B2618;
+    --med:         #7FB4C6;  --med-bg:     #16262C;
+    --low:         #8FBFA2;  --low-bg:     #182420;
+
+    --ok:          #7FC49E;  --ok-bg:      #16261E;
+    --warn:        #D4B34F;  --warn-bg:    #2B2618;
+    --gapc:        #B0A0D4;  --gap-bg:     #221E2E;
+
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, .35);
+    --shadow-2: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -14px rgba(0, 0, 0, .7);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --ground:      #11151A;
+  --panel:       #181E25;
+  --panel-2:     #1F262E;
+  --panel-3:     #273039;
+
+  --ink:         #E6ECF2;
+  --ink-2:       #A7B3BF;
+  --ink-3:       #7C8894;
+  --ink-inv:     #11151A;
+
+  --rule:        #2B343E;
+  --rule-2:      #222A32;
+  --rule-strong: #E6ECF2;
+
+  --accent:      #6FA6D6;
+  --accent-2:    #9CC5E8;
+  --accent-soft: #1C2B39;
+  --accent-ink:  #9CC5E8;
+
+  --crit:        #E8798E;  --crit-bg:    #2E1A20;
+  --high:        #E0975F;  --high-bg:    #2E2018;
+  --medhigh:     #D4B34F;  --medhigh-bg: #2B2618;
+  --med:         #7FB4C6;  --med-bg:     #16262C;
+  --low:         #8FBFA2;  --low-bg:     #182420;
+
+  --ok:          #7FC49E;  --ok-bg:      #16261E;
+  --warn:        #D4B34F;  --warn-bg:    #2B2618;
+  --gapc:        #B0A0D4;  --gap-bg:     #221E2E;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, .35);
+  --shadow-2: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -14px rgba(0, 0, 0, .7);
+}

@@ -1,0 +1,16 @@
+code: "SAF-05"
+name: "AI Output Monitoring & Safeguards"
+framework: "agsc"
+pillar: "Safety"
+tier: "T2"
+purpose: "Ensure AI outputs are monitored after deployment and that safeguards detect, review, escalate, correct, or block risky outputs before they create harm."
+evidence:
+  - "Documented monitoring approach and defined risk thresholds"
+  - "Evidence of monitoring activities"
+  - "Records of issue handling including review, escalation and remediation"
+surfaces:
+  - "safety-layer"
+  - "telemetry"
+ospreyCoverage: "direct"
+coverageNote: "OSP-07, OSP-08 and OSP-11 produce the output-safeguard decisions and blocked-execution records this control asks for."
+order: 15

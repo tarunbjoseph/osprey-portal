@@ -1,0 +1,14 @@
+code: "GOV-05"
+name: "Model Evaluation"
+framework: "agsc"
+pillar: "Governance"
+tier: "T2"
+purpose: "Ensure models are validated for quality, bias, robustness and reliability before and during use."
+evidence:
+  - "Evaluation reports with pass/fail status"
+  - "Regression test history"
+surfaces:
+  - "model"
+ospreyCoverage: "direct"
+coverageNote: "The benchmark layer of this portal is this control’s evidence: Gate 1 classifier metrics and containment results, reported separately."
+order: 35

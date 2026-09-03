@@ -1,0 +1,185 @@
+---
+import Base from '@/layouts/Base.astro';
+import { allThreats, allSurfaces, allFrameworks, stats, url } from '@/lib/data';
+import { site } from '@/site.config';
+
+const s = await stats();
+const threats = await allThreats();
+const surfaces = await allSurfaces();
+const frameworks = await allFrameworks();
+
+const anchorFrameworks = frameworks.filter((f) => f.data.role !== 'regulatory');
+const critical = threats.filter((t) => t.data.severity === 'critical');
+const gate = threats.filter((t) => t.data.detection.inGate1);
+---
+
+<Base description={site.description}>
+  <section class="hero">
+    <p class="eyebrow">Project OSPREY · SafeAlign AI</p>
+    <h1>Agentic threat detection,<br />mapped to the controls that govern it.</h1>
+    <p class="lede hero-lede">
+      Enterprise AI agents plan, call tools and trigger actions on their own. Conventional
+      monitoring tracks latency and errors, and misses the failures that matter — an agent
+      drifting off task, reading instructions out of a poisoned document, or chaining permitted
+      tools into something no single call would have been allowed to do.
+    </p>
+    <p class="lede hero-lede">
+      This portal is the reference layer for that problem: the behaviours the platform detects,
+      the governance and security controls each detection provides evidence for, and the
+      benchmarks used to show whether any of it works.
+    </p>
+
+    <div class="cta">
+      <a class="btn btn--p" href={url('/threats')}>Open the threat register</a>
+      <a class="btn" href={url('/frameworks')}>How the frameworks stack up</a>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="At a glance">
+    <div class="stat"><b>{s.threats}</b><span class="label">Threat categories</span></div>
+    <div class="stat"><b>{s.core}</b><span class="label">Core scope</span></div>
+    <div class="stat"><b>{s.controls}</b><span class="label">Controls mapped</span></div>
+    <div class="stat"><b>{s.anchors}</b><span class="label">Framework anchors</span></div>
+    <div class="stat"><b>{s.inGate1}</b><span class="label">Model-owned labels</span></div>
+  </section>
+
+  <section class="premise">
+    <div class="prem-main prose">
+      <h2>A supplement, not a replacement</h2>
+      <p>
+        The <strong>Agentic Governance &amp; Security Controls (AGSC)</strong> standard published by
+        COHUMAIN Labs and SafeAlign AI answers what to control and why: twenty-five controls across
+        Safety, Alignment, Governance and Security, each risk-justified and mapped to public
+        frameworks. This portal does not restate that catalogue and does not compete with it.
+      </p>
+      <p>
+        It adds three things on top. A <strong>runtime threat layer</strong> — the specific agent
+        behaviours a monitoring platform can observe, with the signals that indicate each one.
+        A second governance anchor in the <strong>EC-Council ADG framework</strong>, whose nine
+        governance surfaces give a coverage axis and whose autonomy tiers turn "does this need
+        human review" from a judgement call into a rule. And an
+        <strong>evaluation layer</strong> that reports whether the detections actually work,
+        instead of asserting that they do.
+      </p>
+      <p>
+        Every threat category names its AGSC control first, then its ADG surface and minimum
+        control, and only then the external frameworks. That ordering is deliberate: internal
+        anchors move when the organisation decides they should, while OWASP, MITRE ATLAS and the
+        EU AI Act move on their own schedules.
+      </p>
+    </div>
+
+    <aside class="prem-side">
+      <p class="label">Anchored to</p>
+      <ul class="fw">
+        {anchorFrameworks.map((f) => (
+          <li>
+            <a href={url(`/frameworks/${f.id}`)}>
+              <b>{f.data.shortName}</b>
+              <span class="mono v">{f.data.version}</span>
+            </a>
+            <span class="pub">{f.data.publisher}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="foot-tip">
+        Each framework is pinned to a version. When one ships a new release, the anchors that
+        referenced the old version are flagged for re-checking rather than silently going stale.
+      </p>
+    </aside>
+  </section>
+
+  <section class="strips">
+    <a class="strip" href={url('/threats?sev=critical')}>
+      <p class="label">Highest severity</p>
+      <h3>{critical.length} critical categories</h3>
+      <p class="sd">
+        {critical.map((t) => t.data.name).join(' · ')}. Both are deterministic checks rather than
+        model decisions, and both always reach a human.
+      </p>
+      <span class="go">Threat register →</span>
+    </a>
+
+    <a class="strip" href={url('/coverage')}>
+      <p class="label">Where the platform is strong and thin</p>
+      <h3>{surfaces.filter((x) => x.data.coverage === 'direct').length} of {surfaces.length} surfaces covered directly</h3>
+      <p class="sd">
+        Mapped onto ADG's governance surfaces, coverage is strongest where behaviour happens and
+        thinnest where provenance is established — which is the honest shape of a runtime platform.
+      </p>
+      <span class="go">Coverage →</span>
+    </a>
+
+    <a class="strip" href={url('/benchmarks')}>
+      <p class="label">How any of this gets proven</p>
+      <h3>{gate.length} labels a model actually owns</h3>
+      <p class="sd">
+        Most categories are deterministic checks, statistics or derived signals. Classifier
+        accuracy is reported only over the labels a model is responsible for; everything else is
+        measured by whether the platform stopped the attack.
+      </p>
+      <span class="go">Benchmarks →</span>
+    </a>
+  </section>
+
+  <section class="wip">
+    <div>
+      <h2>A work in progress, on purpose</h2>
+      <p class="lede">
+        This site grows as the project does. Sections marked in progress have their data model
+        defined and their content still filling in — that is a deliberate state, not an oversight.
+        The <a href={url('/changelog')}>changelog</a> records what moved and why.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { padding: var(--sp-8) 0 var(--sp-6); max-width: 800px; }
+  .hero h1 { margin: var(--sp-3) 0 var(--sp-4); }
+  .hero-lede + .hero-lede { margin-top: var(--sp-3); }
+  .cta { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-5); }
+  .btn {
+    display: inline-block; font-size: 13.5px; font-weight: 500; text-decoration: none;
+    padding: 9px 16px; border-radius: var(--r-md);
+    border: 1px solid var(--rule); background: var(--panel); color: var(--ink);
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn--p { background: var(--rule-strong); color: var(--ground); border-color: var(--rule-strong); }
+  .btn--p:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  }
+  .stat { padding: var(--sp-4) var(--sp-4) var(--sp-4) 0; border-right: 1px solid var(--rule-2); }
+  .stat:last-child { border-right: 0; }
+  .stat b {
+    display: block; font-family: var(--f-display); font-weight: 700; font-size: 30px;
+    line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums;
+  }
+  .stat .label { display: block; margin-top: 7px; }
+
+  .premise { display: grid; grid-template-columns: 1.7fr 1fr; gap: var(--sp-7); padding: var(--sp-7) 0; }
+  @media (max-width: 900px) { .premise { grid-template-columns: 1fr; gap: var(--sp-5); } }
+  .prem-main h2 { margin-bottom: var(--sp-3); }
+
+  .prem-side { background: var(--panel); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--sp-4); align-self: start; }
+  .fw { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 10px; }
+  .fw a { display: flex; align-items: baseline; gap: 8px; text-decoration: none; color: var(--ink); }
+  .fw a:hover b { color: var(--accent); }
+  .fw b { font-size: 13.5px; font-weight: 600; }
+  .fw .v { font-size: 11px; color: var(--ink-3); }
+  .fw .pub { display: block; font-size: 11.5px; color: var(--ink-3); margin-top: 1px; }
+  .foot-tip { font-size: 12px; color: var(--ink-3); margin-top: var(--sp-4); line-height: 1.45; }
+
+  .strips { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: var(--r-md); overflow: hidden; }
+  .strip { display: block; background: var(--panel); padding: var(--sp-5); text-decoration: none; color: var(--ink-2); }
+  .strip:hover { background: var(--panel-2); }
+  .strip h3 { margin: 8px 0 8px; color: var(--ink); }
+  .sd { font-size: 13.5px; line-height: 1.5; }
+  .go { display: block; margin-top: var(--sp-4); font-family: var(--f-mono); font-size: 11.5px; color: var(--accent); }
+
+  .wip { padding: var(--sp-7) 0 0; }
+  .wip h2 { margin-bottom: var(--sp-3); }
+</style>

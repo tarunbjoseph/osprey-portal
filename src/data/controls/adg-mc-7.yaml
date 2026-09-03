@@ -1,0 +1,12 @@
+code: "MC-7"
+name: "Tool and MCP Register"
+framework: "adg"
+pillar: "Defend"
+purpose: "Maintain a register of all tools and MCP capabilities with trust tiering and invocation controls."
+evidence:
+  - "Published register with per-tool risk assessment and approval status"
+surfaces:
+  - "tools"
+ospreyCoverage: "direct"
+coverageNote: "OSP-04, OSP-06 and OSP-12 produce the invocation decisions: which calls were permitted, which chains were stopped, which components changed."
+order: 7

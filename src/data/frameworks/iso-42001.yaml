@@ -1,0 +1,12 @@
+name: "ISO/IEC 42001 — AI management systems"
+shortName: "ISO/IEC 42001"
+version: "2023"
+released: "2023"
+validated: "2026-09-03"
+publisher: "ISO/IEC"
+url: "https://www.iso.org/standard/81230.html"
+citation: "ISO/IEC 42001:2023, Information technology — Artificial intelligence — Management system."
+role: "regulatory"
+idPattern: "A."
+order: 80
+summary: "A certifiable management-system standard for AI, whose Annex A control groups both AGSC and ADG map into. Referenced here for traceability: a detection that produces evidence for an AGSC control also produces evidence toward the Annex A group that control maps to."

@@ -1,0 +1,12 @@
+name: "Agentic Governance & Security Controls"
+shortName: "AGSC"
+version: "v1.0"
+released: "2026"
+validated: "2026-09-03"
+publisher: "COHUMAIN Labs & SafeAlign AI"
+url: "https://himjoe.github.io/Agentic-governance-and-security-controls-by-COHUMAIN-Labs-and-Safealign-AI/COHUMAIN-AGSC-repo/docs/"
+citation: "Agentic Governance & Security Controls (AGSC) v1.0, COHUMAIN Labs & SafeAlign AI, 2026."
+role: "internal-anchor"
+idPattern: "SAF- / ALN- / GOV- / SEC-"
+order: 10
+summary: "Twenty-five controls across four pillars — Safety, Alignment, Governance, Security — each risk-justified, testable, and mapped to public frameworks. AGSC is the primary anchor for this portal: every OSPREY threat category names the control it provides evidence for before it names any external framework. Controls carry an adoption tier (T1 foundational, T2 managed, T3 assured) that sequences implementation rather than replacing internal risk classification."

@@ -1,0 +1,12 @@
+name: "AI Security and Governance Framework (Adopt. Defend. Govern.)"
+shortName: "ADG"
+version: "v1.0"
+released: "2026"
+validated: "2026-09-03"
+publisher: "EC-Council Global Services"
+url: "https://www.eccouncil.org/adgframework/"
+citation: "EC-Council Global Services, AI Security and Governance Framework (ADG) v1.0, 2026."
+role: "internal-anchor"
+idPattern: "MC-"
+order: 20
+summary: "An operating model that sits beneath existing standards and makes them executable. Three pillars — Adopt, Defend, Govern — scale from board to engineer. Beneath them sit nine governance surfaces where engineers instrument and attackers act, twelve minimum controls each with a named evidence artifact, three autonomy tiers, and a four-class harm taxonomy. OSPREY uses the surfaces as its coverage axis, the minimum controls as its evidence targets, and the autonomy tiers as the consequence of a detection."

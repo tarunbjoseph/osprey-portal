@@ -1,0 +1,13 @@
+code: "MC-3"
+name: "Separation of Duties"
+framework: "adg"
+pillar: "Govern"
+purpose: "Separate deployment ownership, security validation, and approval authority across Adopt, Defend and Govern."
+evidence:
+  - "RACI matrix per AI system; no single function holding all three roles"
+surfaces:
+  - "identity"
+  - "orchestration"
+ospreyCoverage: "indirect"
+coverageNote: "OSP-09 enforces the runtime half: an agent should not be able to authorise its own delegation."
+order: 3

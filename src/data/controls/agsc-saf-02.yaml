@@ -1,0 +1,17 @@
+code: "SAF-02"
+name: "Emergency Stop & Containment (Kill Switch)"
+framework: "agsc"
+pillar: "Safety"
+tier: "T1"
+purpose: "Ensure there is a defined and tested emergency stop or containment process so responsible teams can halt, restrict, or isolate the AI system when required."
+evidence:
+  - "Documented emergency stop procedure and activation criteria"
+  - "Defined roles for activation and notification"
+  - "Logs showing activation can be tracked"
+  - "Documented recovery process and evidence of testing"
+surfaces:
+  - "tools"
+  - "orchestration"
+ospreyCoverage: "direct"
+coverageNote: "OSP-13, OSP-10 and OSP-14 all terminate in a containment action. Their quarantine and kill records are this control’s activation evidence."
+order: 12

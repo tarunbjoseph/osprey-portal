@@ -1,0 +1,17 @@
+code: "SAF-01"
+name: "Autonomous System Oversight"
+framework: "agsc"
+pillar: "Safety"
+tier: "T1"
+purpose: "Ensure autonomous or agentic AI systems are monitored against expected behaviour, and that responsible teams can intervene when the system behaves unexpectedly, unsafely, or outside its approved scope."
+evidence:
+  - "Documented expected behaviour and limits"
+  - "Defined criteria for abnormal or unsafe behaviour"
+  - "Evidence of monitoring such as logs, dashboards or alerts"
+  - "Documented human intervention and escalation process"
+surfaces:
+  - "orchestration"
+  - "telemetry"
+ospreyCoverage: "direct"
+coverageNote: "OSP-01 and OSP-16 produce the expected-behaviour baseline and the abnormal-behaviour criteria this control asks for."
+order: 11

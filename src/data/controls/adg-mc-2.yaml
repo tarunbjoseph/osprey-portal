@@ -1,0 +1,12 @@
+code: "MC-2"
+name: "Risk Classification"
+framework: "adg"
+pillar: "Govern"
+purpose: "Classify each AI system by data sensitivity, autonomy, external exposure, harm potential, and business criticality."
+evidence:
+  - "Documented classification per system using a standardized risk taxonomy"
+surfaces:
+  - "model"
+ospreyCoverage: "indirect"
+coverageNote: "The autonomy tier OSPREY downgrades on detection is the tier this control assigns at design time."
+order: 2

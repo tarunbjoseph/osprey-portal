@@ -1,0 +1,10 @@
+name: "Prompt"
+framework: "adg"
+pillars:
+  - "Adopt"
+  - "Defend"
+scope: "System prompts, templates, policies, agent instructions, prompt libraries, multimodal input validation."
+objective: "Prevent unmanaged behaviour changes and unsafe instruction patterns."
+coverage: "direct"
+coverageNote: "OSP-02 and OSP-15. The strongest coverage in the current build, and the labels most likely to reach their accuracy targets first."
+order: 20

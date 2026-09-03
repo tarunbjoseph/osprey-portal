@@ -1,0 +1,12 @@
+code: "MC-11"
+name: "Fairness and Bias Evaluation"
+framework: "adg"
+pillar: "Govern"
+purpose: "Evaluate AI systems for discriminatory outcomes using representative test data and established fairness metrics."
+evidence:
+  - "Fairness evaluation report; re-evaluation after model or data changes"
+surfaces:
+  - "model"
+ospreyCoverage: "none"
+coverageNote: "Out of scope. OSPREY monitors agent actions, not distributional fairness of model outputs."
+order: 11

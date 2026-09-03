@@ -1,0 +1,37 @@
+---
+import { ACTION_ORDER, ACTION_LABELS } from '@/site.config';
+
+interface Props {
+  /** Highest rung this threat may reach on a confident detection. */
+  peak: string;
+  size?: 'sm' | 'md';
+}
+const { peak, size = 'md' } = Astro.props;
+const peakIndex = ACTION_ORDER.indexOf(peak as (typeof ACTION_ORDER)[number]);
+---
+
+<div class={`ladder ladder--${size}`} role="img"
+     aria-label={`Action ladder: escalates as far as ${ACTION_LABELS[peak] ?? peak}`}>
+  {ACTION_ORDER.map((a, i) => (
+    <span class:list={['rung', { on: i < peakIndex, peak: i === peakIndex }]}>
+      {ACTION_LABELS[a]}
+    </span>
+  ))}
+</div>
+
+<style>
+  .ladder { display: flex; gap: 3px; }
+  .rung {
+    flex: 1; min-width: 0; text-align: center; padding: 5px 2px;
+    font-family: var(--f-mono); font-size: 8.5px; letter-spacing: .02em;
+    text-transform: uppercase; border-radius: var(--r-sm);
+    background: var(--panel-2); color: var(--ink-3);
+    border: 1px solid transparent; white-space: nowrap;
+  }
+  .ladder--sm .rung { font-size: 8px; padding: 4px 2px; }
+  .rung.on { background: var(--accent-soft); color: var(--accent-ink); border-color: var(--accent); }
+  .rung.peak {
+    background: var(--rule-strong); color: var(--ground);
+    border-color: var(--rule-strong); font-weight: 600;
+  }
+</style>

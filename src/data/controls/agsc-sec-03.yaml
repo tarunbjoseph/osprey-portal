@@ -1,0 +1,18 @@
+code: "SEC-03"
+name: "Prompt Injection & Adversarial Input Defense"
+framework: "agsc"
+pillar: "Security"
+tier: "T1"
+purpose: "Ensure adversarial inputs are detected, isolated, blocked and monitored across all major ingestion points, especially where untrusted content can influence AI behaviour."
+evidence:
+  - "Input/output protection inventory and configuration"
+  - "Detection rules or monitoring alerts for injection attempts"
+  - "Architecture evidence showing trust-context separation"
+  - "Sample alerts and response records"
+surfaces:
+  - "prompt"
+  - "context"
+  - "safety-layer"
+ospreyCoverage: "direct"
+coverageNote: "OSP-02, OSP-03, OSP-07 and OSP-15. The densest coverage of any single control, and the anchor for most of the classifier work."
+order: 43

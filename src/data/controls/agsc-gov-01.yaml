@@ -1,0 +1,16 @@
+code: "GOV-01"
+name: "Data Provenance & Input Integrity"
+framework: "agsc"
+pillar: "Governance"
+tier: "T2"
+purpose: "Ensure the origin, integrity and trust level of data entering the AI system is known and controlled."
+evidence:
+  - "Provenance records for training, retrieval and runtime inputs"
+  - "Input validation evidence"
+  - "Trust classification for data sources"
+surfaces:
+  - "context"
+  - "learning-loop"
+ospreyCoverage: "direct"
+coverageNote: "The provenance field this control establishes is the same field OSP-03 and OSP-15 cannot be classified without. The dependency runs both ways."
+order: 31

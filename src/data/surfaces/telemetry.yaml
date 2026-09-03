@@ -1,0 +1,10 @@
+name: "Telemetry"
+framework: "adg"
+pillars:
+  - "Defend"
+  - "Govern"
+scope: "Logs, traces, evaluations, replay data, alerts, governance evidence, fairness metrics."
+objective: "Make behaviour observable, reviewable, provable, and measurable."
+coverage: "foundational"
+coverageNote: "Not a threat category. It is the substrate every category depends on, and the single largest determinant of whether the rest of the register is detectable at all."
+order: 80

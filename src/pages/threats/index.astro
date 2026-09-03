@@ -1,0 +1,148 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import Register, { type RegisterRow } from '@/components/Register.tsx';
+import '@/styles/register.css';
+import {
+  allThreats, allFrameworks, allSurfaces, surfacesForThreat, stats, url,
+} from '@/lib/data';
+import {
+  ACTION_LABELS, ACTION_ORDER, ACTION_DEFINITIONS,
+  INSTRUMENT_LABELS, TIER_DEFINITIONS, SEVERITY_DEFINITIONS,
+} from '@/site.config';
+
+const threats = await allThreats();
+const frameworks = await allFrameworks();
+const surfaces = await allSurfaces();
+const s = await stats();
+
+const fwName = Object.fromEntries(frameworks.map((f) => [f.id, f.data.shortName]));
+const fwOrder = Object.fromEntries(frameworks.map((f) => [f.id, f.data.order]));
+const surfaceNames = Object.fromEntries(surfaces.map((x) => [x.id, x.data.name]));
+
+const rows: RegisterRow[] = await Promise.all(
+  threats.map(async (t) => {
+    const groups = new Map<string, string[]>();
+    for (const a of t.data.anchors) {
+      if (!groups.has(a.framework.id)) groups.set(a.framework.id, []);
+      groups.get(a.framework.id)!.push(a.id);
+    }
+    return {
+      slug: t.id,
+      code: t.data.code,
+      name: t.data.name,
+      behaviour: t.data.behaviour,
+      signals: t.data.signals,
+      severity: t.data.severity,
+      scope: t.data.scope,
+      addedIn: t.data.addedIn,
+      harmClasses: t.data.harmClasses,
+      action: t.data.action,
+      detection: {
+        instrument: t.data.detection.instrument,
+        slmDifficulty: t.data.detection.slmDifficulty,
+        inGate1: t.data.detection.inGate1,
+      },
+      surfaces: await surfacesForThreat(t),
+      anchorSummary: [...groups.entries()]
+        .sort((a, b) => (fwOrder[a[0]] ?? 99) - (fwOrder[b[0]] ?? 99))
+        .map(([fid, ids]) => ({ framework: fid, label: fwName[fid] ?? fid, ids: ids.join(' · ') })),
+      href: url(`/threats/${t.id}`),
+    };
+  }),
+);
+---
+
+<Base
+  title="Threat register"
+  section="/threats"
+  description="Sixteen categories of risky agent behaviour, the signals that indicate each one, the platform response, and the governance controls each detection provides evidence for."
+>
+  <PageHeader
+    eyebrow="Reference"
+    title="Threat register"
+    lede="What kinds of risky agent behaviour the platform is built to name, what each one looks like in telemetry, how hard it should be hit, and how much autonomy the agent keeps afterwards."
+    facts={[
+      { k: 'Categories', v: String(s.threats) },
+      { k: 'Core scope', v: String(s.core) },
+      { k: 'In the evaluation gate', v: String(s.inGate1) },
+      { k: 'Framework anchors', v: String(s.anchors), href: url('/coverage#anchors') },
+    ]}
+  />
+
+  <div class="intro">
+    <div class="prose">
+      <p>
+        Each row states a behaviour in plain language, the signals a detector could actually
+        look at, and the response the platform should take. Severity answers how bad the
+        behaviour is if it is real; the action ladder answers what happens about it. The two are
+        deliberately separate.
+      </p>
+      <p class="strong-note">
+        <strong>Confidence, not category, decides how far up the ladder an event travels.</strong>
+        A critical category detected with low confidence goes to Review, not to Kill. Getting
+        this backwards is how a security platform becomes the outage.
+      </p>
+    </div>
+
+    <aside class="legend">
+      <p class="label">Action ladder</p>
+      <dl>
+        {ACTION_ORDER.map((a) => (
+          <div><dt>{ACTION_LABELS[a]}</dt><dd>{ACTION_DEFINITIONS[a]}</dd></div>
+        ))}
+      </dl>
+      <p class="label sp">Autonomy after detection</p>
+      <dl>
+        {Object.entries(TIER_DEFINITIONS).map(([k, v]) => (
+          <div><dt>{k}</dt><dd>{v}</dd></div>
+        ))}
+      </dl>
+    </aside>
+  </div>
+
+  <Register
+    client:load
+    rows={rows}
+    actionLabels={ACTION_LABELS}
+    actionOrder={[...ACTION_ORDER]}
+    instrumentLabels={INSTRUMENT_LABELS}
+    surfaceNames={surfaceNames}
+  />
+
+  <section class="sev">
+    <h2>Severity scale</h2>
+    <div class="tablewrap">
+      <table class="data">
+        <thead><tr><th>Level</th><th>What it means</th></tr></thead>
+        <tbody>
+          {Object.entries(SEVERITY_DEFINITIONS).map(([k, v]) => (
+            <tr>
+              <td><span class="pill" data-sev={k}>{k.replace('-', '–')}</span></td>
+              <td>{v}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .intro {
+    display: grid; grid-template-columns: 1.5fr 1fr; gap: var(--sp-6);
+    padding: var(--sp-5) 0 var(--sp-2);
+  }
+  @media (max-width: 860px) { .intro { grid-template-columns: 1fr; gap: var(--sp-4); } }
+  .strong-note { border-left: 2px solid var(--accent); padding-left: var(--sp-4); }
+
+  .legend { background: var(--panel); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--sp-4); }
+  .legend dl { margin: 8px 0 0; display: grid; gap: 5px; }
+  .legend div { display: grid; grid-template-columns: 78px 1fr; gap: 10px; align-items: baseline; }
+  .legend dt { font-family: var(--f-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+  .legend dd { margin: 0; font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
+  .legend .sp { margin-top: var(--sp-4); }
+
+  .sev { margin-top: var(--sp-7); }
+  .sev h2 { margin-bottom: var(--sp-3); }
+</style>

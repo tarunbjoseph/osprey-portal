@@ -1,0 +1,12 @@
+name: "OWASP Top 10 for Large Language Model Applications"
+shortName: "OWASP LLM"
+version: "2026 v1.0"
+released: "2026"
+validated: "2026-09-03"
+publisher: "OWASP GenAI Security Project"
+url: "https://genai.owasp.org/"
+citation: "OWASP Top 10 for LLM Applications 2026 v1.0, OWASP GenAI Security Project."
+role: "external-validation"
+idPattern: "LLM"
+order: 30
+summary: "The 2026 release is the first built on incident evidence as well as practitioner vote — 7,714 real incidents scored against the community ranking. Ordering moved materially: Excessive Agency climbed to third because agentic deployments are where damage lands, Unbounded Consumption rose four places, and System Prompt Leakage was re-scoped into the broader Hidden Context Exposure. The list owns risk where the model is a component inside an application; once the model becomes an actor with tools and memory, risk moves to the Agentic Top 10."

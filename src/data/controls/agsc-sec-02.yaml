@@ -1,0 +1,15 @@
+code: "SEC-02"
+name: "Agent Identity & Least-Privilege Authorization"
+framework: "agsc"
+pillar: "Security"
+tier: "T1"
+purpose: "Ensure each agent has a unique identity and only the minimum access needed for the task, with stronger approval for sensitive actions."
+evidence:
+  - "Agent identity registry"
+  - "Access and entitlement records"
+  - "Approval records for high-impact actions"
+surfaces:
+  - "identity"
+ospreyCoverage: "direct"
+coverageNote: "OSP-05 is a direct check against this register, and OSP-13 extends it to the runtime boundary. Both are deterministic — a classifier would only add false negatives."
+order: 42

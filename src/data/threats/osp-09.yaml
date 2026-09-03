@@ -1,0 +1,91 @@
+code: "OSP-09"
+name: "Inter-Agent Trust Abuse"
+order: 11
+scope: "secondary"
+behaviour: "In a multi-agent pipeline, one agent accepts instructions or results from another without verifying who sent them or whether that agent was entitled to ask."
+signals:
+  - "Unauthenticated inter-agent messages"
+  - "Delegation to an agent outside the declared topology"
+  - "An agent identity appearing that was not registered for the workflow"
+  - "Guardrail configuration mismatch between two communicating agents"
+severity: "medium"
+severityNote: "Rises to High once multi-agent topologies reach production, where an unverified delegation reaches real systems."
+harmClasses:
+  - "systemic"
+action:
+  peak: "monitor"
+  summary: "Monitor for now. Moves to quarantine scope once multi-agent topologies are in production."
+  tier: "HOOTL"
+  humanReview: "no"
+  reviewNote: "Not while the category sits at Monitor. The tier tightens to HOTL when it moves to quarantine scope."
+detection:
+  instrument: "deterministic"
+  method: "Protocol and authentication check against the declared topology"
+  rationale: "Whether an inter-agent message was authenticated is a protocol fact. A model has no role until the question becomes whether a legitimate delegation was appropriate."
+  inGate1: false
+  dependsOn:
+    - "Declared agent topology"
+    - "Inter-agent message authentication"
+evidence:
+  - "Inter-agent authorization records and topology register (AGSC SEC-01)"
+  - "RACI conformance (ADG MC-3)"
+anchors:
+  -
+    framework: "agsc"
+    id: "SEC-01"
+    label: "Multi-Agent Coordination Security"
+    weight: "primary"
+    rationale: "Agent roles, communication paths and escalation rules are exactly what this label checks."
+    verification: "verified"
+    checked: "2026-09-03"
+  -
+    framework: "adg"
+    id: "MC-3"
+    label: "Separation of Duties"
+    weight: "primary"
+    rationale: "An agent should not be able to authorise its own delegation."
+    verification: "verified"
+    checked: "2026-09-03"
+  -
+    framework: "adg"
+    id: "MC-7"
+    label: "Tool and MCP Register"
+    weight: "supporting"
+    rationale: "Cross-agent capability access is registered like any other capability."
+    verification: "verified"
+    checked: "2026-09-03"
+  -
+    framework: "owasp-llm"
+    id: "LLM03"
+    label: "Excessive Agency"
+    weight: "primary"
+    rationale: "Authorization scope must be preserved across chained agent calls."
+    verification: "verified"
+    checked: "2026-09-03"
+  -
+    framework: "owasp-asi"
+    id: "ASI07"
+    label: "Insecure Inter-Agent Communication"
+    weight: "primary"
+    rationale: "The direct agentic counterpart."
+    verification: "verified"
+    checked: "2026-09-03"
+  -
+    framework: "mitre-atlas"
+    id: "AML.TA0008"
+    label: "Discovery"
+    weight: "supporting"
+    rationale: "Enumerating the agent topology precedes abusing it."
+    verification: "verified"
+    checked: "2026-09-03"
+  -
+    framework: "mitre-atlas"
+    id: "AML.T0103 / T0108"
+    label: "Agent deployment and agent-as-technique entries"
+    weight: "supporting"
+    verification: "pending"
+    rationale: "Identifiers carried from an earlier revision and not re-confirmed in the latest validation pass."
+regulatory:
+  - "EU AI Act Art. 15"
+  - "NIST AI RMF MANAGE 4.1"
+  - "ISO/IEC 42001 A.6.2"

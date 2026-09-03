@@ -1,0 +1,122 @@
+/* Threat register — styles for the React island in Register.tsx.
+   Kept as a plain stylesheet rather than scoped styles so the island and the
+   per-threat Astro pages can share the same visual language. */
+
+.ctl {
+  position: sticky; top: 58px; z-index: 15;
+  background: color-mix(in srgb, var(--ground) 92%, transparent);
+  backdrop-filter: blur(6px);
+  padding: var(--sp-3) 0 var(--sp-4);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: var(--sp-5);
+}
+.ctl-row { display: flex; align-items: center; gap: var(--sp-4); }
+.ctl-row.wrap { flex-wrap: wrap; gap: var(--sp-3) var(--sp-5); margin-top: var(--sp-3); }
+
+.search {
+  display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; max-width: 460px;
+  background: var(--panel); border: 1px solid var(--rule);
+  border-radius: var(--r-md); padding: 0 10px; color: var(--ink-3);
+}
+.search:focus-within { border-color: var(--accent); }
+.search input {
+  flex: 1; min-width: 0; border: 0; background: none; color: var(--ink);
+  font: inherit; font-size: 13.5px; padding: 8px 0; outline: none;
+}
+.search input::placeholder { color: var(--ink-3); }
+
+.count { font-family: var(--f-mono); font-size: 12px; color: var(--ink-3); margin-left: auto; white-space: nowrap; }
+.count b { color: var(--ink); font-weight: 600; }
+.reset {
+  font: inherit; font-family: var(--f-mono); font-size: 11px; margin-left: 10px;
+  background: none; border: 0; color: var(--accent); cursor: pointer; text-decoration: underline;
+}
+
+.fg { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+button.f {
+  font: inherit; font-size: 12px; font-weight: 500; cursor: pointer;
+  background: var(--panel); color: var(--ink-2);
+  border: 1px solid var(--rule); border-radius: var(--r-sm); padding: 3px 10px;
+}
+button.f:hover { border-color: var(--accent); color: var(--ink); }
+button.f[aria-pressed='true'] {
+  background: var(--rule-strong); color: var(--ground); border-color: var(--rule-strong);
+}
+
+.empty { color: var(--ink-2); padding: var(--sp-6) 0; }
+.empty button { font: inherit; background: none; border: 0; color: var(--accent); cursor: pointer; text-decoration: underline; padding: 0; }
+
+.grp-wrap + .grp-wrap { margin-top: var(--sp-6); }
+.grp {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  font-family: var(--f-mono); font-size: 10.5px; font-weight: 400;
+  letter-spacing: .11em; text-transform: uppercase; color: var(--ink-3);
+  padding: var(--sp-4) 0 9px; border-bottom: 1px solid var(--rule);
+  margin: var(--sp-5) 0 var(--sp-2); letter-spacing: .11em;
+}
+.grp b { color: var(--ink); font-weight: 600; font-family: var(--f-mono); }
+.grp em { margin-left: auto; font-style: normal; color: var(--ink-3); }
+
+.t {
+  display: grid; grid-template-columns: 4px 1fr;
+  background: var(--panel); border: 1px solid var(--rule);
+  border-radius: var(--r-md); overflow: hidden; margin-bottom: 2px;
+}
+.stripe { background: var(--med); }
+.t[data-sev='critical'] .stripe { background: var(--crit); }
+.t[data-sev='high'] .stripe { background: var(--high); }
+.t[data-sev='medium-high'] .stripe { background: var(--medhigh); }
+.t[data-sev='low'] .stripe { background: var(--low); }
+
+.tin { padding: var(--sp-4) var(--sp-5); }
+.thead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; margin-bottom: var(--sp-3); }
+.tid { font-family: var(--f-mono); font-size: 12.5px; font-weight: 600; color: var(--accent); text-decoration: none; }
+.tname { font-family: var(--f-display); font-weight: 600; font-size: 19px; letter-spacing: -.01em; color: var(--ink); text-decoration: none; }
+.tname:hover, .tid:hover { text-decoration: underline; }
+.tag {
+  font-family: var(--f-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--accent-ink); background: var(--accent-soft); padding: 2px 6px; border-radius: var(--r-sm);
+}
+.tag--g { color: var(--ok); background: var(--ok-bg); }
+.thead .pill { margin-left: auto; }
+
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--sp-6); }
+@media (max-width: 780px) { .cols { grid-template-columns: 1fr; gap: var(--sp-3); } }
+.body { font-size: 14px; color: var(--ink-2); line-height: 1.52; margin: 0; }
+.body.dk { color: var(--ink); }
+.body.sub { color: var(--ink-3); margin-top: 5px; font-size: 13px; }
+
+.sig { margin: 0; padding-left: 1.05em; font-size: 13.5px; color: var(--ink-2); line-height: 1.48; }
+.sig li + li { margin-top: 3px; }
+.sig .more { list-style: none; margin-left: -1.05em; font-family: var(--f-mono); font-size: 11px; }
+
+.resp {
+  display: grid; grid-template-columns: minmax(300px, 330px) 1fr;
+  gap: var(--sp-3) var(--sp-6); align-items: start;
+  margin-top: var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid var(--rule-2);
+}
+@media (max-width: 780px) { .resp { grid-template-columns: 1fr; } }
+
+.ladder { display: flex; gap: 3px; margin: 4px 0 8px; }
+.rung {
+  flex: 1; min-width: 0; text-align: center; padding: 5px 2px;
+  font-family: var(--f-mono); font-size: 8.5px; letter-spacing: .02em; text-transform: uppercase;
+  background: var(--panel-2); color: var(--ink-3);
+  border-radius: var(--r-sm); border: 1px solid transparent; white-space: nowrap;
+}
+.rung.on { background: var(--accent-soft); color: var(--accent-ink); border-color: var(--accent); }
+.rung.peak { background: var(--rule-strong); color: var(--ground); border-color: var(--rule-strong); font-weight: 600; }
+
+.tier { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.tp {
+  font-family: var(--f-mono); font-size: 10px; letter-spacing: .06em;
+  padding: 2px 7px; border-radius: var(--r-sm); background: var(--panel-2); color: var(--ink-3);
+}
+.tp.on { background: var(--rule-strong); color: var(--ground); font-weight: 600; }
+.arr { color: var(--ink-3); font-size: 11px; font-style: normal; margin-right: 5px; }
+.cap { font-family: var(--f-mono); font-size: 9.5px; letter-spacing: .06em; color: var(--ink-3); margin-left: 4px; }
+
+.chips {
+  display: flex; flex-wrap: wrap; gap: 5px;
+  margin-top: var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid var(--rule-2);
+}

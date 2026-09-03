@@ -1,0 +1,15 @@
+code: "GOV-06"
+name: "Model Continuous Improvement & Drift Management"
+framework: "agsc"
+pillar: "Governance"
+tier: "T3"
+purpose: "Ensure production models are monitored for performance drift and improved through a governed cycle."
+evidence:
+  - "Drift monitoring records"
+  - "Retraining and improvement decisions"
+surfaces:
+  - "model"
+  - "learning-loop"
+ospreyCoverage: "indirect"
+coverageNote: "Detection-quality trends over time feed this control, but model drift itself is measured by the evaluation workstream."
+order: 36

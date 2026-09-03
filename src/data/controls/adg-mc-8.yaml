@@ -1,0 +1,13 @@
+code: "MC-8"
+name: "Runtime Monitoring"
+framework: "adg"
+pillar: "Defend"
+purpose: "Monitor for abuse, drift, data leakage, unsafe actions, bias emergence and configuration drift in production."
+evidence:
+  - "Active monitoring with defined alert thresholds and response SLAs"
+surfaces:
+  - "telemetry"
+  - "safety-layer"
+ospreyCoverage: "direct"
+coverageNote: "The bulk of OSPREY’s output. Every core-scope label produces an alert record with a threshold, a confidence and a verdict. This is the minimum control the platform most directly satisfies."
+order: 8

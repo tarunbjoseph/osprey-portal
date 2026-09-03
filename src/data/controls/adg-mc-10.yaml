@@ -1,0 +1,12 @@
+code: "MC-10"
+name: "Periodic Governance Review"
+framework: "adg"
+pillar: "Govern"
+purpose: "Conduct governance reviews with exception handling and board reporting for high-risk systems."
+evidence:
+  - "Review records with findings, decisions and exception dispositions"
+surfaces:
+  - "telemetry"
+ospreyCoverage: "none"
+coverageNote: "A governance-process control. OSPREY supplies inputs to the review but produces no evidence for it directly."
+order: 10

@@ -1,0 +1,16 @@
+code: "ALN-01"
+name: "Autonomy Boundary Control"
+framework: "agsc"
+pillar: "Alignment"
+tier: "T1"
+purpose: "Ensure each agent operates within a clearly defined and technically enforced action space, with restricted actions blocked by design rather than by prompt instruction."
+evidence:
+  - "Documented action boundaries for each agent"
+  - "Policy or configuration showing permitted, restricted and approval-required actions"
+  - "Logs of blocked boundary violations and related alerts"
+surfaces:
+  - "tools"
+  - "orchestration"
+ospreyCoverage: "direct"
+coverageNote: "OSP-04 and OSP-06 produce exactly the boundary-enforcement record this control needs: which chains were permitted, which were stopped."
+order: 21

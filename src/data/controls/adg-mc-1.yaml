@@ -1,0 +1,13 @@
+code: "MC-1"
+name: "AI System Inventory"
+framework: "adg"
+pillar: "Govern"
+purpose: "Maintain an inventory of all AI systems with an accountable owner, risk classification, and autonomy tier."
+evidence:
+  - "Published inventory, reviewed quarterly, with a named owner per system"
+surfaces:
+  - "model"
+  - "identity"
+ospreyCoverage: "indirect"
+coverageNote: "Contributed, not owned. The agent identity register OSP-05 checks against is the same artifact this control requires."
+order: 1

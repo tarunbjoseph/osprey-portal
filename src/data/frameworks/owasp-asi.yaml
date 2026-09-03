@@ -1,0 +1,12 @@
+name: "OWASP Top 10 for Agentic Applications"
+shortName: "OWASP ASI"
+version: "2026"
+released: "2025-12-09"
+validated: "2026-09-03"
+publisher: "OWASP GenAI Security Project"
+url: "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+citation: "OWASP Top 10 for Agentic Applications (ASI) 2026, OWASP GenAI Security Project, announced 9 December 2025."
+role: "external-validation"
+idPattern: "ASI"
+order: 40
+summary: "The agentic counterpart to the LLM Top 10, covering the risks that appear once a model can call tools, carry memory between sessions, and set consequences in motion downstream. This is the closest external list to what OSPREY actually monitors, which is why most OSPREY categories carry an ASI anchor even where the LLM anchor is indirect."

@@ -1,0 +1,14 @@
+code: "GOV-04"
+name: "Model Training Governance"
+framework: "agsc"
+pillar: "Governance"
+tier: "T3"
+purpose: "Ensure models that are trained, fine-tuned or materially developed follow a governed process."
+evidence:
+  - "Training data documentation"
+  - "Experiment and approval records"
+surfaces:
+  - "learning-loop"
+ospreyCoverage: "none"
+coverageNote: "Out of OSPREY scope. Training-time governance sits with the model workstream."
+order: 34

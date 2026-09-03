@@ -1,0 +1,37 @@
+---
+import { TIER_LABELS } from '@/site.config';
+
+interface Props {
+  /** Tier the agent holds after this threat is detected. */
+  tier: string;
+  showCaption?: boolean;
+}
+const { tier, showCaption = true } = Astro.props;
+const ORDER = ['HOOTL', 'HOTL', 'HITL'] as const;
+---
+
+<div class="tier" role="img"
+     aria-label={`Autonomy after detection: ${tier} — ${TIER_LABELS[tier] ?? ''}`}>
+  {ORDER.map((t, i) => (
+    <>
+      {i > 0 && <span class="arr" aria-hidden="true">›</span>}
+      <span class:list={['tp', { on: t === tier }]} title={TIER_LABELS[t]}>{t}</span>
+    </>
+  ))}
+  {showCaption && <span class="cap">autonomy after detection</span>}
+</div>
+
+<style>
+  .tier { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .tp {
+    font-family: var(--f-mono); font-size: 10px; letter-spacing: .06em;
+    padding: 2px 7px; border-radius: var(--r-sm);
+    background: var(--panel-2); color: var(--ink-3);
+  }
+  .tp.on { background: var(--rule-strong); color: var(--ground); font-weight: 600; }
+  .arr { color: var(--ink-3); font-size: 11px; }
+  .cap {
+    font-family: var(--f-mono); font-size: 9.5px; letter-spacing: .06em;
+    color: var(--ink-3); margin-left: 3px;
+  }
+</style>

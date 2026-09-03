@@ -1,0 +1,11 @@
+name: "MITRE ATLAS"
+shortName: "MITRE ATLAS"
+version: "5.6.0"
+validated: "2026-09-03"
+publisher: "MITRE"
+url: "https://atlas.mitre.org/"
+citation: "MITRE ATLAS (Adversarial Threat Landscape for AI Systems), distribution reporting version 5.6.0."
+role: "external-validation"
+idPattern: "AML.T / AML.TA"
+order: 50
+summary: "The adversarial-ML counterpart to ATT&CK: sixteen tactics and a growing technique catalogue, with recent releases adding heavily to agent, tool and supply-chain coverage. Note that ATLAS ships under two version schemes — the primary distribution reports 5.6.0, while OWASP 2026 pins a dated content distribution (v2026.06, format-version 6.0.0). Both are real; this portal anchors tactics against the primary distribution and marks technique identifiers individually."

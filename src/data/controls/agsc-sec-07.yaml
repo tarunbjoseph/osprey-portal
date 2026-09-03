@@ -1,0 +1,16 @@
+code: "SEC-07"
+name: "Memory & Context Lifecycle Security"
+framework: "agsc"
+pillar: "Security"
+tier: "T2"
+purpose: "Ensure memory and context are isolated, governed, auditable and expired appropriately so stored information does not create leakage, contamination or unintended influence."
+evidence:
+  - "Memory and context isolation design"
+  - "Test results showing no cross-user or cross-session leakage"
+  - "Retention, expiry and purge policy"
+  - "Memory audit or inspection records"
+surfaces:
+  - "context"
+ospreyCoverage: "direct"
+coverageNote: "OSP-03, OSP-08 and OSP-15 produce the memory-write decisions and context-boundary records this control asks for."
+order: 47

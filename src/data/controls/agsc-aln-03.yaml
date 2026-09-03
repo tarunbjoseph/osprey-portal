@@ -1,0 +1,15 @@
+code: "ALN-03"
+name: "Decision Interpretability"
+framework: "agsc"
+pillar: "Alignment"
+tier: "T3"
+purpose: "Ensure AI-supported decisions are explainable in a way appropriate to the audience and decision context."
+evidence:
+  - "Documented interpretability approach"
+  - "Sample explanations for users, operators or reviewers"
+  - "Link to review, escalation, correction or appeal process"
+surfaces:
+  - "safety-layer"
+ospreyCoverage: "indirect"
+coverageNote: "Contributed indirectly: every OSPREY verdict carries the signal, control and confidence that produced it, which is the raw material an explanation is built from."
+order: 23
