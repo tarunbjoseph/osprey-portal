@@ -91,9 +91,23 @@ Pushing to `main` builds and deploys to GitHub Pages via
 [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml). Pull requests are validated and
 type-checked but never published.
 
-**First-time setup:** in the repository settings, under *Pages*, set the source to **GitHub
-Actions**. The workflow resolves the site URL and base path itself, so no configuration is needed
-for a project site, a user site, or a custom domain.
+**First push**, from inside this directory (it already has git history and two commits):
+
+```bash
+gh repo create osprey-portal --public --source=. --remote=origin --push
+# or, without the gh CLI: create the empty repo on github.com first, then
+git remote add origin https://github.com/<you>/osprey-portal.git
+git branch -M main
+git push -u origin main
+```
+
+Then in the repository settings, under **Pages**, set the source to **GitHub Actions**. The next
+push deploys. The workflow resolves the site URL and base path itself, so nothing needs
+configuring for a project site, a user site, or a custom domain.
+
+If the repository name is not `osprey-portal`, nothing needs changing — the workflow reads the
+base path from GitHub. The fallback in `astro.config.mjs` only affects local builds run without
+those environment variables.
 
 To deploy elsewhere (Cloudflare Pages, Netlify), set `SITE` and `BASE` environment variables and
 publish the `dist/` directory.
