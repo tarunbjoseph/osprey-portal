@@ -1,0 +1,70 @@
+name: Build and deploy
+
+# Deploys to GitHub Pages on every push to main, and validates every pull
+# request without deploying. The validate step runs first: an anchor pointing
+# at a framework that does not exist should never reach the published site.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Structural integrity of the data layer, before anything is built.
+      - name: Validate framework anchors
+        run: npm run validate:anchors
+
+      # Type-check components and content schemas.
+      - name: Check types
+        run: npm run check
+
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Build
+        run: npm run build
+        env:
+          # configure-pages resolves these for both project sites
+          # (user.github.io/repo) and user or custom-domain sites.
+          SITE: ${{ steps.pages.outputs.origin }}
+          BASE: ${{ steps.pages.outputs.base_path }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    # Pull requests are validated but never published.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,7 @@
+name: "Rules and statistics baseline"
+vendor: "In-house"
+role: "baseline"
+status: "in-progress"
+rationale: "Not a model, and listed here on purpose. Six categories should never route through a classifier at all, and several more are better served by a threshold than by inference. Any model has to beat this baseline on its own labels to justify its cost — and on the deterministic labels, it cannot, which is the point."
+evaluations: []
+order: 60

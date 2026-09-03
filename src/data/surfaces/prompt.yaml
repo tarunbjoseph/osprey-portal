@@ -6,5 +6,5 @@ pillars:
 scope: "System prompts, templates, policies, agent instructions, prompt libraries, multimodal input validation."
 objective: "Prevent unmanaged behaviour changes and unsafe instruction patterns."
 coverage: "direct"
-coverageNote: "OSP-02 and OSP-15. The strongest coverage in the current build, and the labels most likely to reach their accuracy targets first."
+coverageNote: "The strongest coverage in the current build. Instruction-boundary attacks arrive as text, which is the one thing a classifier is unambiguously good at, and synthetic training data for them is cheap to produce."
 order: 20

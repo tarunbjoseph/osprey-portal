@@ -6,5 +6,5 @@ pillars:
 scope: "Foundation models, fine-tuned models, adapters, routers, versions, diffusion models, composite model chains."
 objective: "Use only approved models with known risk posture, provenance, and change traceability."
 coverage: "indirect"
-coverageNote: "Reached only through OSP-12 when a model or adapter version changes unexpectedly at inference. OSPREY governs runtime behaviour, not model provenance — that sits with the governance workstream under ADG MC-1 and MC-5."
+coverageNote: "Runtime behaviour is what this platform observes; model provenance and approval are established before deployment. Detections reach this surface only where an observed component diverges from what the registry says should be running."
 order: 10

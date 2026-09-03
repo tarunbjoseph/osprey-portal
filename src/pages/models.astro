@@ -1,0 +1,157 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { getCollection } from 'astro:content';
+import { url } from '@/lib/data';
+
+const models = (await getCollection('models')).sort(
+  (a, b) => (a.data.order ?? 50) - (b.data.order ?? 50),
+);
+const benchmarks = await getCollection('benchmarks');
+const bmById = new Map(benchmarks.map((b) => [b.id, b]));
+
+const ROLE_LABEL: Record<string, string> = {
+  classifier: 'Classifier',
+  embedding: 'Embedding',
+  escalation: 'Escalation layer',
+  baseline: 'Baseline',
+  candidate: 'Classifier candidate',
+};
+const ROLE_NOTE: Record<string, string> = {
+  candidate:
+    'Under consideration as the fine-tuning base for the classification labels. Selection turns on accuracy per unit of inference cost, since this model runs inline on agent traffic.',
+  embedding:
+    'Produces the trajectory representation the distance-based detections score against. A different problem from classification, and likely a different model.',
+  escalation:
+    'A larger model reserved for cases the small classifier flags but cannot resolve, and for second-pass judgement calls. Deliberately outside the hot path.',
+  baseline:
+    'The comparison every model has to beat to justify its cost. On several labels it cannot be beaten, because the check is exact and inference is not.',
+  classifier: 'Selected and in service.',
+};
+
+const grouped = ['candidate', 'embedding', 'escalation', 'baseline', 'classifier']
+  .map((role) => ({ role, items: models.filter((m) => m.data.role === role) }))
+  .filter((g) => g.items.length > 0);
+
+const anyEvaluations = models.some((m) => m.data.evaluations.length > 0);
+---
+
+<Base
+  title="Models"
+  section="/models"
+  description="The models under evaluation for the detection pipeline, what each one is for, and the evaluation results as they are produced."
+>
+  <PageHeader
+    eyebrow="Evaluation"
+    title="Model registry"
+    lede="What each model in the pipeline is for, why it is a candidate, and how it performs once measured. Roles matter more than rankings here: a classifier, an embedding model and an escalation layer are answering different questions and should not be compared on one number."
+    facts={[
+      { k: 'Entries', v: String(models.length) },
+      { k: 'Evaluation runs recorded', v: String(models.reduce((n, m) => n + m.data.evaluations.length, 0)) },
+    ]}
+  />
+
+  {!anyEvaluations && (
+    <div class="panel panel--note early">
+      <p class="label">No results yet</p>
+      <p>
+        Model selection is still open and no evaluation has been run. The entries below record what
+        each candidate is for and why it is in the list, so the eventual comparison is against
+        stated criteria rather than assembled after the fact. Results attach to a model as they
+        arrive and appear in the table on each card.
+      </p>
+    </div>
+  )}
+
+  {grouped.map(({ role, items }) => (
+    <section class="grp">
+      <div class="grp-hd">
+        <h2>{ROLE_LABEL[role]}</h2>
+        <p class="sub">{ROLE_NOTE[role]}</p>
+      </div>
+
+      <div class="cards">
+        {items.map((m) => (
+          <article class="mcard" id={m.id}>
+            <header>
+              <h3>{m.data.name}</h3>
+              <span class="pill" data-status={m.data.status}>{m.data.status.replace('-', ' ')}</span>
+            </header>
+            <dl class="specs">
+              <div><dt class="label">Vendor</dt><dd>{m.data.vendor}</dd></div>
+              {m.data.params && <div><dt class="label">Size</dt><dd class="mono">{m.data.params}</dd></div>}
+              {m.data.license && <div><dt class="label">Licence</dt><dd>{m.data.license}</dd></div>}
+              {m.data.hosting && <div><dt class="label">Hosting</dt><dd>{m.data.hosting}</dd></div>}
+            </dl>
+            <p class="why">{m.data.rationale}</p>
+
+            {m.data.evaluations.length > 0 ? (
+              <div class="evals">
+                <p class="label">Evaluation runs</p>
+                <div class="tablewrap">
+                  <table class="data">
+                    <thead><tr><th>Benchmark</th><th>Metric</th><th>Result</th><th>Date</th></tr></thead>
+                    <tbody>
+                      {m.data.evaluations.map((e) => {
+                        const b = bmById.get(e.benchmark.id);
+                        return (
+                          <tr>
+                            <td>{b ? <a href={url(`/benchmarks#${b.id}`)}>{b.data.name}</a> : e.benchmark.id}</td>
+                            <td>{e.metric}</td>
+                            <td class="mono"><strong>{e.value}</strong>{e.note && <div class="enote">{e.note}</div>}</td>
+                            <td class="mono">{e.date ?? '—'}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ) : (
+              <p class="pending">No evaluation runs recorded yet.</p>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+  ))}
+
+  <section class="grp">
+    <div class="panel panel--note">
+      <h3>Adding a result</h3>
+      <p>
+        Append an entry to the <code>evaluations</code> list in that model's data file with the
+        benchmark, metric, value and date. The schema validates the benchmark reference at build
+        time, so a typo in the benchmark name fails the build instead of rendering a broken link.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .early { margin-top: var(--sp-5); }
+  .early p { font-size: 13.5px; color: var(--ink-2); max-width: var(--measure); margin-top: 6px; }
+
+  .grp { margin-top: var(--sp-7); }
+  .grp-hd { border-bottom: 1px solid var(--rule); padding-bottom: var(--sp-3); margin-bottom: var(--sp-4); }
+  .grp-hd h2 { font-size: var(--t-lg); }
+  .sub { font-size: 13.5px; color: var(--ink-2); max-width: var(--measure); margin-top: 6px; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: var(--sp-3); }
+  .mcard { background: var(--panel); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--sp-4) var(--sp-5); scroll-margin-top: 80px; }
+  .mcard header { display: flex; align-items: baseline; gap: 10px; }
+  .mcard h3 { font-size: var(--t-md); }
+  .mcard header .pill { margin-left: auto; }
+
+  .specs { display: grid; gap: 4px; margin: var(--sp-3) 0; }
+  .specs div { display: grid; grid-template-columns: 74px 1fr; gap: 10px; align-items: baseline; }
+  .specs dd { margin: 0; font-size: 12.5px; color: var(--ink-2); }
+
+  .why { font-size: 13.5px; color: var(--ink-2); line-height: 1.55; padding-top: var(--sp-3); border-top: 1px solid var(--rule-2); }
+  .pending { font-size: 12.5px; color: var(--ink-3); margin-top: var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid var(--rule-2); }
+  .evals { margin-top: var(--sp-4); }
+  .enote { font-size: 11px; color: var(--ink-3); margin-top: 3px; font-family: var(--f-body); }
+
+  .panel h3 { font-size: var(--t-md); margin-bottom: 7px; }
+  .panel p { font-size: 13.5px; color: var(--ink-2); max-width: var(--measure); }
+</style>

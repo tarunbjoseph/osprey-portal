@@ -1,0 +1,212 @@
+---
+import Base from '@/layouts/Base.astro';
+import { allFrameworks, allControls, allAnchors, allThreats, url } from '@/lib/data';
+import { VERIFICATION_LABELS } from '@/site.config';
+
+export async function getStaticPaths() {
+  const frameworks = await allFrameworks();
+  return frameworks.map((f) => ({ params: { id: f.id }, props: { framework: f } }));
+}
+
+const { framework } = Astro.props;
+const f = framework.data;
+
+const controls = (await allControls()).filter((c) => c.data.framework.id === framework.id);
+const anchors = (await allAnchors()).filter((a) => a.framework.id === framework.id);
+const threats = await allThreats();
+
+/** Elements of this framework referenced anywhere, with the threats citing them. */
+const elements = new Map<string, { label?: string; verification: string; threats: string[] }>();
+for (const a of anchors) {
+  const key = a.id;
+  if (!elements.has(key)) elements.set(key, { label: a.label, verification: a.verification, threats: [] });
+  const e = elements.get(key)!;
+  if (a.label && !e.label) e.label = a.label;
+  // Worst verification state wins, so a mixed element is never shown as clean.
+  const rank = { verified: 0, superseded: 1, pending: 2, gap: 3 } as Record<string, number>;
+  if ((rank[a.verification] ?? 0) > (rank[e.verification] ?? 0)) e.verification = a.verification;
+  e.threats.push(a.threatCode);
+}
+const elementList = [...elements.entries()].sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }));
+
+const byPillar = new Map<string, typeof controls>();
+for (const c of controls) {
+  const p = c.data.pillar;
+  if (!byPillar.has(p)) byPillar.set(p, [] as typeof controls);
+  byPillar.get(p)!.push(c);
+}
+
+const threatByCode = new Map(threats.map((t) => [t.data.code, t]));
+---
+
+<Base title={f.shortName} section="/frameworks" description={f.summary}>
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href={url('/frameworks')}>Frameworks</a>
+    <span aria-hidden="true">/</span>
+    <span>{f.shortName}</span>
+  </nav>
+
+  <header class="hd">
+    <p class="eyebrow">{f.publisher}</p>
+    <h1>{f.name}</h1>
+    <p class="lede">{f.summary}</p>
+    <dl class="facts">
+      <div><dt class="label">Version</dt><dd class="mono">{f.version}</dd></div>
+      {f.released && <div><dt class="label">Released</dt><dd class="mono">{f.released}</dd></div>}
+      {f.validated && <div><dt class="label">Anchors validated</dt><dd class="mono">{f.validated}</dd></div>}
+      <div><dt class="label">Referenced by</dt><dd class="mono">{anchors.length} anchors</dd></div>
+      <div><dt class="label">Source</dt><dd><a href={f.url} rel="noopener noreferrer" target="_blank">Publisher site ↗</a></dd></div>
+    </dl>
+    {f.supersededBy && (
+      <div class="panel panel--note warn">
+        <p class="label">Newer release available</p>
+        <p>A newer version ({f.supersededBy}) has shipped. Anchors on this site were validated against {f.version} and are flagged for re-checking.</p>
+      </div>
+    )}
+  </header>
+
+  {controls.length > 0 && (
+    <section class="sec">
+      <h2>Control catalogue</h2>
+      <p class="sub">
+        Each control shows what it asks for, the evidence an auditor should be able to see, and how
+        much of that evidence OSPREY's runtime detections actually produce. Where coverage is
+        partial or absent, that is stated rather than smoothed over.
+      </p>
+
+      {[...byPillar.entries()].map(([pillar, list]) => (
+        <div class="pillar">
+          <h3 class="pillar-h">{pillar}<span class="mono">{list.length}</span></h3>
+          <div class="ctrls">
+            {list.map((c) => {
+              const users = threats.filter((t) =>
+                t.data.anchors.some((a) => a.framework.id === framework.id && a.id === c.data.code));
+              return (
+                <article class="ctrl" id={c.data.code}>
+                  <header>
+                    <span class="mono code">{c.data.code}</span>
+                    <h4>{c.data.name}</h4>
+                    {c.data.tier && <span class="chip"><span class="k">Tier</span>{c.data.tier}</span>}
+                    <span class="pill" data-cov={c.data.ospreyCoverage}>{c.data.ospreyCoverage}</span>
+                  </header>
+                  <p class="purpose">{c.data.purpose}</p>
+
+                  <div class="ctrl-grid">
+                    <div>
+                      <p class="label">Evidence the control asks for</p>
+                      <ul class="ev">{c.data.evidence.map((e) => <li>{e}</li>)}</ul>
+                    </div>
+                    <div>
+                      <p class="label">What OSPREY contributes</p>
+                      <p class="cov">{c.data.coverageNote}</p>
+                      {users.length > 0 && (
+                        <div class="chips">
+                          {users.map((t) => (
+                            <a class="chip" href={url(`/threats/${t.id}`)}>
+                              <span class="k">{t.data.code}</span>{t.data.name}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </section>
+  )}
+
+  {controls.length === 0 && elementList.length > 0 && (
+    <section class="sec">
+      <h2>Elements referenced</h2>
+      <p class="sub">
+        Every identifier from this framework that a threat category anchors to, with the
+        verification state of the identifier itself — not of the mapping.
+      </p>
+      <div class="tablewrap">
+        <table class="data">
+          <thead>
+            <tr><th>Element</th><th>Name</th><th>Referenced by</th><th>Identifier</th></tr>
+          </thead>
+          <tbody>
+            {elementList.map(([id, e]) => (
+              <tr>
+                <td class="mono"><strong>{id}</strong></td>
+                <td>{e.label ?? '—'}</td>
+                <td>
+                  <div class="chips">
+                    {[...new Set(e.threats)].map((code) => {
+                      const t = threatByCode.get(code);
+                      return t
+                        ? <a class="chip" href={url(`/threats/${t.id}`)}>{code}</a>
+                        : <span class="chip">{code}</span>;
+                    })}
+                  </div>
+                </td>
+                <td><span class="pill" data-v={e.verification}>{VERIFICATION_LABELS[e.verification]}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )}
+
+  <section class="sec cite">
+    <h2>How to cite this</h2>
+    <p class="citation mono">{f.citation}</p>
+    <p class="sub">
+      Anchors on this site were validated against the version above. If you are quoting an
+      identifier externally, check its verification state on the threat page first.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .crumbs { display: flex; gap: 8px; align-items: center; padding: var(--sp-5) 0 0; font-size: 12.5px; color: var(--ink-3); }
+  .crumbs a { color: var(--ink-2); text-decoration: none; }
+  .crumbs a:hover { color: var(--accent); }
+
+  .hd { padding: var(--sp-4) 0 var(--sp-5); border-bottom: 2px solid var(--rule-strong); }
+  .hd h1 { margin: 8px 0 var(--sp-3); font-size: var(--t-2xl); }
+  .facts { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6); margin: var(--sp-5) 0 0; }
+  .facts div { display: flex; flex-direction: column; gap: 3px; }
+  .facts dd { margin: 0; font-size: 12px; color: var(--ink-2); }
+  .warn { margin-top: var(--sp-4); border-left-color: var(--warn); }
+
+  .sec { margin-top: var(--sp-7); }
+  .sec h2 { margin-bottom: 6px; }
+  .sub { font-size: 13.5px; color: var(--ink-2); max-width: var(--measure); margin-bottom: var(--sp-4); }
+
+  .pillar { margin-top: var(--sp-5); }
+  .pillar-h {
+    display: flex; align-items: baseline; gap: 10px;
+    font-size: var(--t-md); padding-bottom: 8px; border-bottom: 1px solid var(--rule); margin-bottom: var(--sp-3);
+  }
+  .pillar-h span { margin-left: auto; font-size: 11px; color: var(--ink-3); }
+
+  .ctrls { display: grid; gap: var(--sp-2); }
+  .ctrl { background: var(--panel); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--sp-4); scroll-margin-top: 80px; }
+  .ctrl header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; }
+  .ctrl .code { font-size: 12px; font-weight: 600; color: var(--accent); }
+  .ctrl h4 { font-size: 15px; }
+  .ctrl header .pill { margin-left: auto; }
+  .purpose { font-size: 13.5px; color: var(--ink-2); margin-top: 7px; max-width: var(--measure); }
+
+  .ctrl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4) var(--sp-5); margin-top: var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid var(--rule-2); }
+  @media (max-width: 780px) { .ctrl-grid { grid-template-columns: 1fr; } }
+  .ev { margin: 6px 0 0; padding-left: 1.05em; font-size: 12.5px; color: var(--ink-2); }
+  .ev li + li { margin-top: 3px; }
+  .cov { font-size: 12.5px; color: var(--ink-2); margin-top: 6px; line-height: 1.5; }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+
+  .cite { padding-bottom: var(--sp-5); }
+  .citation {
+    font-size: 13px; color: var(--ink); background: var(--panel-2);
+    border-left: 2px solid var(--accent); padding: var(--sp-3) var(--sp-4);
+    border-radius: 0 var(--r-md) var(--r-md) 0; margin: var(--sp-3) 0; max-width: var(--measure);
+  }
+</style>

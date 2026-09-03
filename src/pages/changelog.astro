@@ -1,0 +1,130 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { allFrameworks, url } from '@/lib/data';
+
+const frameworks = await allFrameworks();
+
+/**
+ * Changelog entries are kept here rather than in a content collection on
+ * purpose: they are about the site itself, not about the domain, and keeping
+ * them out of the data layer means a schema change never rewrites history.
+ */
+const entries = [
+  {
+    date: '2026-09-03',
+    title: 'Portal established',
+    kind: 'release',
+    body:
+      'First published build. The threat register, framework layer, coverage assessment and evaluation sections go live together so the shape of the whole reference is visible, even where content is still filling in.',
+    changes: [
+      'Threat register with 16 categories, each anchored to internal controls first and external frameworks second.',
+      'Framework version registry covering AGSC, ADG, OWASP LLM and ASI, MITRE ATLAS, the EU AI Act, NIST AI RMF and ISO/IEC 42001.',
+      'Control catalogues: 25 AGSC controls across four pillars, 12 ADG minimum controls with their evidence requirements.',
+      'Coverage assessment across the nine ADG governance surfaces, derived from anchors rather than asserted separately.',
+      'Anchor verification register distinguishing confirmed identifiers from those carried pending re-check.',
+      'Evaluation layer with benchmark and model schemas defined, ready for results.',
+    ],
+  },
+  {
+    date: '2026-09-03',
+    title: 'Threat model rebuilt against the 2026 frameworks',
+    kind: 'content',
+    body:
+      'The taxonomy this portal publishes is a rebuild rather than an edit of earlier internal drafts. Three things had moved enough to justify starting over.',
+    changes: [
+      'OWASP anchors migrated from the 2025 LLM Top 10 to the 2026 release. The ordering moved materially, and one entry was re-scoped: System Prompt Leakage became the broader Hidden Context Exposure.',
+      'The EC-Council ADG framework added as a second internal anchor, contributing nine governance surfaces, twelve minimum controls, three autonomy tiers and a four-class harm taxonomy.',
+      'Three threat categories added: resource exhaustion and denial of wallet, hidden context exposure, and fabricated completion. All three are first-class risks in the 2026 sources and all three sit inside what a runtime platform can observe.',
+      'Human review restated as an autonomy-tier consequence rather than a per-row judgement call.',
+      'MITRE ATLAS tactic identifiers re-validated against the live distribution. Two naming corrections were found in source material and are recorded on the affected framework pages.',
+    ],
+  },
+];
+
+const KIND_LABEL: Record<string, string> = {
+  release: 'Release',
+  content: 'Content',
+  framework: 'Framework update',
+  fix: 'Correction',
+};
+---
+
+<Base
+  title="Changelog"
+  section="/changelog"
+  description="What changed on this portal and why, including framework version updates and their effect on existing anchors."
+>
+  <PageHeader
+    eyebrow="Maintenance"
+    title="Changelog"
+    lede="What moved and what it changed. A framework version bump with no note is indistinguishable from a typo six months later, so every substantive change gets a line here."
+    facts={[{ k: 'Entries', v: String(entries.length) }]}
+  />
+
+  <div class="cl">
+    {entries.map((e) => (
+      <article class="entry">
+        <div class="when">
+          <time class="mono" datetime={e.date}>{e.date}</time>
+          <span class="chip">{KIND_LABEL[e.kind] ?? e.kind}</span>
+        </div>
+        <div class="what">
+          <h2>{e.title}</h2>
+          <p class="body">{e.body}</p>
+          <ul>{e.changes.map((c) => <li>{c}</li>)}</ul>
+        </div>
+      </article>
+    ))}
+  </div>
+
+  <section class="fw">
+    <h2>Framework versions in use</h2>
+    <p class="sub">
+      The current pin for each framework and the date its anchors were last validated. When one of
+      these changes, the anchors that referenced the old version are flagged for re-checking rather
+      than silently going stale — the procedure is in
+      <a href={url('/notes/upgrading-frameworks')}>Upgrading when a framework ships a new version</a>.
+    </p>
+    <div class="tablewrap">
+      <table class="data">
+        <thead>
+          <tr><th>Framework</th><th>Version</th><th>Released</th><th>Anchors validated</th><th>Role</th></tr>
+        </thead>
+        <tbody>
+          {frameworks.map((f) => (
+            <tr>
+              <td><a href={url(`/frameworks/${f.id}`)}><strong>{f.data.shortName}</strong></a></td>
+              <td class="mono">{f.data.version}</td>
+              <td class="mono">{f.data.released ?? '—'}</td>
+              <td class="mono">{f.data.validated ?? '—'}</td>
+              <td>{f.data.role.replace('-', ' ')}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cl { display: grid; gap: var(--sp-2); padding-top: var(--sp-6); }
+  .entry {
+    display: grid; grid-template-columns: 150px 1fr; gap: var(--sp-5);
+    background: var(--panel); border: 1px solid var(--rule); border-radius: var(--r-md);
+    padding: var(--sp-5);
+  }
+  @media (max-width: 760px) { .entry { grid-template-columns: 1fr; gap: var(--sp-3); } }
+  .when { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .when time { font-size: 12px; color: var(--ink-3); }
+  .what h2 { font-size: var(--t-md); }
+  .what .body { font-size: 13.5px; color: var(--ink-2); margin-top: 7px; max-width: var(--measure); }
+  .what ul { margin: var(--sp-3) 0 0; padding-left: 1.05em; font-size: 13.5px; color: var(--ink-2); }
+  .what li + li { margin-top: 6px; }
+
+  .fw { margin-top: var(--sp-7); }
+  .fw h2 { margin-bottom: 6px; }
+  .sub { font-size: 13.5px; color: var(--ink-2); max-width: var(--measure); margin-bottom: var(--sp-4); }
+  table.data a { text-decoration: none; color: var(--ink-2); }
+  table.data a:hover { color: var(--accent); }
+</style>

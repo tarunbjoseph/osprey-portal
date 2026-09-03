@@ -1,0 +1,266 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import {
+  allSurfaces, allControls, allThreats, allAnchors, threatsForSurface, url,
+} from '@/lib/data';
+import { VERIFICATION_LABELS, VERIFICATION_DEFINITIONS } from '@/site.config';
+
+const surfaces = await allSurfaces();
+const controls = await allControls();
+const threats = await allThreats();
+const anchors = await allAnchors();
+
+const surfaceRows = await Promise.all(
+  surfaces.map(async (x) => ({ surface: x, threats: await threatsForSurface(x.id) })),
+);
+
+const agsc = controls.filter((c) => c.data.framework.id === 'agsc');
+const adg = controls.filter((c) => c.data.framework.id === 'adg');
+
+const covCount = (list: typeof controls, v: string) =>
+  list.filter((c) => c.data.ospreyCoverage === v).length;
+
+const pending = anchors.filter((a) => a.verification === 'pending');
+const gaps = anchors.filter((a) => a.verification === 'gap');
+
+const tier1 = agsc.filter((c) => c.data.tier === 'T1');
+const tier1Covered = tier1.filter((c) => c.data.ospreyCoverage === 'direct');
+---
+
+<Base
+  title="Coverage"
+  section="/coverage"
+  description="Where the platform's detections reach across the nine ADG governance surfaces, which controls they produce evidence for, and which framework anchors still need re-checking."
+>
+  <PageHeader
+    eyebrow="Assessment"
+    title="Coverage and gaps"
+    lede="Mapping the threat register onto governance surfaces exposes the shape of the platform more honestly than a control count does. It is strong where behaviour happens and thin where provenance is established — which is the true shape of a runtime system, not a shortcoming to hide."
+    facts={[
+      { k: 'Surfaces covered directly', v: `${surfaces.filter((x) => x.data.coverage === 'direct').length} of ${surfaces.length}` },
+      { k: 'AGSC Tier 1 direct', v: `${tier1Covered.length} of ${tier1.length}` },
+      { k: 'Anchors pending re-check', v: String(pending.length) },
+      { k: 'Recorded framework gaps', v: String(gaps.length) },
+    ]}
+  />
+
+  <section class="sec" id="surfaces">
+    <h2>Governance surfaces</h2>
+    <p class="sub">
+      The nine surfaces from the EC-Council ADG framework, which define what must be governed
+      regardless of model vendor or architecture. Coverage here is derived from the controls each
+      threat anchors to, not asserted separately — so it cannot drift out of sync with the register.
+    </p>
+
+    <div class="surfaces">
+      {surfaceRows.map(({ surface: x, threats: list }) => (
+        <article class="surf" id={x.id} data-cov={x.data.coverage}>
+          <span class="bar" aria-hidden="true" />
+          <div class="surf-in">
+            <header>
+              <h3>{x.data.name}</h3>
+              <div class="pills">
+                {x.data.pillars.map((p) => <span class="chip">{p}</span>)}
+                <span class="pill" data-cov={x.data.coverage}>{x.data.coverage.replace('-', ' ')}</span>
+              </div>
+            </header>
+            <p class="scope">{x.data.scope}</p>
+            <p class="obj"><span class="label">Objective</span> {x.data.objective}</p>
+            <p class="note">{x.data.coverageNote}</p>
+            {list.length > 0 && (
+              <div class="chips">
+                <span class="label ck">Threats touching this surface</span>
+                {list.map((t) => (
+                  <a class="chip" href={url(`/threats/${t.id}`)}>
+                    <span class="k">{t.data.code}</span>{t.data.name}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="sec" id="controls">
+    <h2>Control coverage</h2>
+    <p class="sub">
+      How much of each control catalogue the platform's runtime detections actually reach. The
+      controls it produces nothing for are governance-process controls, and that is the correct
+      answer rather than a gap to close.
+    </p>
+
+    <div class="cov-cards">
+      <div class="cov-card">
+        <header><h3>AGSC</h3><span class="mono">{agsc.length} controls</span></header>
+        <div class="bars">
+          {['direct', 'partial', 'indirect', 'none'].map((v) => {
+            const n = covCount(agsc, v);
+            return n > 0 ? (
+              <div class="brow">
+                <span class="pill" data-cov={v}>{v}</span>
+                <span class="track"><span class="fill" data-cov={v} style={`width:${(n / agsc.length) * 100}%`} /></span>
+                <span class="mono n">{n}</span>
+              </div>
+            ) : null;
+          })}
+        </div>
+        <p class="cnote">
+          Of the {tier1.length} Tier&nbsp;1 foundational controls, {tier1Covered.length} are covered
+          directly. The exception is content safety — the platform governs actions rather than
+          generated content, which is a scoping decision worth confirming rather than a defect.
+        </p>
+        <a class="go" href={url('/frameworks/agsc')}>Full AGSC catalogue →</a>
+      </div>
+
+      <div class="cov-card">
+        <header><h3>ADG minimum controls</h3><span class="mono">{adg.length} controls</span></header>
+        <div class="bars">
+          {['direct', 'partial', 'indirect', 'none'].map((v) => {
+            const n = covCount(adg, v);
+            return n > 0 ? (
+              <div class="brow">
+                <span class="pill" data-cov={v}>{v}</span>
+                <span class="track"><span class="fill" data-cov={v} style={`width:${(n / adg.length) * 100}%`} /></span>
+                <span class="mono n">{n}</span>
+              </div>
+            ) : null;
+          })}
+        </div>
+        <p class="cnote">
+          Evidence is produced directly for the runtime controls — context policy, tool register,
+          runtime monitoring and incident response. Nothing is produced for fairness evaluation or
+          governance review, which are process controls that no runtime detector can satisfy.
+        </p>
+        <a class="go" href={url('/frameworks/adg')}>Full ADG catalogue →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="anchors">
+    <h2>Anchor verification register</h2>
+    <p class="sub">
+      Which external identifiers are safe to quote outside this project and which still need a
+      check. None of this blocks internal work; all of it matters before a reference goes in front
+      of a regulator, a customer, or a published paper.
+    </p>
+
+    <div class="vsummary">
+      {(['verified', 'pending', 'gap'] as const).map((v) => {
+        const n = anchors.filter((a) => a.verification === v).length;
+        return (
+          <div class="vcard">
+            <div class="vhead">
+              <span class="pill" data-v={v}>{VERIFICATION_LABELS[v]}</span>
+              <b class="mono">{n}</b>
+            </div>
+            <p>{VERIFICATION_DEFINITIONS[v]}</p>
+          </div>
+        );
+      })}
+    </div>
+
+    {pending.length > 0 && (
+      <>
+        <h3 class="sub-h">Pending re-check</h3>
+        <div class="tablewrap">
+          <table class="data">
+            <thead><tr><th>Category</th><th>Framework</th><th>Identifier</th><th>Why it is pending</th></tr></thead>
+            <tbody>
+              {pending.map((a) => {
+                const t = threats.find((x) => x.data.code === a.threatCode);
+                return (
+                  <tr>
+                    <td><a href={url(`/threats/${t?.id}`)}><strong>{a.threatCode}</strong> {a.threatName}</a></td>
+                    <td class="mono">{a.framework.id}</td>
+                    <td class="mono">{a.id}</td>
+                    <td>{a.rationale ?? '—'}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </>
+    )}
+
+    {gaps.length > 0 && (
+      <>
+        <h3 class="sub-h">Recorded gaps</h3>
+        <p class="sub">
+          Behaviours no published external technique models. These are the clearest evidence that
+          the internal control catalogue is doing real work rather than restating an external list.
+        </p>
+        <div class="tablewrap">
+          <table class="data">
+            <thead><tr><th>Category</th><th>Framework</th><th>What is missing</th></tr></thead>
+            <tbody>
+              {gaps.map((a) => {
+                const t = threats.find((x) => x.data.code === a.threatCode);
+                return (
+                  <tr>
+                    <td><a href={url(`/threats/${t?.id}`)}><strong>{a.threatCode}</strong> {a.threatName}</a></td>
+                    <td class="mono">{a.framework.id}</td>
+                    <td>{a.rationale ?? a.label ?? '—'}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </>
+    )}
+  </section>
+</Base>
+
+<style>
+  .sec { margin-top: var(--sp-7); }
+  .sec h2 { margin-bottom: 6px; }
+  .sub { font-size: 13.5px; color: var(--ink-2); max-width: var(--measure); margin-bottom: var(--sp-4); }
+  .sub-h { margin: var(--sp-6) 0 var(--sp-3); font-size: var(--t-md); }
+
+  .surfaces { display: grid; gap: var(--sp-2); }
+  .surf {
+    display: grid; grid-template-columns: 4px 1fr; background: var(--panel);
+    border: 1px solid var(--rule); border-radius: var(--r-md); overflow: hidden; scroll-margin-top: 80px;
+  }
+  .bar { background: var(--rule); }
+  .surf[data-cov='direct'] .bar { background: var(--accent); }
+  .surf[data-cov='partial'] .bar { background: var(--warn); }
+  .surf-in { padding: var(--sp-4) var(--sp-5); }
+  .surf header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
+  .surf h3 { font-size: var(--t-md); }
+  .pills { display: flex; gap: 5px; margin-left: auto; flex-wrap: wrap; }
+  .scope { font-size: 12.5px; color: var(--ink-3); margin-top: 5px; }
+  .obj { font-size: 13.5px; color: var(--ink-2); margin-top: 8px; }
+  .obj .label { display: inline; margin-right: 4px; }
+  .note { font-size: 13.5px; color: var(--ink-2); margin-top: 8px; max-width: var(--measure); }
+  .chips { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid var(--rule-2); }
+  .ck { margin-right: 6px; }
+
+  .cov-cards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
+  @media (max-width: 820px) { .cov-cards { grid-template-columns: 1fr; } }
+  .cov-card { background: var(--panel); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--sp-4) var(--sp-5); }
+  .cov-card header { display: flex; align-items: baseline; gap: 10px; padding-bottom: var(--sp-3); border-bottom: 1px solid var(--rule-2); }
+  .cov-card header span { margin-left: auto; font-size: 11.5px; color: var(--ink-3); }
+  .bars { display: grid; gap: 7px; margin: var(--sp-4) 0; }
+  .brow { display: grid; grid-template-columns: 78px 1fr 28px; gap: 10px; align-items: center; }
+  .track { height: 7px; background: var(--panel-2); border-radius: 4px; overflow: hidden; }
+  .fill { display: block; height: 100%; background: var(--ink-3); border-radius: 4px; }
+  .fill[data-cov='direct'] { background: var(--accent); }
+  .fill[data-cov='partial'] { background: var(--warn); }
+  .brow .n { font-size: 11.5px; color: var(--ink-3); text-align: right; }
+  .cnote { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+  .go { display: inline-block; margin-top: var(--sp-3); font-family: var(--f-mono); font-size: 11.5px; text-decoration: none; }
+
+  .vsummary { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--sp-3); margin-bottom: var(--sp-5); }
+  .vcard { background: var(--panel); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--sp-4); }
+  .vhead { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .vhead b { margin-left: auto; font-size: 20px; font-family: var(--f-display); }
+  .vcard p { font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
+
+  table.data a { text-decoration: none; color: var(--ink-2); }
+  table.data a:hover { color: var(--accent); }
+</style>

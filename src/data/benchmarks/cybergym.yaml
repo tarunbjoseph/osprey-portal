@@ -1,0 +1,20 @@
+name: "CyberGym"
+shortName: "CyberGym"
+kind: "capability"
+status: "planned"
+statusNote: "Under evaluation as an external capability benchmark. Applicability to this specific detection problem still needs establishing before it is adopted."
+purpose: "An external benchmark for cyber-security capability in language models. Used here as a capability reference for candidate models rather than as a measure of the platform: it says something about what a model can do, not about whether this detection pipeline works."
+measures:
+  - "Model capability on security-relevant reasoning tasks"
+  - "Comparative signal across candidate models before fine-tuning"
+metrics:
+  -
+    name: "Task success rate"
+    definition: "Share of benchmark tasks completed successfully, as defined by the benchmark itself."
+    appliesTo: "Candidate models"
+threats: []
+openQuestions:
+  - "Which tasks in the suite are relevant to agent-behaviour detection, as opposed to offensive capability?"
+  - "Is a strong score here predictive of classification performance after fine-tuning, or unrelated?"
+  - "What compute does a full run need, and does it fit the available budget?"
+order: 30

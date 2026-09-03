@@ -1,0 +1,42 @@
+name: "Adversarial Containment Evaluation"
+shortName: "Containment"
+kind: "containment"
+gate: "Gate 2"
+status: "planned"
+statusNote: "Scoped, not yet built. This is the measurement that covers the majority of the register, and it is deliberately separate from classifier accuracy."
+purpose: "Measure whether the platform stopped the attack — not whether a model correctly named it. Most threat categories are deterministic checks, statistics or derived signals, and none of them can be scored with an F1. Reporting them through classifier metrics would inflate the number while telling you nothing."
+measures:
+  - "Whether a scripted attack reached its objective or was contained"
+  - "How far up the action ladder the platform escalated, and whether that was proportionate"
+  - "Time from the anomalous event to detection, and from detection to containment"
+  - "False containment: legitimate agent work that was blocked or quarantined"
+metrics:
+  -
+    name: "Containment rate"
+    definition: "Share of scripted attack scenarios where the platform prevented the objective from being reached."
+    target: "To be set after a baseline run"
+  -
+    name: "Mean time to detect"
+    definition: "Elapsed time from the anomalous event occurring to an alert being generated, measured in a sandbox."
+    target: "< 5 minutes"
+  -
+    name: "Mean time to contain"
+    definition: "Elapsed time from detection to automated or human-confirmed isolation."
+    target: "< 10 minutes"
+  -
+    name: "False containment rate"
+    definition: "Share of legitimate agent sessions incorrectly blocked or quarantined. The metric that decides whether anyone will leave the platform switched on."
+    target: "To be set after a baseline run"
+threats:
+  - "osp-05"
+  - "osp-09"
+  - "osp-10"
+  - "osp-12"
+  - "osp-13"
+  - "osp-14"
+openQuestions:
+  - "What scenario library is available, and does it cover the agentic categories or only classical ML attacks?"
+  - "Can the sandbox reproduce a sandbox escape safely enough to measure the response to one?"
+  - "What counts as containment for a workflow-level threat, where isolating a single agent is insufficient?"
+  - "How is false containment measured without a corpus of known-good agent sessions?"
+order: 20

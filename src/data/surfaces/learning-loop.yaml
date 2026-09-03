@@ -6,5 +6,5 @@ pillars:
 scope: "Pre-training sources, post-training alignment, feedback loops, retraining updates, RLHF data."
 objective: "Control data provenance, drift, alignment stability, and undocumented behaviour change."
 coverage: "out-of-scope"
-coverageNote: "OSP-03 touches it where poisoned memory writes persist across sessions. Training-time poisoning is governed by AGSC GOV-04 and the ADG pre/post-training overlay, and is not an OSPREY runtime concern."
+coverageNote: "Largely outside the runtime scope. It is reached only where poisoned context persists into memory and influences later sessions; training-time governance belongs to the model workstream."
 order: 90

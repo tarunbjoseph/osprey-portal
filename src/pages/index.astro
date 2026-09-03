@@ -90,12 +90,12 @@ const gate = threats.filter((t) => t.data.detection.inGate1);
   </section>
 
   <section class="strips">
-    <a class="strip" href={url('/threats?sev=critical')}>
+    <a class="strip" href={url('/threats')}>
       <p class="label">Highest severity</p>
-      <h3>{critical.length} critical categories</h3>
+      <h3>{critical.length} critical categor{critical.length === 1 ? 'y' : 'ies'}</h3>
       <p class="sd">
-        {critical.map((t) => t.data.name).join(' · ')}. Both are deterministic checks rather than
-        model decisions, and both always reach a human.
+        {critical.map((t) => t.data.name).join(' · ')}. Every one is a deterministic check rather
+        than a model decision, and every one always reaches a human.
       </p>
       <span class="go">Threat register →</span>
     </a>

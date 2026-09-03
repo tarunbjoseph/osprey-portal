@@ -1,0 +1,38 @@
+name: "Threat Classifier Accuracy Gate"
+shortName: "Classifier gate"
+kind: "classification"
+gate: "Gate 1"
+status: "in-progress"
+statusNote: "Metric definitions settled. The labelled evaluation set is being assembled, and the first run is scheduled once the classifier has a trained checkpoint."
+purpose: "Measure whether the small language model can actually name the threats it is responsible for — and only those. This gate exists to keep a headline accuracy number honest, because most categories in the register are not model decisions at all."
+measures:
+  - "Precision and recall over the labels a model owns, not over the whole register"
+  - "Missed-threat rate on the same evaluation set"
+  - "Per-label breakdown, so one strong label cannot carry a weak one"
+metrics:
+  -
+    name: "F1"
+    definition: "Harmonic mean of precision and recall across the labelled evaluation set, computed per label and macro-averaged."
+    target: "≥ 0.80"
+    appliesTo: "Model-owned labels only"
+  -
+    name: "False negative rate"
+    definition: "Share of genuine threats the classifier failed to flag, on the same evaluation set."
+    target: "< 10%"
+    appliesTo: "Model-owned labels only"
+  -
+    name: "Per-label F1"
+    definition: "The same measure reported for each label individually, so a strong label cannot mask a weak one."
+    appliesTo: "Each model-owned label"
+threats:
+  - "osp-02"
+  - "osp-03"
+  - "osp-07"
+  - "osp-08"
+  - "osp-15"
+openQuestions:
+  - "Is there an existing labelled corpus, or does the evaluation set need generating from scratch?"
+  - "What label balance does the evaluation set need? Real-world class imbalance would make a naive accuracy figure meaningless."
+  - "Who adjudicates disagreements when two annotators label the same trace differently?"
+  - "How is a synthetic evaluation set kept honest — held-out generators, or a separate source entirely?"
+order: 10

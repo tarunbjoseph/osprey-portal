@@ -5,5 +5,5 @@ pillars:
 scope: "APIs, plugins, actions, code execution, file access, transactional endpoints, MCP capabilities."
 objective: "Enforce least privilege, strong validation, sandboxing, and full audit logging."
 coverage: "direct"
-coverageNote: "OSP-04, OSP-06, OSP-12 and OSP-13. Requires a machine-readable declared-scope statement per agent — the artifact ADG calls an Agent Authority Statement."
+coverageNote: "Strong coverage, conditional on a machine-readable statement of what each agent is allowed to call - the artifact ADG names an Agent Authority Statement. With it, several of these checks are exact rather than probabilistic."
 order: 40

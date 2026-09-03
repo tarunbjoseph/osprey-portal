@@ -1,0 +1,28 @@
+name: "Red-Team Scenario Corpus"
+shortName: "Red-team corpus"
+kind: "classification"
+status: "in-progress"
+statusNote: "Generation approach being defined. Weighting is deliberately skewed toward the labels where model performance is the binding constraint."
+purpose: "The labelled corpus behind the classifier gate. Its composition decides what the accuracy numbers actually mean, so the weighting is a design decision rather than a byproduct of whatever was easy to generate."
+measures:
+  - "Coverage across model-owned labels"
+  - "Difficulty distribution, including obfuscated and novel payloads rather than only textbook cases"
+  - "Class balance, and how far it departs from what production would look like"
+metrics:
+  -
+    name: "Scenario count per label"
+    definition: "Number of labelled scenarios available for each model-owned label."
+    appliesTo: "Model-owned labels"
+  -
+    name: "Held-out share"
+    definition: "Proportion reserved for evaluation and never seen during fine-tuning."
+threats:
+  - "osp-02"
+  - "osp-03"
+  - "osp-07"
+  - "osp-15"
+openQuestions:
+  - "Generation should be weighted toward the labels where the model is the binding constraint. Volume for deterministic labels is wasted effort — is that agreed?"
+  - "How is synthetic-data overfitting avoided, given the same model family may generate and be evaluated on this corpus?"
+  - "Does any real (non-synthetic) trace data exist to validate that synthetic scenarios resemble production?"
+order: 50

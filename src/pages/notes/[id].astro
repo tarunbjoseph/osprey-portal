@@ -1,0 +1,54 @@
+---
+import Base from '@/layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+import { url } from '@/lib/data';
+
+export async function getStaticPaths() {
+  const notes = (await getCollection('notes')).sort(
+    (a, b) => (a.data.order ?? 50) - (b.data.order ?? 50),
+  );
+  return notes.map((n) => ({ params: { id: n.id }, props: { note: n } }));
+}
+
+const { note } = Astro.props;
+const { Content } = await render(note);
+---
+
+<Base title={note.data.title} section="/notes" description={note.data.summary}>
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href={url('/notes')}>Notes</a>
+    <span aria-hidden="true">/</span>
+    <span>{note.data.title}</span>
+  </nav>
+
+  <article class="note">
+    <header>
+      <p class="eyebrow">{note.data.section}</p>
+      <h1>{note.data.title}</h1>
+      <p class="lede">{note.data.summary}</p>
+      <p class="upd mono">Updated {note.data.updated}</p>
+    </header>
+    <div class="prose"><Content /></div>
+  </article>
+</Base>
+
+<style>
+  .crumbs { display: flex; gap: 8px; align-items: center; padding: var(--sp-5) 0 0; font-size: 12.5px; color: var(--ink-3); }
+  .crumbs a { color: var(--ink-2); text-decoration: none; }
+  .crumbs a:hover { color: var(--accent); }
+
+  .note { max-width: 760px; padding: var(--sp-4) 0 0; }
+  .note header { padding-bottom: var(--sp-5); border-bottom: 2px solid var(--rule-strong); margin-bottom: var(--sp-6); }
+  .note h1 { margin: 8px 0 var(--sp-3); font-size: var(--t-2xl); }
+  .upd { font-size: 11.5px; color: var(--ink-3); margin-top: var(--sp-4); }
+
+  .prose :global(table) { width: 100%; border-collapse: collapse; font-size: 14px; margin: var(--sp-4) 0; }
+  .prose :global(th) {
+    text-align: left; font-family: var(--f-mono); font-size: 10px; letter-spacing: .09em;
+    text-transform: uppercase; color: var(--ink-3); padding: 9px 12px;
+    border-bottom: 1px solid var(--rule); background: var(--panel-2);
+  }
+  .prose :global(td) { padding: 10px 12px; border-bottom: 1px solid var(--rule-2); color: var(--ink-2); }
+  .prose :global(h2) { font-size: var(--t-lg); }
+  .prose :global(h3) { font-size: var(--t-md); }
+</style>

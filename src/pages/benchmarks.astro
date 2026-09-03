@@ -1,0 +1,211 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { getCollection } from 'astro:content';
+import { allThreats, stats, url } from '@/lib/data';
+
+const benchmarks = (await getCollection('benchmarks')).sort(
+  (a, b) => (a.data.order ?? 50) - (b.data.order ?? 50),
+);
+const threats = await allThreats();
+const s = await stats();
+const byId = new Map(threats.map((t) => [t.id, t]));
+
+const KIND_LABEL: Record<string, string> = {
+  classification: 'Classification accuracy',
+  containment: 'Containment',
+  capability: 'Model capability',
+  robustness: 'Adversarial robustness',
+  cost: 'Cost and efficiency',
+};
+
+const modelOwned = threats.filter((t) => t.data.detection.inGate1);
+const notModel = threats.filter((t) => t.data.detection.slmDifficulty === null);
+---
+
+<Base
+  title="Benchmarks"
+  section="/benchmarks"
+  description="How the platform's detections get proven: classifier accuracy over the labels a model owns, containment measurement over everything else, and the external benchmarks used to compare candidate models."
+>
+  <PageHeader
+    eyebrow="Evaluation"
+    title="Benchmarks and gates"
+    lede="Two different questions need two different answers. Whether a model correctly named a threat is one measurement; whether the platform stopped the attack is another. Blending them into one headline number would flatter the result and tell you nothing."
+    facts={[
+      { k: 'Benchmarks defined', v: String(benchmarks.length) },
+      { k: 'Labels a model owns', v: `${modelOwned.length} of ${s.threats}` },
+      { k: 'Never a model output', v: String(notModel.length) },
+    ]}
+  />
+
+  <section class="premise">
+    <div class="prose">
+      <h2>Why the split matters</h2>
+      <p>
+        Of the {s.threats} categories in the register, {s.modelInvolved} involve a model at some
+        point, but only <strong>{modelOwned.length} are genuine first-pass classification
+        problems</strong>. The rest are deterministic checks, statistical outliers, or signals
+        derived by correlating other detectors. Comparing a call against a declared scope is a
+        lookup; a sandbox boundary event is a fact. Routing either through a classifier would add
+        false negatives to something that can be exact.
+      </p>
+      <p>
+        So accuracy metrics are reported <strong>only over the labels the model is actually
+        responsible for</strong>. Everything else is measured by containment — did the platform
+        stop it — which is a different question with a different instrument. Reporting one blended
+        figure would inflate the score while saying nothing about either half.
+      </p>
+      <p>
+        This has a practical consequence for the roadmap. The label most likely to hit target
+        first is not representative of the rest, and an early strong number should not be read as
+        the platform working.
+      </p>
+    </div>
+
+    <aside class="split">
+      <p class="label">Measured by classifier accuracy</p>
+      <div class="chips">
+        {modelOwned.map((t) => (
+          <a class="chip chip--accent" href={url(`/threats/${t.id}`)}>
+            <span class="k">{t.data.code}</span>{t.data.name}
+          </a>
+        ))}
+      </div>
+      <p class="label sp">Measured by containment</p>
+      <div class="chips">
+        {notModel.map((t) => (
+          <a class="chip" href={url(`/threats/${t.id}`)}>
+            <span class="k">{t.data.code}</span>{t.data.name}
+          </a>
+        ))}
+      </div>
+    </aside>
+  </section>
+
+  <section class="sec">
+    <h2>Benchmarks</h2>
+    <p class="sub">
+      Each entry states what it measures, the metrics it produces, and what is still unknown.
+      Entries marked planned have their shape settled so results can drop in without a redesign.
+    </p>
+
+    <div class="bms">
+      {benchmarks.map((b) => (
+        <article class="bm" id={b.id}>
+          <header>
+            <div class="bh">
+              <h3>{b.data.name}</h3>
+              {b.data.gate && <span class="chip chip--accent">{b.data.gate}</span>}
+              <span class="pill" data-status={b.data.status}>{b.data.status.replace('-', ' ')}</span>
+            </div>
+            <p class="kind label">{KIND_LABEL[b.data.kind] ?? b.data.kind}</p>
+          </header>
+
+          <p class="purpose">{b.data.purpose}</p>
+          {b.data.statusNote && <p class="statusnote">{b.data.statusNote}</p>}
+
+          <div class="bgrid">
+            <div>
+              <p class="label">What it measures</p>
+              <ul class="ms">{b.data.measures.map((m) => <li>{m}</li>)}</ul>
+            </div>
+            <div>
+              <p class="label">Metrics</p>
+              {b.data.metrics.length > 0 ? (
+                <dl class="mt">
+                  {b.data.metrics.map((m) => (
+                    <div>
+                      <dt>
+                        {m.name}
+                        {m.target && <span class="target mono">{m.target}</span>}
+                      </dt>
+                      <dd>{m.definition}{m.appliesTo && <em> · {m.appliesTo}</em>}</dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : <p class="none">Not yet defined.</p>}
+            </div>
+          </div>
+
+          {b.data.threats.length > 0 && (
+            <div class="row">
+              <p class="label">Exercises</p>
+              <div class="chips">
+                {b.data.threats.map((ref) => {
+                  const t = byId.get(ref.id);
+                  return t ? (
+                    <a class="chip" href={url(`/threats/${t.id}`)}>
+                      <span class="k">{t.data.code}</span>{t.data.name}
+                    </a>
+                  ) : null;
+                })}
+              </div>
+            </div>
+          )}
+
+          {b.data.openQuestions.length > 0 && (
+            <div class="oq">
+              <p class="label">Open questions</p>
+              <ul>{b.data.openQuestions.map((q) => <li>{q}</li>)}</ul>
+            </div>
+          )}
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="panel panel--note">
+      <h3>How results will appear here</h3>
+      <p>
+        Evaluation runs attach to a model, not to a benchmark, so a result carries which model
+        produced it, when, and against which benchmark. Adding a run means adding a few lines to
+        that model's data file — the tables on the
+        <a href={url('/models')}>models page</a> pick it up on the next build. Nothing on this page
+        needs editing when a number arrives.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .premise { display: grid; grid-template-columns: 1.6fr 1fr; gap: var(--sp-7); padding: var(--sp-6) 0 0; }
+  @media (max-width: 900px) { .premise { grid-template-columns: 1fr; gap: var(--sp-5); } }
+  .premise h2 { margin-bottom: var(--sp-3); }
+  .split { background: var(--panel); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--sp-4); align-self: start; }
+  .split .sp { margin-top: var(--sp-4); }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+
+  .sec { margin-top: var(--sp-7); }
+  .sec h2 { margin-bottom: 6px; }
+  .sub { font-size: 13.5px; color: var(--ink-2); max-width: var(--measure); margin-bottom: var(--sp-4); }
+
+  .bms { display: grid; gap: var(--sp-3); }
+  .bm { background: var(--panel); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--sp-5); scroll-margin-top: 80px; }
+  .bh { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
+  .bh h3 { font-size: var(--t-md); }
+  .bh .pill { margin-left: auto; }
+  .kind { margin-top: 4px; }
+  .purpose { font-size: 14px; color: var(--ink-2); margin-top: var(--sp-3); max-width: var(--measure); line-height: 1.55; }
+  .statusnote { font-size: 12.5px; color: var(--ink-3); margin-top: 8px; max-width: var(--measure); }
+
+  .bgrid { display: grid; grid-template-columns: 1fr 1.3fr; gap: var(--sp-5); margin-top: var(--sp-4); padding-top: var(--sp-4); border-top: 1px solid var(--rule-2); }
+  @media (max-width: 820px) { .bgrid { grid-template-columns: 1fr; gap: var(--sp-4); } }
+  .ms { margin: 7px 0 0; padding-left: 1.05em; font-size: 13px; color: var(--ink-2); }
+  .ms li + li { margin-top: 4px; }
+  .mt { margin: 7px 0 0; display: grid; gap: 9px; }
+  .mt dt { font-size: 13px; font-weight: 600; color: var(--ink); display: flex; align-items: baseline; gap: 8px; }
+  .target { font-size: 11px; font-weight: 400; color: var(--accent); }
+  .mt dd { margin: 2px 0 0; font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
+  .mt dd em { color: var(--ink-3); font-style: normal; }
+  .none { font-size: 12.5px; color: var(--ink-3); margin-top: 7px; }
+
+  .row { margin-top: var(--sp-4); padding-top: var(--sp-3); border-top: 1px solid var(--rule-2); }
+  .oq { margin-top: var(--sp-4); background: var(--panel-2); border-radius: var(--r-md); padding: var(--sp-3) var(--sp-4); }
+  .oq ul { margin: 7px 0 0; padding-left: 1.05em; font-size: 13px; color: var(--ink-2); }
+  .oq li + li { margin-top: 5px; }
+
+  .panel h3 { margin-bottom: 7px; font-size: var(--t-md); }
+  .panel p { font-size: 13.5px; color: var(--ink-2); max-width: var(--measure); }
+</style>

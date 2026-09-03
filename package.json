@@ -20,8 +20,13 @@
     "astro": "^7.3.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "typescript": "^7.0.2"
+    "zod": "^4.5.4"
   },
   "type": "module",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "js-yaml": "^5.4.1",
+    "typescript": "^5.9.3"
+  }
 }

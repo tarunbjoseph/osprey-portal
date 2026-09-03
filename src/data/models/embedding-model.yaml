@@ -1,0 +1,7 @@
+name: "Trajectory embedding model"
+vendor: "To be selected"
+role: "embedding"
+status: "planned"
+rationale: "Two categories — goal drift and tool-chain exploitation — are distance and sequence problems rather than classification, and need an embedding over the session trajectory instead of a classifier over a span. Selection depends on what trajectory telemetry ends up looking like, so it is deliberately unresolved."
+evaluations: []
+order: 40

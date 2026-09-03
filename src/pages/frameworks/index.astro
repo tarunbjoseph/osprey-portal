@@ -1,0 +1,120 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { allFrameworks, allControls, allAnchors, url } from '@/lib/data';
+
+const frameworks = await allFrameworks();
+const controls = await allControls();
+const anchors = await allAnchors();
+
+const countFor = (id: string) => anchors.filter((a) => a.framework.id === id).length;
+const controlsFor = (id: string) => controls.filter((c) => c.data.framework.id === id).length;
+
+const ROLE_LABEL: Record<string, string> = {
+  'internal-anchor': 'Internal anchor',
+  'external-validation': 'External validation',
+  regulatory: 'Regulatory reference',
+};
+const ROLE_NOTE: Record<string, string> = {
+  'internal-anchor':
+    'The governance positions this project is built against. A threat category names one of these first, before any external framework, because these move when the organisation decides they should.',
+  'external-validation':
+    'Independent frameworks used to check that the internal position has not drifted from the field. They move on their own schedules, which is exactly why they are the second anchor rather than the first.',
+  regulatory:
+    'Obligations the controls trace to. Referenced for traceability, inherited from the AGSC and ADG per-control mappings rather than derived from an independent legal reading.',
+};
+
+const grouped = ['internal-anchor', 'external-validation', 'regulatory'].map((role) => ({
+  role,
+  items: frameworks.filter((f) => f.data.role === role),
+}));
+---
+
+<Base
+  title="Frameworks"
+  section="/frameworks"
+  description="The governance and security frameworks this portal anchors to, each pinned to the version its references were validated against."
+>
+  <PageHeader
+    eyebrow="Reference"
+    title="Frameworks in use"
+    lede="Every framework this portal references, pinned to the version its anchors were validated against. Bumping a version here is what makes an upgrade traceable instead of invisible."
+    facts={[
+      { k: 'Frameworks', v: String(frameworks.length) },
+      { k: 'Controls catalogued', v: String(controls.length) },
+      { k: 'Anchors resolved', v: String(anchors.length) },
+    ]}
+  />
+
+  <div class="prose why">
+    <h2>Why the order matters</h2>
+    <p>
+      Anchoring internally first and validating externally second is a deliberate choice, not a
+      formality. External frameworks ship releases on their own schedule: OWASP re-ranked its list
+      on incident evidence in 2026 and re-scoped one entry entirely, and MITRE ATLAS added most of
+      its agent-specific techniques after the AGSC catalogue was published. A threat model anchored
+      only to external identifiers has to be re-litigated every time one of them moves.
+    </p>
+    <p>
+      Anchored to an internal control first, the same release becomes a re-validation task with a
+      known scope — which anchors pointed at the old version — rather than a rewrite.
+    </p>
+  </div>
+
+  {grouped.map(({ role, items }) => (
+    <section class="grp">
+      <div class="grp-hd">
+        <h2>{ROLE_LABEL[role]}</h2>
+        <p class="sub">{ROLE_NOTE[role]}</p>
+      </div>
+
+      <div class="cards">
+        {items.map((f) => (
+          <a class="fcard" href={url(`/frameworks/${f.id}`)} id={f.id}>
+            <header>
+              <h3>{f.data.shortName}</h3>
+              <span class="mono ver">{f.data.version}</span>
+            </header>
+            <p class="full">{f.data.name}</p>
+            <p class="sum">{f.data.summary}</p>
+            <dl class="meta">
+              <div><dt class="label">Publisher</dt><dd>{f.data.publisher}</dd></div>
+              {f.data.released && <div><dt class="label">Released</dt><dd class="mono">{f.data.released}</dd></div>}
+              {f.data.validated && <div><dt class="label">Anchors validated</dt><dd class="mono">{f.data.validated}</dd></div>}
+              <div><dt class="label">Referenced by</dt><dd class="mono">
+                {countFor(f.id)} anchor{countFor(f.id) === 1 ? '' : 's'}
+                {controlsFor(f.id) > 0 && ` · ${controlsFor(f.id)} controls`}
+              </dd></div>
+            </dl>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .why { padding: var(--sp-6) 0 0; }
+  .why h2 { margin-bottom: var(--sp-3); }
+
+  .grp { margin-top: var(--sp-7); }
+  .grp-hd { border-bottom: 1px solid var(--rule); padding-bottom: var(--sp-3); margin-bottom: var(--sp-4); }
+  .grp-hd h2 { font-size: var(--t-lg); }
+  .sub { font-size: 13.5px; color: var(--ink-2); max-width: var(--measure); margin-top: 6px; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: var(--sp-3); }
+  .fcard {
+    display: block; background: var(--panel); border: 1px solid var(--rule);
+    border-radius: var(--r-md); padding: var(--sp-4) var(--sp-5); text-decoration: none; color: var(--ink-2);
+  }
+  .fcard:hover { border-color: var(--accent); }
+  .fcard header { display: flex; align-items: baseline; gap: 10px; }
+  .fcard h3 { color: var(--ink); font-size: var(--t-md); }
+  .ver { font-size: 11px; color: var(--ink-3); margin-left: auto; }
+  .full { font-size: 12.5px; color: var(--ink-3); margin-top: 2px; }
+  .sum { font-size: 13.5px; line-height: 1.5; margin-top: var(--sp-3); }
+
+  .meta { display: grid; gap: 4px; margin: var(--sp-4) 0 0; padding-top: var(--sp-3); border-top: 1px solid var(--rule-2); }
+  .meta div { display: grid; grid-template-columns: 118px 1fr; gap: 8px; align-items: baseline; }
+  .meta dd { margin: 0; font-size: 12px; color: var(--ink-2); }
+</style>

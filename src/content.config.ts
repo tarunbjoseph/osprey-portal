@@ -1,5 +1,6 @@
-import { defineCollection, reference, z } from 'astro:content';
+import { defineCollection, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { z } from 'zod';
 
 /* ==========================================================================
    OSPREY Governance Portal — content schemas
@@ -48,6 +49,15 @@ export const INSTRUMENT = [
 /** Maturity of anything on this site that is still being built. */
 export const STATUS = ['stable', 'draft', 'planned', 'in-progress'] as const;
 
+/**
+ * An ISO date that tolerates both `2026-09-03` and `"2026-09-03"` in YAML.
+ * Unquoted dates are parsed by the YAML loader into a Date, which is a
+ * papercut every contributor hits exactly once. Accept both and normalise.
+ */
+const isoDate = z
+  .union([z.string(), z.date()])
+  .transform((v) => (typeof v === 'string' ? v : v.toISOString().slice(0, 10)));
+
 /* -------------------------------------------------------------------------
    An anchor: "this thing maps to element X of framework Y".
    ------------------------------------------------------------------------- */
@@ -65,7 +75,7 @@ const anchor = z.object({
   /** Confidence in the identifier itself, not in the mapping. */
   verification: z.enum(VERIFICATION).default('pending'),
   /** ISO date the identifier was last checked against the live framework. */
-  checked: z.string().optional(),
+  checked: isoDate.optional(),
 });
 
 /* -------------------------------------------------------------------------
@@ -79,9 +89,9 @@ const frameworks = defineCollection({
     /** The version string as the publisher writes it. */
     version: z.string(),
     /** Publication or release date of that version, ISO. */
-    released: z.string().optional(),
+    released: isoDate.optional(),
     /** ISO date this portal last validated anchors against it. */
-    validated: z.string().optional(),
+    validated: isoDate.optional(),
     publisher: z.string(),
     url: z.string().url(),
     /** How to cite it in prose. */
@@ -257,7 +267,7 @@ const models = defineCollection({
     /** Eval runs land here as they are produced. */
     evaluations: z.array(z.object({
       benchmark: reference('benchmarks'),
-      date: z.string().optional(),
+      date: isoDate.optional(),
       metric: z.string(),
       value: z.string(),
       note: z.string().optional(),
@@ -276,7 +286,7 @@ const notes = defineCollection({
     title: z.string(),
     summary: z.string(),
     section: z.enum(['method', 'governance', 'evaluation', 'platform']),
-    updated: z.string(),
+    updated: isoDate,
     status: z.enum(STATUS).default('stable'),
     order: z.number().default(50),
   }),

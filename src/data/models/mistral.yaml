@@ -1,0 +1,10 @@
+name: "Mistral"
+vendor: "Mistral AI"
+params: "7B class"
+license: "Apache 2.0"
+role: "candidate"
+status: "planned"
+rationale: "A well-supported open-weights family with a mature fine-tuning ecosystem. The larger parameter count buys headroom on the harder labels at the cost of inference budget — the trade-off the evaluation is meant to settle."
+hosting: "Local accelerator"
+evaluations: []
+order: 20

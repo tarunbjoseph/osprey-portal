@@ -1,0 +1,10 @@
+name: "Phi-3"
+vendor: "Microsoft"
+params: "3.8B (mini)"
+license: "MIT"
+role: "candidate"
+status: "planned"
+rationale: "A small, permissively licensed model that fits comfortably on local hardware, which matters when the detector has to run inline without adding meaningful latency to every agent action. Strong reasoning for its size makes it a credible fine-tuning base for the classification labels."
+hosting: "Local accelerator"
+evaluations: []
+order: 10

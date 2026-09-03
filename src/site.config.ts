@@ -17,7 +17,7 @@ export const site = {
   repo: 'https://github.com/tarunbjoseph/osprey-portal',
 } as const;
 
-export const nav = [
+export const nav: readonly { href: string; label: string; exact?: boolean }[] = [
   { href: '/', label: 'Overview', exact: true },
   { href: '/threats', label: 'Threat register' },
   { href: '/frameworks', label: 'Frameworks' },
@@ -26,7 +26,7 @@ export const nav = [
   { href: '/models', label: 'Models' },
   { href: '/notes', label: 'Notes' },
   { href: '/changelog', label: 'Changelog' },
-] as const;
+];
 
 /** Labels for enum values, so components never hard-code prose. */
 export const ACTION_LABELS: Record<string, string> = {

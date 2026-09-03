@@ -5,5 +5,5 @@ pillars:
 scope: "Guardrails, policy engines, semantic filters, classifiers, circuit breakers, harm detectors."
 objective: "Block unsafe content, unfair outputs, and unauthorized actions before impact."
 coverage: "partial"
-coverageNote: "OSP-07 and OSP-11. OSPREY governs actions rather than generated content, so content-safety controls such as AGSC SAF-03 are only partly covered. Whether partial coverage is acceptable is an open scoping question."
+coverageNote: "Partial by design. The platform governs what an agent does rather than what it writes, so action-level safeguards are covered while content-level ones are not. Whether that split is acceptable is an open scoping question rather than a defect."
 order: 70

@@ -1,0 +1,9 @@
+name: "Command A"
+vendor: "Cohere"
+license: "Open weights, non-commercial"
+role: "candidate"
+status: "planned"
+rationale: "Included as an enterprise-oriented comparison point with a Canadian vendor, which is relevant given the regulatory pilot. Licence terms need confirming before any deployment beyond evaluation."
+hosting: "Local accelerator"
+evaluations: []
+order: 30

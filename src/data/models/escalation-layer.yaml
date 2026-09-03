@@ -1,0 +1,7 @@
+name: "Frontier escalation layer"
+vendor: "To be selected"
+role: "escalation"
+status: "planned"
+rationale: "A larger model handles the cases the small classifier flags but cannot resolve confidently, and the second-pass judgement calls — whether a statistical outlier was contextually justified, whether a gap between an agent’s summary and its actions was material. Deliberately not in the hot path: it is the expensive instrument, reserved for ambiguity."
+evaluations: []
+order: 50

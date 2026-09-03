@@ -1,0 +1,73 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { getCollection } from 'astro:content';
+import { url } from '@/lib/data';
+
+const notes = (await getCollection('notes')).sort(
+  (a, b) => (a.data.order ?? 50) - (b.data.order ?? 50),
+);
+
+const SECTION_LABEL: Record<string, string> = {
+  method: 'Method',
+  governance: 'Governance',
+  evaluation: 'Evaluation',
+  platform: 'Platform',
+};
+
+const grouped = ['method', 'governance', 'evaluation', 'platform']
+  .map((s) => ({ section: s, items: notes.filter((n) => n.data.section === s) }))
+  .filter((g) => g.items.length > 0);
+---
+
+<Base
+  title="Notes"
+  section="/notes"
+  description="Longer-form reasoning behind the positions this portal takes: how to read it, how autonomy tiers work, how framework upgrades are absorbed, and which detections a model should own."
+>
+  <PageHeader
+    eyebrow="Reference"
+    title="Notes"
+    lede="The reasoning behind the positions the rest of the site states as fact. A table can record a decision; it cannot show why the decision went that way, and the why is what makes it reviewable."
+    facts={[{ k: 'Notes', v: String(notes.length) }]}
+  />
+
+  {grouped.map(({ section, items }) => (
+    <section class="grp">
+      <h2>{SECTION_LABEL[section]}</h2>
+      <div class="list">
+        {items.map((n) => (
+          <a class="note" href={url(`/notes/${n.id}`)}>
+            <div>
+              <h3>{n.data.title}</h3>
+              <p>{n.data.summary}</p>
+            </div>
+            <div class="meta">
+              <span class="mono">{n.data.updated}</span>
+              {n.data.status !== 'stable' && (
+                <span class="pill" data-status={n.data.status}>{n.data.status.replace('-', ' ')}</span>
+              )}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .grp { margin-top: var(--sp-6); }
+  .grp h2 { font-size: var(--t-lg); padding-bottom: var(--sp-3); border-bottom: 1px solid var(--rule); margin-bottom: var(--sp-3); }
+  .list { display: grid; gap: var(--sp-2); }
+  .note {
+    display: flex; gap: var(--sp-5); align-items: flex-start; justify-content: space-between;
+    background: var(--panel); border: 1px solid var(--rule); border-radius: var(--r-md);
+    padding: var(--sp-4) var(--sp-5); text-decoration: none; color: var(--ink-2);
+  }
+  .note:hover { border-color: var(--accent); }
+  .note h3 { font-size: var(--t-md); color: var(--ink); }
+  .note p { font-size: 13.5px; margin-top: 5px; max-width: 62ch; }
+  .meta { display: flex; align-items: center; gap: 8px; flex: none; }
+  .meta .mono { font-size: 11px; color: var(--ink-3); }
+  @media (max-width: 700px) { .note { flex-direction: column; gap: var(--sp-3); } }
+</style>

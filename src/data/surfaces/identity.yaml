@@ -6,5 +6,5 @@ pillars:
 scope: "Credentials, service accounts, delegated authority, secrets, trust relationships, agent identity."
 objective: "Prevent privilege misuse, preserve accountability, trace agent actions to human authority."
 coverage: "direct"
-coverageNote: "OSP-05 and OSP-13. Both are deterministic checks, which makes this the highest-value quick win once an agent identity register exists."
+coverageNote: "Deterministic and exact once an agent identity register exists. The highest-value quick win on the board: no model training, no labelled data, and it produces the evidence that every agent action traces back to a human authority."
 order: 60
