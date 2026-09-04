@@ -99,17 +99,25 @@ const threatByCode = new Map(threats.map((t) => [t.data.code, t]));
               return (
                 <article class="ctrl" id={c.data.code}>
                   <header>
-                    <span class="mono code">{c.data.code}</span>
-                    <h4>{c.data.name}</h4>
+                    <a class="mono code" href={url(`/controls/${c.id}`)}>{c.data.code}</a>
+                    <h4><a href={url(`/controls/${c.id}`)}>{c.data.name}</a></h4>
                     {c.data.tier && <span class="chip"><span class="k">Tier</span>{c.data.tier}</span>}
+                    {c.data.origin && <span class="chip">{c.data.origin}</span>}
                     <span class="pill" data-cov={c.data.ospreyCoverage}>{c.data.ospreyCoverage}</span>
                   </header>
                   <p class="purpose">{c.data.purpose}</p>
+                  {c.data.appliesTo && <p class="applies"><span class="label">Applies to</span> {c.data.appliesTo}</p>}
 
                   <div class="ctrl-grid">
                     <div>
                       <p class="label">Evidence the control asks for</p>
-                      <ul class="ev">{c.data.evidence.map((e) => <li>{e}</li>)}</ul>
+                      <ul class="ev">{c.data.evidence.slice(0, 4).map((e) => <li>{e}</li>)}</ul>
+                      {c.data.evidence.length > 4 && (
+                        <p class="more"><a href={url(`/controls/${c.id}`)}>{c.data.evidence.length - 4} more, plus requirements and review cadence →</a></p>
+                      )}
+                      {c.data.evidence.length <= 4 && c.data.requirements.length > 0 && (
+                        <p class="more"><a href={url(`/controls/${c.id}`)}>Requirements, mappings and review cadence →</a></p>
+                      )}
                     </div>
                     <div>
                       <p class="label">What OSPREY contributes</p>
@@ -215,6 +223,12 @@ const threatByCode = new Map(threats.map((t) => [t.data.code, t]));
   .ctrl h4 { font-size: 15px; }
   .ctrl header .pill { margin-left: auto; }
   .purpose { font-size: 13.5px; color: var(--ink-2); margin-top: 7px; max-width: var(--measure); }
+  .applies { font-size: 12.5px; color: var(--ink-3); margin-top: 6px; max-width: var(--measure); }
+  .applies .label { display: inline; margin-right: 4px; }
+  .ctrl h4 a, .ctrl .code { text-decoration: none; color: inherit; }
+  .ctrl h4 a:hover, .ctrl .code:hover { color: var(--accent); }
+  .more { margin-top: 7px; font-family: var(--f-mono); font-size: 11px; }
+  .more a { text-decoration: none; }
 
   .ctrl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4) var(--sp-5); margin-top: var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid var(--rule-2); }
   @media (max-width: 780px) { .ctrl-grid { grid-template-columns: 1fr; } }

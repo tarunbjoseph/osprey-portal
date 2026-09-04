@@ -1,17 +1,61 @@
-code: "SAF-01"
-name: "Autonomous System Oversight"
-framework: "agsc"
-pillar: "Safety"
-tier: "T1"
-purpose: "Ensure autonomous or agentic AI systems are monitored against expected behaviour, and that responsible teams can intervene when the system behaves unexpectedly, unsafely, or outside its approved scope."
+code: SAF-01
+name: Autonomous System Oversight
+framework: agsc
+pillar: Safety
+tier: T1
+purpose: >-
+  Ensure autonomous or agentic AI systems are monitored against expected behaviour, and that
+  responsible teams can intervene when the system behaves unexpectedly, unsafely, or outside its
+  approved scope.
 evidence:
-  - "Documented expected behaviour and limits"
-  - "Defined criteria for abnormal or unsafe behaviour"
-  - "Evidence of monitoring such as logs, dashboards or alerts"
-  - "Documented human intervention and escalation process"
+  - Documented expected behaviour and limits
+  - Defined criteria for abnormal or unsafe behaviour
+  - Evidence of monitoring (e.g. logs, dashboards, or alerts)
+  - Examples of reviewed system activity
+  - Documented human intervention and escalation process
+  - Evidence that controls were tested and updated after significant changes
 surfaces:
-  - "orchestration"
-  - "telemetry"
-ospreyCoverage: "direct"
-coverageNote: "OSP-01 and OSP-16 produce the expected-behaviour baseline and the abnormal-behaviour criteria this control asks for."
+  - orchestration
+  - telemetry
+ospreyCoverage: direct
+coverageNote: >-
+  OSP-01 and OSP-16 produce the expected-behaviour baseline and the abnormal-behaviour criteria this
+  control asks for.
 order: 11
+appliesTo: >-
+  AI systems or agents that can act, trigger workflows, invoke tools, make recommendations, or
+  operate with limited human direction.
+requirements:
+  - Define what the AI system is expected to do and its operating limits before go-live
+  - Identify what would be considered abnormal or unsafe behaviour
+  - Ensure the system can be monitored and its actions reviewed
+  - Put in place clear escalation and human intervention processes
+  - Test oversight and intervention mechanisms before deployment and after major changes
+reviewCadence:
+  - Monthly review and testing
+  - Additional testing after major updates, retraining, or changes to autonomous behaviour
+example: >-
+  A procurement agent is designed to help reduce stock-outs. Over time, it begins automatically
+  increasing purchase orders beyond expected volumes. Standard uptime monitoring shows the system is
+  available, but no one is monitoring the agent's purchasing behaviour. The issue is only discovered
+  after repeated unexpected orders. This control helps prevent that type of failure by requiring
+  expected behaviour, monitoring criteria, escalation paths, and human intervention before the agent
+  is deployed.
+origin: AI-native
+applicability: Agentic
+mappings:
+  - framework: mitRisk
+    value: 7.1 AI pursuing its own goals in conflict with human goals/values
+  - framework: atlas
+    value: AML.TA0015 Command and Control (tactic, new in v5.1.0)
+    note: >-
+      In the current MITRE ATLAS distribution, Command and Control is AML.TA0014; AML.TA0015 is
+      Lateral Movement. Reported upstream.
+  - framework: attack
+    value: N/A — emerging agentic orchestration pattern; no official ATT&CK technique ID assigned.
+  - framework: euAiAct
+    value: Art. 14, 15
+  - framework: nistRmf
+    value: MANAGE 4.1; MEASURE 2.x
+  - framework: iso42001
+    value: A.6.2, A.9

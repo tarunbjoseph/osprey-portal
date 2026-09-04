@@ -1,14 +1,51 @@
-code: "GOV-08"
-name: "Environmental & Carbon Governance"
-framework: "agsc"
-pillar: "Governance"
-tier: "T3"
-purpose: "Ensure material compute usage is measured and governed across training, hosting and inference."
+code: GOV-08
+name: Environmental & Carbon Governance
+framework: agsc
+pillar: Governance
+tier: T3
+purpose: Ensure material compute usage is measured and governed across training, hosting and inference.
 evidence:
-  - "Compute and energy usage records"
-  - "Efficiency or reduction measures"
+  - Carbon or compute-impact estimate
+  - Methodology or calculation reference
+  - Architecture decision record referencing the estimate
+  - Production usage or compute monitoring where applicable
+  - Sustainability or cost review for high-impact systems
 surfaces:
-  - "telemetry"
-ospreyCoverage: "partial"
-coverageNote: "OSP-14 counts per-session compute and spend for security reasons; the same counters serve this control’s efficiency reporting."
+  - telemetry
+ospreyCoverage: partial
+coverageNote: >-
+  OSP-14 counts per-session compute and spend for security reasons; the same counters serve this
+  control’s efficiency reporting.
 order: 38
+appliesTo: >-
+  AI systems with material compute usage across training, fine-tuning, hosting, inference,
+  retrieval, or agentic multi-step workflows.
+requirements:
+  - Estimate environmental or carbon impact for material AI systems
+  - Consider training, hosting, inference, retrieval, and agentic multi-step workflows
+  - Use a documented methodology or accepted reporting approach where available
+  - Use the estimate to inform architecture and deployment decisions
+  - Monitor material compute usage where ongoing impact is significant
+reviewCadence:
+  - Pre-deployment carbon assessment
+  - Monthly production monitoring where applicable
+  - Quarterly carbon review for material compute usage
+  - Annual sustainability review for high-impact or large-scale AI systems
+example: >-
+  An agentic workflow repeatedly calls tools and models far more often than expected, increasing
+  compute cost and carbon impact beyond the original design assumption. This control helps prevent
+  that failure by requiring compute and carbon impact to be estimated, reviewed, and considered in
+  architecture decisions.
+origin: Adapted
+applicability: AI systems
+mappings:
+  - framework: mitRisk
+    value: 6.6 Environmental harm
+  - framework: atlas
+    value: AML.T0034 Cost Harvesting, loosely related where excessive compute is abuse-driven
+  - framework: euAiAct
+    value: Art. 40 / Art. 95, where applicable
+  - framework: nistRmf
+    value: GOVERN 1.x
+  - framework: iso42001
+    value: A.4, with CSRD/GHG references where applicable

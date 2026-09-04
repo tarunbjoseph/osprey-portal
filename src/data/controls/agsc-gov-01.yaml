@@ -1,16 +1,55 @@
-code: "GOV-01"
-name: "Data Provenance & Input Integrity"
-framework: "agsc"
-pillar: "Governance"
-tier: "T2"
-purpose: "Ensure the origin, integrity and trust level of data entering the AI system is known and controlled."
+code: GOV-01
+name: Data Provenance & Input Integrity
+framework: agsc
+pillar: Governance
+tier: T2
+purpose: >-
+  Ensure the origin, integrity and trust level of data entering the AI system is known and
+  controlled.
 evidence:
-  - "Provenance records for training, retrieval and runtime inputs"
-  - "Input validation evidence"
-  - "Trust classification for data sources"
+  - Data provenance or lineage record
+  - Approved source list or RAG source allow-list
+  - Ingestion and validation logs
+  - Records of flagged or rejected inputs
+  - Data access and modification audit trail
 surfaces:
-  - "context"
-  - "learning-loop"
-ospreyCoverage: "direct"
-coverageNote: "The provenance field this control establishes is the same field OSP-03 and OSP-15 cannot be classified without. The dependency runs both ways."
+  - context
+  - learning-loop
+ospreyCoverage: direct
+coverageNote: >-
+  The provenance field this control establishes is the same field OSP-03 and OSP-15 cannot be
+  classified without. The dependency runs both ways.
 order: 31
+appliesTo: >-
+  AI systems that use training data, business data, retrieved content, tool outputs, user inputs, or
+  other runtime information to generate outputs or take actions.
+requirements:
+  - Document the source, lineage, and intended use of key data and runtime inputs
+  - Validate data sources before use, including retrieved content, tool outputs, and agent messages
+  - Flag or isolate untrusted, external, or high-risk content
+  - Maintain approved sources for retrieval, ingestion, or tool-based inputs
+  - Keep an audit trail of data access, ingestion, and modification
+reviewCadence:
+  - Before training or deployment for initial data validation
+  - At each material data source, ingestion, or transformation change
+  - Periodic review based on risk tier and data sensitivity
+example: >-
+  A malicious or inaccurate document is added to a retrieval source, and the AI system begins
+  repeating it as trusted company policy. This control helps prevent that failure by requiring
+  source validation, approved input channels, and traceability over the information used by the
+  system.
+origin: Adapted
+applicability: Both
+mappings:
+  - framework: mitRisk
+    value: 2.2 AI system security vulnerabilities and attacks
+  - framework: atlas
+    value: AML.T0020 Poison Training Data
+  - framework: attack
+    value: T1195 Supply Chain Compromise
+  - framework: euAiAct
+    value: Art. 10
+  - framework: nistRmf
+    value: MAP 2; MEASURE 2.x
+  - framework: iso42001
+    value: A.7

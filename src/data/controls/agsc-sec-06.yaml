@@ -1,16 +1,61 @@
-code: "SEC-06"
-name: "AI Security Testing & Red-Teaming"
-framework: "agsc"
-pillar: "Security"
-tier: "T2"
-purpose: "Ensure AI systems are tested against misuse, adversarial inputs, jailbreaks, data leakage and unsafe behaviour before release, with clear pass/fail thresholds."
+code: SEC-06
+name: AI Security Testing & Red-Teaming
+framework: agsc
+pillar: Security
+tier: T2
+purpose: >-
+  Ensure AI systems are tested against misuse, adversarial inputs, jailbreaks, data leakage and
+  unsafe behaviour before release, with clear pass/fail thresholds.
 evidence:
-  - "AI security test plan or red-team scope"
-  - "Latest test results with pass/fail status"
-  - "Regression test history"
+  - AI security test plan or red-team scope
+  - Latest test results with pass/fail status
+  - Findings, remediation actions, and release decisions
+  - Regression test history
+  - Approval records for accepted residual risks
 surfaces:
-  - "safety-layer"
-  - "model"
-ospreyCoverage: "direct"
-coverageNote: "The containment benchmarks measure this control directly — whether the platform stopped the attack, not whether a model named it."
+  - safety-layer
+  - model
+ospreyCoverage: direct
+coverageNote: >-
+  The containment benchmarks measure this control directly — whether the platform stopped the
+  attack, not whether a model named it.
 order: 46
+appliesTo: >-
+  AI systems that need to be tested against misuse, adversarial inputs, jailbreaks, data leakage,
+  extraction attempts, or unsafe behaviour before release.
+requirements:
+  - Define adversarial test cases relevant to the system and use case
+  - >-
+    Test for prompt injection, jailbreaks, data leakage, extraction, and unsafe tool use where
+    applicable
+  - Set clear pass/fail criteria before release
+  - Block release for critical unresolved findings
+  - >-
+    Repeat testing after material changes to models, prompts, data, tools, integrations, or
+    configurations
+reviewCadence:
+  - Pre-deployment security testing
+  - >-
+    Regression testing after material changes to models, prompts, data sources, tools, integrations,
+    or system configuration
+  - Periodic retesting for high-risk or externally exposed systems
+  - Additional testing after security incidents, detected vulnerabilities, or new threat patterns
+example: >-
+  A model upgrade reopens a jailbreak vulnerability that had previously been fixed. Without
+  regression security testing, the weakness ships to production. This control helps prevent that
+  failure by requiring adversarial testing and release gates before deployment.
+origin: Adapted
+applicability: Both
+mappings:
+  - framework: mitRisk
+    value: 2.2 AI system security vulnerabilities and attacks
+  - framework: atlas
+    value: AML.T0043 Craft Adversarial Data
+  - framework: attack
+    value: T1587 Develop Capabilities
+  - framework: euAiAct
+    value: Art. 15
+  - framework: nistRmf
+    value: MEASURE 2.7
+  - framework: iso42001
+    value: A.6.2

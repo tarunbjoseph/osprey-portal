@@ -1,15 +1,56 @@
-code: "GOV-07"
-name: "AI Lifecycle & Registry Management"
-framework: "agsc"
-pillar: "Governance"
-tier: "T3"
-purpose: "Ensure models, prompts, tools, datasets, retrieval sources and memory are inventoried across their lifecycle."
+code: GOV-07
+name: AI Lifecycle & Registry Management
+framework: agsc
+pillar: Governance
+tier: T3
+purpose: >-
+  Ensure models, prompts, tools, datasets, retrieval sources and memory are inventoried across their
+  lifecycle.
 evidence:
-  - "AI system and component registry"
-  - "Version and lifecycle records"
+  - AI system and artefact registry
+  - Version records for models, prompts, tools, data, configurations, and agent settings
+  - Deployment records linked to active versions
+  - Monitoring and incident records tied to system versions
+  - Lifecycle review and revalidation records
 surfaces:
-  - "model"
-  - "tools"
-ospreyCoverage: "indirect"
-coverageNote: "OSP-12 compares observed components against the registry. Maintaining the registry is a governance task, not a runtime one."
+  - model
+  - tools
+ospreyCoverage: indirect
+coverageNote: >-
+  OSP-12 compares observed components against the registry. Maintaining the registry is a governance
+  task, not a runtime one.
 order: 37
+appliesTo: >-
+  AI systems where models, prompts, tools, datasets, retrieval sources, memory, agent
+  configurations, or deployment environments must be tracked across the lifecycle.
+requirements:
+  - Maintain a registry of AI systems and key artefacts
+  - Version models, prompts, tools, data sources, configurations, and agent settings
+  - Link deployments to the artefact versions used in production
+  - Connect monitoring, incidents, and evaluations to the relevant version
+  - Revalidate after material changes to system artefacts or intended use
+reviewCadence:
+  - Lifecycle evidence review before deployment
+  - Ongoing monitoring after deployment for applicable models
+  - Periodic lifecycle review based on risk tier
+  - Revalidation after material model, data, prompt, configuration, or deployment changes
+  - Annual lifecycle review for high-risk or business-critical models
+example: >-
+  An incident occurs, but no one can confirm which model, prompt, tool, retrieval source, or
+  configuration was live at the time. This control helps prevent that failure by requiring lifecycle
+  tracking and version control for all key AI artefacts, not only the model.
+origin: Adapted
+applicability: Both
+mappings:
+  - framework: mitRisk
+    value: 7.3 Lack of capability or robustness
+  - framework: atlas
+    value: AML.T0018 Manipulate / Backdoor ML Model
+  - framework: attack
+    value: T1195 Supply Chain Compromise
+  - framework: euAiAct
+    value: Art. 11, 17
+  - framework: nistRmf
+    value: GOVERN; MAP 1.x
+  - framework: iso42001
+    value: A.6

@@ -12,6 +12,32 @@ const frameworks = await allFrameworks();
  */
 const entries = [
   {
+    date: '2026-09-04',
+    title: 'Full AGSC control detail, and a page per control',
+    kind: 'content',
+    body:
+      'The control catalogue previously carried a summary of each AGSC control. It now carries the published detail in full — AGSC is an open standard, explicitly free to adopt and adapt, and reproducing it with attribution is what the publisher intends.',
+    changes: [
+      'Each of the 25 AGSC controls gains its scope, key requirements, complete evidence list, review cadence, and the publisher\u2019s worked example of the failure it prevents.',
+      'Each control now has its own deep-linkable page rather than a row on a framework page.',
+      'AGSC\u2019s own mappings into the MIT AI Risk Repository, MITRE ATLAS, ATT&CK, the EU AI Act, NIST AI RMF and ISO/IEC 42001 are reproduced as published — distinct from this project\u2019s anchors, so a reader can see where the two agree and where they differ.',
+      'Two discrepancies found while validating those mappings are flagged in place rather than silently corrected: AGSC cites AML.TA0015 for the ATLAS Command and Control tactic where the current distribution uses AML.TA0014, and labels AML.T0053 with its former name.',
+    ],
+  },
+  {
+    date: '2026-09-04',
+    title: 'Licensing audit and attribution',
+    kind: 'fix',
+    body:
+      'A review of the referenced frameworks found that their terms are not uniform, and that one of them permits no reuse at all. Recording that turned out to matter more than assuming it.',
+    changes: [
+      'Content licensed CC BY-SA 4.0 and code MIT. ShareAlike is inherited: parts of the content derive from the OWASP lists, which carry that condition.',
+      'The EC-Council ADG white paper carries no licence grant, so its identifiers are used as mapping targets and every description attached to an ADG element is written independently.',
+      'A licence field is now required on every framework entry, so no future framework can be added without someone stating its terms.',
+      'An attribution page records every source, its terms, and the basis for use here.',
+    ],
+  },
+  {
     date: '2026-09-03',
     title: 'Portal established',
     kind: 'release',

@@ -1,16 +1,57 @@
-code: "ALN-01"
-name: "Autonomy Boundary Control"
-framework: "agsc"
-pillar: "Alignment"
-tier: "T1"
-purpose: "Ensure each agent operates within a clearly defined and technically enforced action space, with restricted actions blocked by design rather than by prompt instruction."
+code: ALN-01
+name: Autonomy Boundary Control
+framework: agsc
+pillar: Alignment
+tier: T1
+purpose: >-
+  Ensure each agent operates within a clearly defined and technically enforced action space, with
+  restricted actions blocked by design rather than by prompt instruction.
 evidence:
-  - "Documented action boundaries for each agent"
-  - "Policy or configuration showing permitted, restricted and approval-required actions"
-  - "Logs of blocked boundary violations and related alerts"
+  - Documented action boundaries for each agent
+  - Policy or configuration showing permitted, restricted, and approval-required actions
+  - Technical enforcement evidence, such as gateway, tool-access, or workflow controls
+  - Logs of blocked boundary violations and related alerts
+  - Test results showing restricted actions were attempted and blocked
 surfaces:
-  - "tools"
-  - "orchestration"
-ospreyCoverage: "direct"
-coverageNote: "OSP-04 and OSP-06 produce exactly the boundary-enforcement record this control needs: which chains were permitted, which were stopped."
+  - tools
+  - orchestration
+ospreyCoverage: direct
+coverageNote: >-
+  OSP-04 and OSP-06 produce exactly the boundary-enforcement record this control needs: which chains
+  were permitted, which were stopped.
 order: 21
+appliesTo: >-
+  AI agents or autonomous systems that can take actions, invoke tools, access systems, trigger
+  workflows, or operate with limited human direction.
+requirements:
+  - Define what each agent is allowed and not allowed to do
+  - Set clear limits for actions, tools, data access, transactions, and approval-required activities
+  - Enforce boundaries through technical controls, not only through prompts or user instructions
+  - Block and log attempts to act outside approved boundaries
+  - Test boundaries periodically to confirm restricted actions cannot be performed
+reviewCadence:
+  - Before deployment for systems with autonomous or tool-use capability
+  - Quarterly review for systems with ongoing autonomous behaviour
+  - >-
+    Additional review after material changes to tools, workflows, permissions, integrations, or
+    system capabilities
+example: >-
+  A data agent is approved only to read records from a production database. A user prompt asks it to
+  “correct” a record, and the agent attempts to update the system of record. This control helps
+  prevent that failure by technically blocking actions outside the agent's approved scope.
+origin: AI-native
+applicability: Agentic
+mappings:
+  - framework: mitRisk
+    value: 7.1 AI pursuing its own goals in conflict with human goals/values
+  - framework: atlas
+    value: AML.T0053 Compromise LLM Plugins / Tools
+    note: The identifier is current, but ATLAS now names AML.T0053 "AI Agent Tool Invocation".
+  - framework: attack
+    value: T1059 Command and Scripting Interpreter
+  - framework: euAiAct
+    value: Art. 14
+  - framework: nistRmf
+    value: MANAGE 4.1
+  - framework: iso42001
+    value: A.9

@@ -137,8 +137,31 @@ const controls = defineCollection({
     tier: z.string().optional(),
     /** What the control asks for, in plain language. */
     purpose: z.string(),
+    /** Which systems the control governs. */
+    appliesTo: z.string().optional(),
+    /** What the control requires an organisation to actually do. */
+    requirements: z.array(z.string()).default([]),
     /** What an auditor should be able to see. This is what OSPREY produces. */
     evidence: z.array(z.string()).default([]),
+    /** How often the control is re-tested or re-reviewed. */
+    reviewCadence: z.array(z.string()).default([]),
+    /** The publisher's worked example of the failure this control prevents. */
+    example: z.string().optional(),
+    /** Whether the control is AI-native or an adaptation of an existing one. */
+    origin: z.string().optional(),
+    /** Which kinds of AI system it applies to. */
+    applicability: z.string().optional(),
+    /**
+     * The publisher's own mappings into public frameworks. Kept distinct from
+     * a threat's anchors: this is what the control's author says it maps to,
+     * which is not always what this project concluded. Where the two differ,
+     * `note` records the discrepancy rather than quietly overwriting it.
+     */
+    mappings: z.array(z.object({
+      framework: z.string(),
+      value: z.string(),
+      note: z.string().optional(),
+    })).default([]),
     /** ADG governance surfaces this control operates on. */
     surfaces: z.array(z.string()).default([]),
     /** How much of this control OSPREY's runtime detections contribute to. */

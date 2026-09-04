@@ -1,15 +1,53 @@
-code: "ALN-03"
-name: "Decision Interpretability"
-framework: "agsc"
-pillar: "Alignment"
-tier: "T3"
-purpose: "Ensure AI-supported decisions are explainable in a way appropriate to the audience and decision context."
+code: ALN-03
+name: Decision Interpretability
+framework: agsc
+pillar: Alignment
+tier: T3
+purpose: >-
+  Ensure AI-supported decisions are explainable in a way appropriate to the audience and decision
+  context.
 evidence:
-  - "Documented interpretability approach"
-  - "Sample explanations for users, operators or reviewers"
-  - "Link to review, escalation, correction or appeal process"
+  - Documented interpretability approach
+  - Sample explanations for users, operators, or reviewers
+  - Evidence that explanations appear in the workflow, interface, or decision record
+  - Records showing explanations were reviewed for clarity and usefulness
+  - Link to review, escalation, correction, or appeal process where applicable
 surfaces:
-  - "safety-layer"
-ospreyCoverage: "indirect"
-coverageNote: "Contributed indirectly: every OSPREY verdict carries the signal, control and confidence that produced it, which is the raw material an explanation is built from."
+  - safety-layer
+ospreyCoverage: indirect
+coverageNote: >-
+  Contributed indirectly: every OSPREY verdict carries the signal, control and confidence that
+  produced it, which is the raw material an explanation is built from.
 order: 23
+appliesTo: >-
+  AI systems that support decisions affecting people, services, eligibility, safety, health, access,
+  or other meaningful outcomes.
+requirements:
+  - Identify decisions where explanations are required
+  - Define what explanation is needed for each audience
+  - Provide explanations at the point of decision or in the decision record
+  - Ensure explanations are clear, relevant, and proportionate to the decision impact
+  - Support review, escalation, correction, or appeal where applicable
+reviewCadence:
+  - Pre-deployment interpretability review for applicable systems
+  - Periodic review where AI recommendations influence decisions or operations
+  - Additional review after model, prompt, data, decision logic, or use-case changes
+  - Enhanced review for higher-impact or regulated decision contexts
+example: >-
+  A person is affected by an AI-supported decision but receives no understandable explanation. The
+  organization cannot clearly explain the outcome to the person, operator, reviewer, or auditor.
+  This control helps prevent that failure by requiring explanations that are clear, available, and
+  appropriate to the decision impact.
+origin: Adapted
+applicability: AI systems
+mappings:
+  - framework: mitRisk
+    value: 7.4 Lack of transparency or interpretability
+  - framework: atlas
+    value: N/A — not adversarial-security (transparency/sustainability …
+  - framework: euAiAct
+    value: Art. 13
+  - framework: nistRmf
+    value: MEASURE 2.9
+  - framework: iso42001
+    value: A.8

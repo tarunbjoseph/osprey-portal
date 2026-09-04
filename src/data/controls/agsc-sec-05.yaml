@@ -1,17 +1,59 @@
-code: "SEC-05"
-name: "AI Threat Modeling"
-framework: "agsc"
-pillar: "Security"
-tier: "T2"
-purpose: "Ensure AI-specific threats are identified before deployment, mapped to mitigations, and refreshed when the system materially changes."
+code: SEC-05
+name: AI Threat Modeling
+framework: agsc
+pillar: Security
+tier: T2
+purpose: >-
+  Ensure AI-specific threats are identified before deployment, mapped to mitigations, and refreshed
+  when the system materially changes.
 evidence:
-  - "Versioned AI threat model"
-  - "Threat-to-control or mitigation matrix"
-  - "Refresh history tied to change events"
+  - Versioned AI threat model
+  - Threat-to-control or mitigation matrix
+  - Identified owners for material threats
+  - Refresh history tied to change events
+  - Evidence that unresolved risks were accepted, remediated, or escalated
 surfaces:
-  - "orchestration"
-  - "tools"
-  - "context"
-ospreyCoverage: "direct"
-coverageNote: "The threat register on this portal is the versioned threat model this control asks for, and the anchoring tables are the threat-to-control matrix."
+  - orchestration
+  - tools
+  - context
+ospreyCoverage: direct
+coverageNote: >-
+  The threat register on this portal is the versioned threat model this control asks for, and the
+  anchoring tables are the threat-to-control matrix.
 order: 45
+appliesTo: >-
+  AI systems with external integrations, sensitive data, autonomy, tool use, third-party components,
+  or meaningful business impact.
+requirements:
+  - Perform an AI-specific threat model before production use
+  - Cover models, prompts, memory, agents, tools, data flows, and integrations
+  - Map relevant threats to recognized AI security references where useful
+  - Assign each material threat an owner and mitigation
+  - Refresh the threat model after major system, vendor, data, prompt, or architecture changes
+reviewCadence:
+  - >-
+    Required before production for systems with autonomy, sensitive data, external integrations, or
+    high- risk workflows, otherwise before deployment for applicable systems
+  - >-
+    Review after material architecture, model, data, prompt, tool, connector, vendor, or deployment
+    changes
+  - Periodic review for high-risk systems
+example: >-
+  A team launches an agent with external connectors but never assesses how those connectors could be
+  poisoned or misused. The exact path is later exploited. This control helps prevent that failure by
+  requiring AI-specific threat modelling before deployment and after material changes.
+origin: Adapted
+applicability: Both
+mappings:
+  - framework: mitRisk
+    value: 2.2 AI system security vulnerabilities and attacks
+  - framework: atlas
+    value: AML.T0051 LLM Prompt Injection
+  - framework: attack
+    value: N/A — emerging agentic orchestration pattern; no official ATT&CK technique ID assigned.
+  - framework: euAiAct
+    value: Art. 9, 15
+  - framework: nistRmf
+    value: MAP 5.1; MEASURE 2.7
+  - framework: iso42001
+    value: A.5

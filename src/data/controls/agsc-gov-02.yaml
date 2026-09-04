@@ -1,16 +1,58 @@
-code: "GOV-02"
-name: "AI Change Governance"
-framework: "agsc"
-pillar: "Governance"
-tier: "T2"
-purpose: "Ensure changes to models, prompts, data, tools and configurations pass through a governed change process."
+code: GOV-02
+name: AI Change Governance
+framework: agsc
+pillar: Governance
+tier: T2
+purpose: >-
+  Ensure changes to models, prompts, data, tools and configurations pass through a governed change
+  process.
 evidence:
-  - "Change log with approval records"
-  - "Evidence that no uncontrolled production changes occurred"
+  - AI change register with change type and impact
+  - Re-evaluation results for material changes
+  - Approval or sign-off records
+  - Updated model, prompt, tool, data, or configuration records
+  - Post-change monitoring evidence
 surfaces:
-  - "model"
-  - "prompt"
-  - "tools"
-ospreyCoverage: "indirect"
-coverageNote: "OSP-12 detects change-control failures at runtime — a component that changed without passing the gate."
+  - model
+  - prompt
+  - tools
+ospreyCoverage: indirect
+coverageNote: >-
+  OSP-12 detects change-control failures at runtime — a component that changed without passing the
+  gate.
 order: 32
+appliesTo: >-
+  AI systems where changes to models, prompts, data, tools, configurations, workflows, or agent
+  behaviour may affect outputs, decisions, or actions.
+requirements:
+  - Define which AI changes require governance review
+  - Include model, prompt, data, tool, configuration, workflow, and fine-tuning changes
+  - Require re-evaluation before material changes are released
+  - Link change records to testing, approvals, and updated artefacts
+  - Monitor for unexpected behaviour after release
+reviewCadence:
+  - Before deployment of any material AI system change
+  - Post-change monitoring after approved changes are released
+  - Periodic change review based on risk tier
+  - >-
+    Additional review after unexpected behaviour, drift, incidents, major vendor updates, or changes
+    to intended use
+example: >-
+  A system prompt is edited to make the AI system “more helpful,” but the change weakens an
+  important safety instruction and bypasses normal release review. This control helps prevent that
+  failure by treating AI behaviour changes as governed changes that require evaluation and approval.
+origin: Adapted
+applicability: Both
+mappings:
+  - framework: mitRisk
+    value: 7.3 Lack of capability or robustness
+  - framework: atlas
+    value: AML.T0018 Manipulate / Backdoor ML Model
+  - framework: attack
+    value: T1195 Supply Chain Compromise
+  - framework: euAiAct
+    value: Art. 9, 17
+  - framework: nistRmf
+    value: MANAGE 1.x
+  - framework: iso42001
+    value: A.6

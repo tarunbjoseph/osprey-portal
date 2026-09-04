@@ -1,17 +1,57 @@
-code: "SAF-02"
-name: "Emergency Stop & Containment (Kill Switch)"
-framework: "agsc"
-pillar: "Safety"
-tier: "T1"
-purpose: "Ensure there is a defined and tested emergency stop or containment process so responsible teams can halt, restrict, or isolate the AI system when required."
+code: SAF-02
+name: Emergency Stop & Containment (Kill Switch)
+framework: agsc
+pillar: Safety
+tier: T1
+purpose: >-
+  Ensure there is a defined and tested emergency stop or containment process so responsible teams
+  can halt, restrict, or isolate the AI system when required.
 evidence:
-  - "Documented emergency stop procedure and activation criteria"
-  - "Defined roles for activation and notification"
-  - "Logs showing activation can be tracked"
-  - "Documented recovery process and evidence of testing"
+  - Documented emergency stop procedure and activation criteria
+  - Defined roles responsible for activation and notification
+  - Evidence the stop mechanism can control relevant AI activity
+  - Logs or records showing activation can be tracked
+  - Documented recovery process and evidence of testing
 surfaces:
-  - "tools"
-  - "orchestration"
-ospreyCoverage: "direct"
-coverageNote: "OSP-13, OSP-10 and OSP-14 all terminate in a containment action. Their quarantine and kill records are this control’s activation evidence."
+  - tools
+  - orchestration
+ospreyCoverage: direct
+coverageNote: >-
+  OSP-13, OSP-10 and OSP-14 all terminate in a containment action. Their quarantine and kill records
+  are this control’s activation evidence.
 order: 12
+appliesTo: >-
+  AI systems or agents that can take actions, invoke tools, access systems, trigger workflows, use
+  sensitive data, or create material downstream impact.
+requirements:
+  - Define when the AI system should be stopped or restricted
+  - Assign clear authority for who can activate the emergency stop and who must be informed
+  - Ensure the stop mechanism can effectively halt or limit risky activity
+  - Establish a clear process for containment, investigation, and recovery
+  - Test the emergency stop before deployment and review it after major changes
+reviewCadence:
+  - Monthly test (agentic/high-risk)
+example: >-
+  An AI agent connected to email and document systems is compromised through an indirect prompt
+  injection and begins sending sensitive documents outside the approved workflow. Without a kill
+  switch, teams must manually disable different pieces of the system while the issue continues. This
+  control ensures there is a clear way to stop the AI activity, restrict access, isolate affected
+  components, notify the right teams, and begin investigation and recovery.
+origin: Adapted
+applicability: Both
+mappings:
+  - framework: mitRisk
+    value: 7.1 AI pursuing its own goals in conflict with human goals/values
+  - framework: atlas
+    value: AML.TA0015 Command and Control (tactic, new in v5.1.0)
+    note: >-
+      In the current MITRE ATLAS distribution, Command and Control is AML.TA0014; AML.TA0015 is
+      Lateral Movement. Reported upstream.
+  - framework: attack
+    value: TA0011 Command and Control (tactic)
+  - framework: euAiAct
+    value: Art. 14, 15
+  - framework: nistRmf
+    value: MANAGE 4.1
+  - framework: iso42001
+    value: A.6.2

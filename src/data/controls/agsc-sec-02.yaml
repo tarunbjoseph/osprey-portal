@@ -1,15 +1,53 @@
-code: "SEC-02"
-name: "Agent Identity & Least-Privilege Authorization"
-framework: "agsc"
-pillar: "Security"
-tier: "T1"
-purpose: "Ensure each agent has a unique identity and only the minimum access needed for the task, with stronger approval for sensitive actions."
+code: SEC-02
+name: Agent Identity & Least-Privilege Authorization
+framework: agsc
+pillar: Security
+tier: T1
+purpose: >-
+  Ensure each agent has a unique identity and only the minimum access needed for the task, with
+  stronger approval for sensitive actions.
 evidence:
-  - "Agent identity registry"
-  - "Access and entitlement records"
-  - "Approval records for high-impact actions"
+  - Agent identity registry
+  - Access and entitlement records
+  - Just-in-time grant and revoke logs where applicable
+  - Approval records for high-impact actions
+  - Periodic access review results
 surfaces:
-  - "identity"
-ospreyCoverage: "direct"
-coverageNote: "OSP-05 is a direct check against this register, and OSP-13 extends it to the runtime boundary. Both are deterministic — a classifier would only add false negatives."
+  - identity
+ospreyCoverage: direct
+coverageNote: >-
+  OSP-05 is a direct check against this register, and OSP-13 extends it to the runtime boundary.
+  Both are deterministic — a classifier would only add false negatives.
 order: 42
+appliesTo: AI agents that access tools, systems, APIs, data sources, workflows, or enterprise resources.
+requirements:
+  - Assign each agent a unique, non-shared identity
+  - Grant only the minimum permissions required for the task
+  - Use time-bound or task-scoped access where feasible
+  - Require approval for high-impact or sensitive actions
+  - Review agent identities and permissions periodically
+reviewCadence:
+  - Before production deployment for all applicable agents
+  - Quarterly review of agent identities, permissions, and access scope
+  - >-
+    Additional review after changes to tools, APIs, data sources, workflows, permissions, or system
+    integrations
+example: >-
+  Several agents share one service account with broad write access. If one agent is compromised, the
+  attacker can reach every system tied to that account. This control helps prevent that failure by
+  requiring unique agent identities and least-privilege access.
+origin: Adapted
+applicability: Agentic
+mappings:
+  - framework: mitRisk
+    value: 2.2 AI system security vulnerabilities and attacks
+  - framework: atlas
+    value: AML.T0055 Unsecured Credentials
+  - framework: attack
+    value: T1078 Valid Accounts
+  - framework: euAiAct
+    value: Art. 15
+  - framework: nistRmf
+    value: MANAGE 2.x
+  - framework: iso42001
+    value: A.9 (+ ISO 27001)

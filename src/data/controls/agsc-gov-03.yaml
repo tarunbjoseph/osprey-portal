@@ -1,16 +1,58 @@
-code: "GOV-03"
-name: "Third-Party & Supply-Chain Oversight"
-framework: "agsc"
-pillar: "Governance"
-tier: "T3"
-purpose: "Ensure external models, vendors, APIs, datasets, platforms and tools are assessed and monitored."
+code: GOV-03
+name: Third-Party & Supply-Chain Oversight
+framework: agsc
+pillar: Governance
+tier: T3
+purpose: Ensure external models, vendors, APIs, datasets, platforms and tools are assessed and monitored.
 evidence:
-  - "Third-party component register"
-  - "Vendor assessment records"
-  - "Change approvals for external components"
+  - Supplier AI risk assessment
+  - Executed contract with AI-specific terms
+  - Supplier model, data, hosting, or sub-processor documentation
+  - Supplier change and incident notification records
+  - Periodic supplier review or reassessment records
 surfaces:
-  - "tools"
-  - "model"
-ospreyCoverage: "direct"
-coverageNote: "OSP-12 produces the runtime half of this evidence: which components changed between runs, and whether the change was approved."
+  - tools
+  - model
+ospreyCoverage: direct
+coverageNote: >-
+  OSP-12 produces the runtime half of this evidence: which components changed between runs, and
+  whether the change was approved.
 order: 33
+appliesTo: >-
+  AI systems that rely on external models, vendors, APIs, datasets, platforms, tools, cloud
+  services, or other third-party AI components.
+requirements:
+  - Assess AI supplier risk before contract or production use
+  - Require supplier transparency for model, data, hosting, and sub-processor dependencies
+  - >-
+    Include AI-specific contract terms for change notice, incident notice, data use, IP, and
+    accountability
+  - Monitor supplier model changes, incidents, deprecations, and material updates
+  - Reassess suppliers after major changes or risk events
+reviewCadence:
+  - Before procurement, contract, or supplier onboarding
+  - Before production deployment of supplier-managed AI
+  - Annual review for high-risk or business-critical suppliers
+  - >-
+    Event-driven reassessment after supplier changes, incidents, terms updates, model updates,
+    hosting changes, or regulatory changes
+example: >-
+  A foundation model provider silently deprecates or updates the model version supporting a
+  validated production tool. Outputs shift, but the organization receives no notice and the prior
+  validation no longer applies. This control helps prevent that failure through supplier oversight,
+  contract obligations, and change monitoring.
+origin: Adapted
+applicability: Both
+mappings:
+  - framework: mitRisk
+    value: 6.5 Governance failure
+  - framework: atlas
+    value: AML.T0010 ML Supply Chain Compromise
+  - framework: attack
+    value: T1195 Supply Chain Compromise
+  - framework: euAiAct
+    value: Art. 25
+  - framework: nistRmf
+    value: GOVERN 6.1
+  - framework: iso42001
+    value: A.10

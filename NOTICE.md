@@ -13,7 +13,7 @@ of it into another product, should have it reviewed.
 
 | Source | Terms | What this project does with it |
 | --- | --- | --- |
-| [AGSC v1.0][agsc] | Open standard, explicitly "free to adopt and adapt" | Control identifiers, names, purposes and evidence requirements reproduced |
+| [AGSC v1.0][agsc] | Open standard, explicitly "free to adopt and adapt" | Full control detail reproduced with attribution: scope, requirements, evidence, review cadence, worked examples and the publisher's own framework mappings |
 | [MITRE ATLAS][atlas] | Apache License 2.0 | Tactic and technique identifiers and names referenced |
 | [OWASP LLM Top 10][owasp] · [OWASP ASI Top 10][asi] | **CC BY-SA 4.0** | Entry identifiers, names, and some derived relevance descriptions |
 | [EC-Council ADG v1.0][adg] | **No licence granted** | Identifiers and element names only; all descriptive prose independently written |
@@ -68,7 +68,9 @@ would have to be rewritten first, exactly as the ADG material was.
 
 **AGSC v1.0** states on its cover that it is an "Open standard | vendor-neutral | free to adopt and
 adapt", and its closing section confirms that organisations may adopt, adapt and operationalise
-the controls. It asks to be cited as:
+the controls. This is the one framework whose content is reproduced in full here — scope,
+requirements, evidence, review cadence and worked examples for all twenty-five controls — because
+that is what the publisher intends and asks only that it be cited as:
 
 > Joshi, H., & Gandhi, D. (2026). *Agentic Governance & Security Controls (AGSC): Field Guide for
 > Enterprise Leaders* (Edition v1.0). COHUMAIN Labs & SafeAlign AI.

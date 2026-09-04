@@ -1,16 +1,59 @@
-code: "SAF-04"
-name: "Output Factual Accuracy & Anti-Hallucination"
-framework: "agsc"
-pillar: "Safety"
-tier: "T2"
-purpose: "Ensure fact-bearing AI outputs are grounded, checked, and presented with appropriate source support or uncertainty indicators."
+code: SAF-04
+name: Output Factual Accuracy & Anti-Hallucination
+framework: agsc
+pillar: Safety
+tier: T2
+purpose: >-
+  Ensure fact-bearing AI outputs are grounded, checked, and presented with appropriate source
+  support or uncertainty indicators.
 evidence:
-  - "Documented accuracy expectations"
-  - "Sample outputs demonstrating sourcing or uncertainty indicators"
-  - "Records of identified inaccuracies and corrective actions"
+  - Documented accuracy expectations
+  - Approach for using trusted or approved sources
+  - Sample outputs demonstrating sourcing or uncertainty indicators
+  - Results from pre-deployment accuracy testing
+  - Records of identified inaccuracies and corrective actions
+  - Evidence of reassessment following significant changes
 surfaces:
-  - "safety-layer"
-  - "telemetry"
-ospreyCoverage: "partial"
-coverageNote: "OSP-16 covers the agentic slice: claims of completed work the trace does not support. General factual accuracy of generated prose is out of scope."
+  - safety-layer
+  - telemetry
+ospreyCoverage: partial
+coverageNote: >-
+  OSP-16 covers the agentic slice: claims of completed work the trace does not support. General
+  factual accuracy of generated prose is out of scope.
 order: 14
+appliesTo: >-
+  AI systems that generate answers, summaries, recommendations, explanations, reports, analysis, or
+  other fact-bearing outputs that users may rely on to make decisions.
+requirements:
+  - Define expected accuracy standards for the use case
+  - Ensure outputs are supported by reliable sources where needed
+  - Clearly indicate uncertainty or low confidence in responses
+  - Validate factual accuracy before deployment
+  - Establish a process to detect and correct inaccurate outputs
+  - Reassess accuracy controls after significant changes
+reviewCadence:
+  - Pre-deployment factual accuracy validation
+  - Periodic output review based on risk tier and use frequency
+  - Monthly evaluation for high-risk or decision-support systems
+  - >-
+    Additional review after model changes, prompt changes, retrieval-source changes, or detected
+    factual errors
+example: >-
+  A knowledge assistant gives a confident answer and cites a source that does not exist. A user
+  relies on the response as fact and includes it in a business decision, customer communication, or
+  compliance-relevant document. This control helps prevent that type of failure by requiring factual
+  accuracy expectations, source grounding where needed, uncertainty signals, and a process to review
+  and correct inaccurate outputs.
+origin: AI-native
+applicability: GenAI
+mappings:
+  - framework: mitRisk
+    value: 3.1 False or misleading information
+  - framework: atlas
+    value: AML.T0048 External Harms
+  - framework: euAiAct
+    value: Art. 15
+  - framework: nistRmf
+    value: MEASURE 2.3
+  - framework: iso42001
+    value: A.6.2

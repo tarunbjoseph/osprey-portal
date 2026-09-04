@@ -1,18 +1,61 @@
-code: "SEC-03"
-name: "Prompt Injection & Adversarial Input Defense"
-framework: "agsc"
-pillar: "Security"
-tier: "T1"
-purpose: "Ensure adversarial inputs are detected, isolated, blocked and monitored across all major ingestion points, especially where untrusted content can influence AI behaviour."
+code: SEC-03
+name: Prompt Injection & Adversarial Input Defense
+framework: agsc
+pillar: Security
+tier: T1
+purpose: >-
+  Ensure adversarial inputs are detected, isolated, blocked and monitored across all major ingestion
+  points, especially where untrusted content can influence AI behaviour.
 evidence:
-  - "Input/output protection inventory and configuration"
-  - "Detection rules or monitoring alerts for injection attempts"
-  - "Architecture evidence showing trust-context separation"
-  - "Sample alerts and response records"
+  - Input/output protection inventory and configuration
+  - Detection rules or monitoring alerts for injection attempts
+  - Architecture evidence showing trust-context separation
+  - Sample alerts and response records
+  - Review records for new sources, integrations, or pipelines
 surfaces:
-  - "prompt"
-  - "context"
-  - "safety-layer"
-ospreyCoverage: "direct"
-coverageNote: "OSP-02, OSP-03, OSP-07 and OSP-15. The densest coverage of any single control, and the anchor for most of the classifier work."
+  - prompt
+  - context
+  - safety-layer
+ospreyCoverage: direct
+coverageNote: >-
+  OSP-02, OSP-03, OSP-07 and OSP-15. The densest coverage of any single control, and the anchor for
+  most of the classifier work.
 order: 43
+appliesTo: >-
+  AI systems that accept user input, retrieved content, documents, emails, tool outputs, web
+  content, or other external information.
+requirements:
+  - Protect key input and output boundaries with AI- specific filtering or inspection
+  - Detect direct and indirect prompt injection attempts
+  - Separate trusted instructions from untrusted external content
+  - Monitor and alert on suspected adversarial input patterns
+  - >-
+    Review new retrieval sources, document pipelines, APIs, and tool connections before production
+    use
+reviewCadence:
+  - Pre-deployment injection and adversarial input testing
+  - Quarterly review of input validation and detection rules
+  - Review before onboarding new retrieval sources, APIs, document pipelines, or tool connections
+  - >-
+    Additional testing after injection attempts, incidents, model changes, prompt changes, or
+    integration changes
+example: >-
+  A supplier document contains hidden instructions telling a contract-analysis agent to approve
+  payment and forward banking details externally. This control helps prevent that failure by
+  detecting adversarial content and keeping untrusted inputs separate from trusted system
+  instructions.
+origin: AI-native
+applicability: Both
+mappings:
+  - framework: mitRisk
+    value: 2.2 AI system security vulnerabilities and attacks
+  - framework: atlas
+    value: AML.T0051 LLM Prompt Injection
+  - framework: attack
+    value: T1190 Exploit Public-Facing Application
+  - framework: euAiAct
+    value: Art. 15
+  - framework: nistRmf
+    value: MEASURE 2.7
+  - framework: iso42001
+    value: A.6.2

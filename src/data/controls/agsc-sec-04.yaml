@@ -1,17 +1,55 @@
-code: "SEC-04"
-name: "Observability, Anomaly Detection & Incident Response"
-framework: "agsc"
-pillar: "Security"
-tier: "T1"
-purpose: "Ensure AI systems generate usable telemetry, support anomaly detection, and connect to an AI-specific incident response process."
+code: SEC-04
+name: Observability, Anomaly Detection & Incident Response
+framework: agsc
+pillar: Security
+tier: T1
+purpose: >-
+  Ensure AI systems generate usable telemetry, support anomaly detection, and connect to an
+  AI-specific incident response process.
 evidence:
-  - "Trace or logging schema"
-  - "Monitoring coverage report"
-  - "Anomaly detection configuration and sample alerts"
-  - "AI incident response runbook"
+  - Trace or logging schema
+  - Monitoring coverage report
+  - Anomaly detection configuration and sample alerts
+  - AI incident response runbook
+  - Closed incident or investigation records
 surfaces:
-  - "telemetry"
-  - "orchestration"
-ospreyCoverage: "direct"
-coverageNote: "This is the control OSPREY exists to satisfy. Every category in the register produces evidence against it."
+  - telemetry
+  - orchestration
+ospreyCoverage: direct
+coverageNote: >-
+  This is the control OSPREY exists to satisfy. Every category in the register produces evidence
+  against it.
 order: 44
+appliesTo: >-
+  AI systems or agents operating in production, especially those that access tools, data, users,
+  workflows, or business-critical systems.
+requirements:
+  - Capture structured logs or traces for key AI activity
+  - Include prompts, outputs, tool calls, decisions, actions, and relevant context where appropriate
+  - Monitor for abnormal behaviour, misuse, data leakage, or unexpected agent activity
+  - Route significant alerts into security or incident response processes
+  - Maintain an AI incident runbook with severity levels, owners, and response steps
+reviewCadence:
+  - Pre-deployment validation of logging, monitoring, and alerting
+  - Continuous or periodic monitoring based on risk tier
+  - Monthly review for high-risk systems & annual incident response review where applicable
+  - Additional review after incidents, anomalies, major updates, or monitoring failures
+example: >-
+  An agent slowly leaks sensitive information through repeated queries, but the behaviour is not
+  detected because there are no call-level traces or anomaly alerts. This control helps prevent that
+  failure by requiring visibility, monitoring, and AI-specific incident response.
+origin: Adapted
+applicability: Both
+mappings:
+  - framework: mitRisk
+    value: 2.2 AI system security vulnerabilities and attacks
+  - framework: atlas
+    value: AML.T0074 Masquerading (Defense Evasion)
+  - framework: attack
+    value: T1562 Impair Defenses
+  - framework: euAiAct
+    value: Art. 12, 15, 72
+  - framework: nistRmf
+    value: MEASURE 2.x; MANAGE
+  - framework: iso42001
+    value: A.9

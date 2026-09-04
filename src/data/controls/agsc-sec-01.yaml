@@ -1,16 +1,58 @@
-code: "SEC-01"
-name: "Multi-Agent Coordination Security"
-framework: "agsc"
-pillar: "Security"
-tier: "T2"
-purpose: "Ensure multi-agent interactions are mapped, tested and governed so coordination stays predictable, secure and aligned with the intended business process."
+code: SEC-01
+name: Multi-Agent Coordination Security
+framework: agsc
+pillar: Security
+tier: T2
+purpose: >-
+  Ensure multi-agent interactions are mapped, tested and governed so coordination stays predictable,
+  secure and aligned with the intended business process.
 evidence:
-  - "Versioned agent interaction map"
-  - "Inter-agent communication or coordination protocol"
-  - "Records of topology, hierarchy or coordination changes"
+  - Versioned agent interaction map
+  - Inter-agent communication or coordination protocol
+  - Simulation or failure-injection test results
+  - Access-control records for external or cross- organization agent calls
+  - Records of topology, hierarchy, or coordination changes
 surfaces:
-  - "orchestration"
-  - "identity"
-ospreyCoverage: "direct"
-coverageNote: "OSP-09 and OSP-10 produce the inter-agent authorization records and the workflow-level containment evidence."
+  - orchestration
+  - identity
+ospreyCoverage: direct
+coverageNote: >-
+  OSP-09 and OSP-10 produce the inter-agent authorization records and the workflow-level containment
+  evidence.
 order: 41
+appliesTo: >-
+  Multi-agent AI systems where multiple agents interact, delegate tasks, review outputs, trigger
+  workflows, or coordinate actions.
+requirements:
+  - Document each agent's role, responsibility, and interaction path
+  - Define how agents communicate, delegate, escalate, and make decisions
+  - Establish safeguards for loops, deadlocks, cascading actions, and conflicting outputs
+  - Control access for external or cross-organization agent interactions
+  - Test multi-agent behaviour before production and after major architecture changes
+reviewCadence:
+  - Quarterly review and testing
+  - >-
+    Additional review after material architecture, access, hierarchy, workflow, or agent interaction
+    changes
+example: >-
+  A writer agent and reviewer agent repeatedly accept each other's outputs and generate incorrect
+  regulatory text at scale. This control helps prevent that failure by requiring clear coordination
+  rules, escalation paths, and testing for loops or cascading behaviour.
+origin: AI-native
+applicability: Agentic
+mappings:
+  - framework: mitRisk
+    value: 7.6 Multi-agent risks
+  - framework: atlas
+    value: AML.TA0015 Command and Control (tactic, new in v5.1.0)
+    note: >-
+      In the current MITRE ATLAS distribution, Command and Control is AML.TA0014; AML.TA0015 is
+      Lateral Movement. Reported upstream.
+  - framework: attack
+    value: N/A — emerging agentic orchestration pattern; no official ATT&CK technique ID assigned.
+  - framework: euAiAct
+    value: Art. 15
+  - framework: nistRmf
+    value: MANAGE 4.1
+  - framework: iso42001
+    value: A.6.2

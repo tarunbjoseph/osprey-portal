@@ -1,16 +1,61 @@
-code: "ALN-02"
-name: "Human Oversight & Intervention"
-framework: "agsc"
-pillar: "Alignment"
-tier: "T1"
-purpose: "Ensure human oversight is accessible, timely, and meaningful, occurring before high-impact or irreversible actions rather than only after the fact."
+code: ALN-02
+name: Human Oversight & Intervention
+framework: agsc
+pillar: Alignment
+tier: T1
+purpose: >-
+  Ensure human oversight is accessible, timely, and meaningful, occurring before high-impact or
+  irreversible actions rather than only after the fact.
 evidence:
-  - "Oversight and escalation process"
-  - "Defined reviewer roles and decision rights"
-  - "Evidence of approval gates for sensitive actions"
+  - Oversight and escalation process
+  - Defined reviewer roles and decision rights
+  - Approval or intervention records
+  - Evidence of approval gates for sensitive actions
+  - Testing records showing oversight works as intended
 surfaces:
-  - "orchestration"
-  - "safety-layer"
-ospreyCoverage: "direct"
-coverageNote: "The autonomy-tier downgrade rule is this control expressed as a runtime mechanism. Every threat row states the tier the agent holds after detection."
+  - orchestration
+  - safety-layer
+ospreyCoverage: direct
+coverageNote: >-
+  The autonomy-tier downgrade rule is this control expressed as a runtime mechanism. Every threat
+  row states the tier the agent holds after detection.
 order: 22
+appliesTo: >-
+  AI systems or agents used in business processes where outputs, recommendations, or actions may
+  affect people, operations, or organizational outcomes.
+requirements:
+  - Define when human oversight is required
+  - Assign clear review and approval responsibilities
+  - Enable people to pause, escalate, or override AI activity when needed
+  - Require approval before high-impact or irreversible actions
+  - Record key reviews, approvals, and interventions
+reviewCadence:
+  - Pre-deployment review of oversight design
+  - Periodic review based on risk tier and use frequency
+  - Testing before high-risk systems go live
+  - >-
+    Additional review after incidents, user feedback, workflow changes, autonomy changes, or changes
+    to decision impact
+example: >-
+  An AI agent is able to submit a filing, send funds, delete records, or trigger a
+  customer-impacting workflow before any person can review the action. The organization technically
+  has “oversight,” but only through after-the-fact reports. This control helps prevent that failure
+  by requiring timely human intervention and approval gates before high-impact actions occur.
+origin: Adapted
+applicability: Both
+mappings:
+  - framework: mitRisk
+    value: 5.2 Loss of human agency and autonomy
+  - framework: atlas
+    value: AML.TA0015 Command and Control (tactic, new in v5.1.0)
+    note: >-
+      In the current MITRE ATLAS distribution, Command and Control is AML.TA0014; AML.TA0015 is
+      Lateral Movement. Reported upstream.
+  - framework: attack
+    value: TA0011 Command and Control (tactic)
+  - framework: euAiAct
+    value: Art. 14, 15
+  - framework: nistRmf
+    value: GOVERN 3; MANAGE 2.x
+  - framework: iso42001
+    value: A.9

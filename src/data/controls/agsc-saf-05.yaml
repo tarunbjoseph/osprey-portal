@@ -1,16 +1,60 @@
-code: "SAF-05"
-name: "AI Output Monitoring & Safeguards"
-framework: "agsc"
-pillar: "Safety"
-tier: "T2"
-purpose: "Ensure AI outputs are monitored after deployment and that safeguards detect, review, escalate, correct, or block risky outputs before they create harm."
+code: SAF-05
+name: AI Output Monitoring & Safeguards
+framework: agsc
+pillar: Safety
+tier: T2
+purpose: >-
+  Ensure AI outputs are monitored after deployment and that safeguards detect, review, escalate,
+  correct, or block risky outputs before they create harm.
 evidence:
-  - "Documented monitoring approach and defined risk thresholds"
-  - "Evidence of monitoring activities"
-  - "Records of issue handling including review, escalation and remediation"
+  - Documented monitoring approach and defined risk thresholds
+  - Evidence of monitoring activities (e.g., logs, reviews, reports)
+  - Records of issue handling, including review, escalation, and remediation
+  - Evidence of human oversight where required
+  - Defined ownership and periodic reassessment of safeguards
 surfaces:
-  - "safety-layer"
-  - "telemetry"
-ospreyCoverage: "direct"
-coverageNote: "OSP-07, OSP-08 and OSP-11 produce the output-safeguard decisions and blocked-execution records this control asks for."
+  - safety-layer
+  - telemetry
+ospreyCoverage: direct
+coverageNote: >-
+  OSP-07, OSP-08 and OSP-11 produce the output-safeguard decisions and blocked-execution records
+  this control asks for.
 order: 15
+appliesTo: >-
+  AI systems that produce outputs used by people, processes, or other systems, particularly where
+  those outputs may influence decisions.
+requirements:
+  - Identify key output risks and define how they will be monitored based on impact and use
+  - Establish clear criteria for when outputs must be reviewed, corrected, escalated, or blocked
+  - Require human oversight for high-impact or regulated use cases
+  - Assign ownership for monitoring, review, and remediation
+  - Track issues and update safeguards as the system or use changes
+reviewCadence:
+  - 'High Risk: Continuous monitoring with monthly review'
+  - 'Low Risk: Monitoring aligned to use frequency and business impact'
+  - >-
+    Additional review should occur when harmful, biased, misleading, or degraded outputs are
+    detected
+  - Agentic Governance & Security Controls (AGSC) 11
+example: >-
+  A triage or prioritization model gradually begins ranking critical cases lower than expected. The
+  system remains available and technically functional, but no one is monitoring whether the outputs
+  are still appropriate for the business process. The issue is only discovered during a later audit.
+  This control helps prevent that type of failure by requiring output monitoring, clear review
+  thresholds, human escalation for high-impact outputs, and remediation when output quality or
+  safety degrades.
+origin: AI-native
+applicability: Both
+mappings:
+  - framework: mitRisk
+    value: 3.1 False or misleading information
+  - framework: atlas
+    value: AML.T0048 External Harms (Financial / Reputational / Societa…
+  - framework: attack
+    value: T1587 Develop Capabilities
+  - framework: euAiAct
+    value: Art. 15, 72
+  - framework: nistRmf
+    value: MEASURE 2.x; MANAGE 4.1
+  - framework: iso42001
+    value: A.9

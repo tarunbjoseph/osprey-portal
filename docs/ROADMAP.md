@@ -38,11 +38,22 @@ six model entries defined, results pending.
 README, data model reference, contributing guide, this roadmap. The anchor validator wired into
 CI so a broken reference cannot reach the published site.
 
+### CP8 — Full AGSC control detail
+Every AGSC control carries its scope, key requirements, complete evidence list, review cadence,
+worked example and the publisher's own framework mappings — and has its own deep-linkable page.
+Discrepancies found while validating those mappings are flagged in place rather than corrected
+silently.
+
+### CP9 — Licensing and attribution
+Dual licence (MIT code, CC BY-SA 4.0 content), a required `licence` field on every framework entry,
+`NOTICE.md`, and an attribution page. The ADG-derived descriptions were rewritten because that
+framework grants no reuse.
+
 ---
 
 ## Next
 
-### CP8 — Telemetry requirements
+### CP10 — Telemetry requirements
 The register already records what each detection `dependsOn`. Turn that into a first-class section:
 every telemetry field, which threats need it, whether it exists today, and who owns getting it.
 This is the highest-value next section because it is the binding constraint on most of the
@@ -50,13 +61,13 @@ register — several categories are undetectable without fields that may not exi
 
 *Depends on:* answers to the open questions carried on the threat pages.
 
-### CP9 — First evaluation results
+### CP11 — First evaluation results
 Populate `evaluations` on model entries as runs complete. Add a comparison view once more than one
 model has been measured against the same benchmark.
 
 *Depends on:* a trained checkpoint and a labelled evaluation set.
 
-### CP10 — Dashboard requirements
+### CP12 — Dashboard requirements
 The human-facing layer: what the operator view has to show, which fields come from which
 detection, and how review routing works. Several threats already imply requirements — one is
 explicitly a dashboard requirement rather than a runtime block.
@@ -65,21 +76,21 @@ explicitly a dashboard requirement rather than a runtime block.
 
 ## Later
 
-### CP11 — Regulatory overlays
+### CP13 — Regulatory overlays
 Regulatory references are currently text, cited rather than resolved. Promote the mappings that
 matter to a structured overlay so a specific regime can be selected and the controls it demands
 filtered — the same mechanism the framework registry uses, applied to obligations.
 
-### CP12 — Architecture and pipeline documentation
+### CP14 — Architecture and pipeline documentation
 How detection, classification, escalation and containment fit together, and where each threat
 category is caught. Currently implicit in the register; worth being explicit for a stakeholder who
 has not read it end to end.
 
-### CP13 — Search
+### CP15 — Search
 The register has search within itself. A site-wide index across threats, controls, frameworks and
 notes becomes worth the weight once there is meaningfully more content.
 
-### CP14 — Public presentation mode
+### CP16 — Public presentation mode
 A stripped view for demos and stakeholder walkthroughs: fewer controls, larger type, one idea per
 screen. The content is already structured for it; this is a layout, not a rewrite.
 
@@ -93,6 +104,7 @@ dependency and a second source of truth to a project whose main property is havi
 **Runtime data fetching.** The site is static on purpose: no backend to keep alive after the
 project term, and no way for it to break while nobody is watching.
 
-**Framework content mirroring.** The catalogues here record what OSPREY anchors to and how much of
-each control it covers. Reproducing AGSC or ADG in full would duplicate work those publishers do
-better, and would go stale the moment they ship.
+**Mirroring frameworks that do not permit it.** AGSC is reproduced in full because it is published
+as an open standard and asks to be adopted. Everything else is referenced rather than mirrored —
+partly because the publishers do that work better and it goes stale the moment they ship a release,
+and partly because not all of them grant permission. `NOTICE.md` records which is which.

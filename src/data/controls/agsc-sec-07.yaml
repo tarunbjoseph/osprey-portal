@@ -1,16 +1,56 @@
-code: "SEC-07"
-name: "Memory & Context Lifecycle Security"
-framework: "agsc"
-pillar: "Security"
-tier: "T2"
-purpose: "Ensure memory and context are isolated, governed, auditable and expired appropriately so stored information does not create leakage, contamination or unintended influence."
+code: SEC-07
+name: Memory & Context Lifecycle Security
+framework: agsc
+pillar: Security
+tier: T2
+purpose: >-
+  Ensure memory and context are isolated, governed, auditable and expired appropriately so stored
+  information does not create leakage, contamination or unintended influence.
 evidence:
-  - "Memory and context isolation design"
-  - "Test results showing no cross-user or cross-session leakage"
-  - "Retention, expiry and purge policy"
-  - "Memory audit or inspection records"
+  - Memory and context isolation design
+  - Test results showing no cross-user, cross-tenant, or cross-session leakage
+  - Retention, expiry, and purge policy
+  - Purge or deletion execution logs
+  - Memory audit or inspection records
 surfaces:
-  - "context"
-ospreyCoverage: "direct"
-coverageNote: "OSP-03, OSP-08 and OSP-15 produce the memory-write decisions and context-boundary records this control asks for."
+  - context
+ospreyCoverage: direct
+coverageNote: >-
+  OSP-03, OSP-08 and OSP-15 produce the memory-write decisions and context-boundary records this
+  control asks for.
 order: 47
+appliesTo: >-
+  AI systems that use persistent memory, reusable context, session history, user profiles, retrieved
+  context, or long-running agent state.
+requirements:
+  - Isolate memory and context between users, tenants, sessions, and workflows
+  - Define rules for context reuse, retention, expiry, and deletion
+  - Prevent sensitive or unauthorized information from persisting in memory
+  - Detect or review stale, poisoned, or inappropriate stored context
+  - Maintain auditability over memory access, updates, and deletion where feasible
+reviewCadence:
+  - Before deployment for systems using persistent memory or reusable context
+  - Periodic review based on data sensitivity and risk tier
+  - Quarterly review for high-risk, regulated, sensitive, or externally exposed systems
+  - >-
+    Additional review after changes to memory design, retention rules, access permissions, or
+    context- related incidents
+example: >-
+  One user's information remains in shared agent memory and later appears in another user's session.
+  This control helps prevent that failure by requiring memory isolation, retention limits, purge
+  controls, and auditability over stored context.
+origin: AI-native
+applicability: Both
+mappings:
+  - framework: mitRisk
+    value: 2.1 Compromise of privacy
+  - framework: atlas
+    value: AML.T0057 LLM Data Leakage
+  - framework: attack
+    value: T1005 Data from Local System
+  - framework: euAiAct
+    value: Art. 10, 15
+  - framework: nistRmf
+    value: MANAGE 2.x
+  - framework: iso42001
+    value: A.7

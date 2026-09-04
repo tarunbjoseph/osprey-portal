@@ -1,14 +1,50 @@
-code: "GOV-05"
-name: "Model Evaluation"
-framework: "agsc"
-pillar: "Governance"
-tier: "T2"
-purpose: "Ensure models are validated for quality, bias, robustness and reliability before and during use."
+code: GOV-05
+name: Model Evaluation
+framework: agsc
+pillar: Governance
+tier: T2
+purpose: Ensure models are validated for quality, bias, robustness and reliability before and during use.
 evidence:
-  - "Evaluation reports with pass/fail status"
-  - "Regression test history"
+  - Model evaluation report
+  - Metrics compared against acceptance thresholds
+  - Bias, robustness, or subgroup evaluation results where applicable
+  - Domain or business validation record
+  - Deployment approval or sign-off evidence
 surfaces:
-  - "model"
-ospreyCoverage: "direct"
-coverageNote: "The benchmark layer of this portal is this control’s evidence: Gate 1 classifier metrics and containment results, reported separately."
+  - model
+ospreyCoverage: direct
+coverageNote: >-
+  The benchmark layer of this portal is this control’s evidence: Gate 1 classifier metrics and
+  containment results, reported separately.
 order: 35
+appliesTo: >-
+  AI systems that require validation of quality, bias, robustness, reliability, and suitability
+  before they are used in business processes or decision-making.
+requirements:
+  - Define evaluation criteria before deployment
+  - Assess quality, bias, robustness, reliability, and use-case suitability
+  - Compare results against documented acceptance thresholds
+  - Include subgroup or scenario-based testing where relevant
+  - Require business or domain sign-off for higher-risk uses
+reviewCadence:
+  - Pre-deployment evaluation
+  - Monthly or periodic performance assessment where applicable
+  - Quarterly domain or business validation review for higher-risk systems
+  - Annual revalidation or reassessment where the model or use case materially changes
+example: >-
+  A model is approved based on overall accuracy, but it performs significantly worse for a specific
+  user group or business scenario. This control helps prevent that failure by requiring evaluation
+  against relevant thresholds, subgroups, and real use- case conditions.
+origin: Adapted
+applicability: AI systems
+mappings:
+  - framework: mitRisk
+    value: 7.3 Lack of capability or robustness
+  - framework: atlas
+    value: AML.T0043 Craft Adversarial Data
+  - framework: euAiAct
+    value: Art. 15
+  - framework: nistRmf
+    value: MEASURE 2.1, 2.3
+  - framework: iso42001
+    value: A.6.2

@@ -1,16 +1,56 @@
-code: "ALN-05"
-name: "Output Labeling & Action Attribution"
-framework: "agsc"
-pillar: "Alignment"
-tier: "T2"
-purpose: "Ensure AI-generated content is labelled where human origin may be assumed, and that autonomous actions are attributed to the responsible AI system, workflow, or service account."
+code: ALN-05
+name: Output Labeling & Action Attribution
+framework: agsc
+pillar: Alignment
+tier: T2
+purpose: >-
+  Ensure AI-generated content is labelled where human origin may be assumed, and that autonomous
+  actions are attributed to the responsible AI system, workflow, or service account.
 evidence:
-  - "Documented labelling and attribution standard"
-  - "Agent action records showing the responsible system or workflow"
-  - "Audit logs linking outputs or actions to the AI system"
+  - Documented labelling and attribution standard
+  - Sample labelled outputs, documents, messages, or records
+  - Agent action records showing the responsible system or workflow
+  - Evidence that labels persist across key workflows or exports
+  - Audit logs linking outputs or actions to the AI system
 surfaces:
-  - "telemetry"
-  - "identity"
-ospreyCoverage: "direct"
-coverageNote: "OSP-11 and OSP-16 both turn on attribution: comparing what the agent said it did against what the trace shows it did."
+  - telemetry
+  - identity
+ospreyCoverage: direct
+coverageNote: >-
+  OSP-11 and OSP-16 both turn on attribution: comparing what the agent said it did against what the
+  trace shows it did.
 order: 25
+appliesTo: >-
+  AI systems that generate content, communicate with users, create documents, support decisions, or
+  perform actions in business workflows.
+requirements:
+  - Define when AI-generated content must be labelled
+  - Label AI-generated or AI-assisted outputs where human authorship may be assumed
+  - Attribute agent actions to the responsible AI system, workflow, or service account
+  - Preserve labels and attribution in records, exports, or downstream workflows where feasible
+  - Define and approve exceptions where labelling is not required or not feasible
+reviewCadence:
+  - Pre-deployment validation of labelling controls
+  - Periodic review for externally facing, user-facing, or downstream-system outputs
+  - >-
+    Additional review after changes to output channels, user groups, workflow routing, or
+    transparency requirements
+example: >-
+  An AI-generated document is mistaken for human-authored work, or an AI agent takes an action
+  without a clear record of which system performed it. This control helps prevent confusion and
+  accountability gaps by making AI-generated outputs and agentic actions clearly identifiable.
+origin: Adapted
+applicability: Both
+mappings:
+  - framework: mitRisk
+    value: 3.1 False or misleading information
+  - framework: atlas
+    value: AML.T0048 External Harms (Financial / Reputational / Societal..etc.)
+  - framework: attack
+    value: T1566 Phishing
+  - framework: euAiAct
+    value: Art. 50
+  - framework: nistRmf
+    value: GOVERN 1; MEASURE
+  - framework: iso42001
+    value: A.8

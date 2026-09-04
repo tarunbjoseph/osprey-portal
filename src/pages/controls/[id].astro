@@ -1,0 +1,248 @@
+---
+import Base from '@/layouts/Base.astro';
+import { allControls, allFrameworks, allSurfaces, threatsForControl, url } from '@/lib/data';
+
+export async function getStaticPaths() {
+  const controls = await allControls();
+  return controls.map((c, i) => ({
+    params: { id: c.id },
+    props: { control: c, prev: controls[i - 1] ?? null, next: controls[i + 1] ?? null },
+  }));
+}
+
+const { control, prev, next } = Astro.props;
+const c = control.data;
+
+const frameworks = await allFrameworks();
+const surfaces = await allSurfaces();
+const framework = frameworks.find((f) => f.id === c.framework.id)!;
+const threats = await threatsForControl(control);
+const mySurfaces = surfaces.filter((s) => c.surfaces.includes(s.id));
+
+/** Labels for the publisher's own framework-mapping keys. */
+const MAP_LABEL: Record<string, string> = {
+  mitRisk: 'MIT AI Risk Repository',
+  atlas: 'MITRE ATLAS',
+  attack: 'MITRE ATT&CK',
+  euAiAct: 'EU AI Act',
+  nistRmf: 'NIST AI RMF',
+  iso42001: 'ISO/IEC 42001',
+};
+
+const COVERAGE_NOTE: Record<string, string> = {
+  direct: 'Runtime detections produce evidence for this control directly.',
+  partial: 'Some of what this control asks for is produced; the rest sits outside runtime scope.',
+  indirect: 'Contributed to rather than owned — the control is satisfied elsewhere.',
+  none: 'No runtime contribution, which is the correct answer for a governance-process control.',
+};
+---
+
+<Base
+  title={`${c.code} · ${c.name}`}
+  section="/frameworks"
+  description={c.purpose}
+>
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href={url('/frameworks')}>Frameworks</a>
+    <span aria-hidden="true">/</span>
+    <a href={url(`/frameworks/${framework.id}`)}>{framework.data.shortName}</a>
+    <span aria-hidden="true">/</span>
+    <span class="mono">{c.code}</span>
+  </nav>
+
+  <header class="hd">
+    <div class="hd-top">
+      <p class="mono code">{c.code}</p>
+      <span class="pill" data-cov={c.ospreyCoverage}>{c.ospreyCoverage} coverage</span>
+    </div>
+    <h1>{c.name}</h1>
+    <p class="lede">{c.purpose}</p>
+    <div class="badges">
+      <span class="chip"><span class="k">Pillar</span>{c.pillar}</span>
+      {c.tier && <span class="chip"><span class="k">Tier</span>{c.tier}</span>}
+      {c.origin && <span class="chip"><span class="k">Origin</span>{c.origin}</span>}
+      {c.applicability && <span class="chip"><span class="k">Applies to</span>{c.applicability}</span>}
+    </div>
+  </header>
+
+  <div class="grid">
+    <main>
+      {c.appliesTo && (
+        <section>
+          <h2>Scope</h2>
+          <p class="body">{c.appliesTo}</p>
+        </section>
+      )}
+
+      {c.requirements.length > 0 && (
+        <section>
+          <h2>Key requirements</h2>
+          <p class="sub">What the control asks an organisation to actually do.</p>
+          <ol class="reqs">{c.requirements.map((r) => <li>{r}</li>)}</ol>
+        </section>
+      )}
+
+      {c.evidence.length > 0 && (
+        <section>
+          <h2>Evidence</h2>
+          <p class="sub">What an auditor should be able to see to believe the control is operating.</p>
+          <ul class="ev">{c.evidence.map((e) => <li>{e}</li>)}</ul>
+        </section>
+      )}
+
+      {c.example && (
+        <section>
+          <div class="panel panel--note ex">
+            <p class="label">What this prevents</p>
+            <p class="body">{c.example}</p>
+          </div>
+        </section>
+      )}
+
+      {c.mappings.length > 0 && (
+        <section>
+          <h2>Framework mappings</h2>
+          <p class="sub">
+            The control author's own mappings into public frameworks, reproduced as published.
+            Where this project's validation found a discrepancy, it is noted rather than silently
+            corrected.
+          </p>
+          <div class="tablewrap">
+            <table class="data">
+              <thead><tr><th>Framework</th><th>Mapping</th></tr></thead>
+              <tbody>
+                {c.mappings.map((m) => (
+                  <tr>
+                    <td><strong>{MAP_LABEL[m.framework] ?? m.framework}</strong></td>
+                    <td>
+                      {m.value}
+                      {m.note && (
+                        <div class="corr">
+                          <span class="pill" data-v="pending">Discrepancy</span>
+                          <span>{m.note}</span>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+
+      {c.reviewCadence.length > 0 && (
+        <section>
+          <h2>Review cadence</h2>
+          <ul class="ev">{c.reviewCadence.map((r) => <li>{r}</li>)}</ul>
+        </section>
+      )}
+    </main>
+
+    <aside class="side">
+      <div class="card">
+        <p class="label">What OSPREY contributes</p>
+        <p class="body tiny">{c.coverageNote ?? COVERAGE_NOTE[c.ospreyCoverage]}</p>
+      </div>
+
+      {threats.length > 0 && (
+        <div class="card">
+          <p class="label">Threats producing this evidence</p>
+          <ul class="lst">
+            {threats.map((t) => (
+              <li>
+                <a href={url(`/threats/${t.id}`)}>
+                  <span class="mono">{t.data.code}</span> {t.data.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {mySurfaces.length > 0 && (
+        <div class="card">
+          <p class="label">Governance surfaces</p>
+          <div class="chips">
+            {mySurfaces.map((s) => (
+              <a class="chip" href={url(`/coverage#${s.id}`)}>{s.data.name}</a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div class="card">
+        <p class="label">Source</p>
+        <p class="body tiny">{framework.data.citation}</p>
+        <p class="body tiny sp">
+          <a href={framework.data.url} rel="noopener noreferrer" target="_blank">Publisher site ↗</a>
+          {' · '}
+          <a href={url('/attribution')}>Terms</a>
+        </p>
+      </div>
+    </aside>
+  </div>
+
+  <nav class="pager" aria-label="Control navigation">
+    {prev ? (
+      <a href={url(`/controls/${prev.id}`)} class="pg">
+        <span class="label">Previous</span>
+        <b>{prev.data.code} · {prev.data.name}</b>
+      </a>
+    ) : <span />}
+    {next && (
+      <a href={url(`/controls/${next.id}`)} class="pg pg--n">
+        <span class="label">Next</span>
+        <b>{next.data.code} · {next.data.name}</b>
+      </a>
+    )}
+  </nav>
+</Base>
+
+<style>
+  .crumbs { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: var(--sp-5) 0 0; font-size: 12.5px; color: var(--ink-3); }
+  .crumbs a { color: var(--ink-2); text-decoration: none; }
+  .crumbs a:hover { color: var(--accent); }
+
+  .hd { padding: var(--sp-4) 0 var(--sp-5); border-bottom: 2px solid var(--rule-strong); }
+  .hd-top { display: flex; align-items: center; gap: var(--sp-3); }
+  .code { font-size: 13px; font-weight: 600; color: var(--accent); letter-spacing: .04em; }
+  .hd-top .pill { margin-left: auto; }
+  .hd h1 { margin: 8px 0 var(--sp-3); font-size: var(--t-2xl); }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: var(--sp-4); }
+
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: var(--sp-7); padding-top: var(--sp-6); }
+  @media (max-width: 940px) { .grid { grid-template-columns: 1fr; gap: var(--sp-5); } }
+
+  section + section { margin-top: var(--sp-6); }
+  section h2 { font-size: var(--t-lg); margin-bottom: 6px; }
+  .sub { font-size: 13px; color: var(--ink-3); max-width: var(--measure); margin-bottom: var(--sp-3); }
+  .body { font-size: 14.5px; color: var(--ink-2); line-height: 1.55; max-width: var(--measure); }
+  .body.tiny { font-size: 12.5px; }
+  .body.sp { margin-top: 8px; }
+
+  .reqs { margin: 0; padding-left: 1.3em; font-size: 14.5px; color: var(--ink-2); }
+  .reqs li + li { margin-top: 7px; }
+  .ev { margin: 0; padding-left: 1.1em; font-size: 14px; color: var(--ink-2); }
+  .ev li + li { margin-top: 5px; }
+
+  .ex .body { margin-top: 6px; font-size: 13.5px; }
+  .corr { display: flex; gap: 8px; align-items: flex-start; margin-top: 8px; font-size: 12px; color: var(--ink-3); }
+  .corr .pill { flex: none; }
+
+  .side { display: grid; gap: var(--sp-3); align-content: start; }
+  @media (min-width: 941px) { .side { position: sticky; top: 78px; } }
+  .card { background: var(--panel); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--sp-4); }
+  .card .label { display: block; margin-bottom: 7px; }
+  .lst { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 13px; }
+  .lst a { text-decoration: none; color: var(--ink-2); }
+  .lst a:hover { color: var(--accent); }
+  .lst .mono { color: var(--accent); font-size: 11.5px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+
+  .pager { display: flex; justify-content: space-between; gap: var(--sp-4); margin-top: var(--sp-7); padding-top: var(--sp-5); border-top: 1px solid var(--rule); }
+  .pg { text-decoration: none; color: var(--ink-2); max-width: 46%; }
+  .pg--n { text-align: right; margin-left: auto; }
+  .pg b { display: block; font-family: var(--f-display); font-weight: 600; font-size: 15px; color: var(--ink); margin-top: 3px; }
+  .pg:hover b { color: var(--accent); }
+</style>

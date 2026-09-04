@@ -1,14 +1,51 @@
-code: "GOV-04"
-name: "Model Training Governance"
-framework: "agsc"
-pillar: "Governance"
-tier: "T3"
-purpose: "Ensure models that are trained, fine-tuned or materially developed follow a governed process."
+code: GOV-04
+name: Model Training Governance
+framework: agsc
+pillar: Governance
+tier: T3
+purpose: Ensure models that are trained, fine-tuned or materially developed follow a governed process.
 evidence:
-  - "Training data documentation"
-  - "Experiment and approval records"
+  - Training data lineage record
+  - Training pipeline, configuration, and version records
+  - Training environment access records
+  - Bias, representativeness, or data quality review
+  - Records showing sensitive data or IP restrictions were assessed
 surfaces:
-  - "learning-loop"
-ospreyCoverage: "none"
-coverageNote: "Out of OSPREY scope. Training-time governance sits with the model workstream."
+  - learning-loop
+ospreyCoverage: none
+coverageNote: Out of OSPREY scope. Training-time governance sits with the model workstream.
 order: 34
+appliesTo: >-
+  AI systems where models are trained, fine-tuned, adapted, or materially developed using
+  organizational, third-party, or domain-specific data.
+requirements:
+  - Document training data lineage, source, and intended use
+  - Use approved and access-controlled training environments
+  - Maintain reproducible training pipelines and version control
+  - Screen datasets for quality, bias, representativeness, and integrity
+  - Protect sensitive, personal, confidential, or restricted data from unauthorized use
+reviewCadence:
+  - Pre-training data quality validation
+  - Bias and integrity checks during development
+  - Periodic model performance review during development
+  - Regulatory or compliance review where applicable
+example: >-
+  A model is trained using data that includes unauthorized licensed, confidential, or poorly
+  representative material. The issue is only discovered after deployment. This control helps prevent
+  that failure by requiring approved data lineage, controlled training environments, and
+  pre-training data review.
+origin: Adapted
+applicability: AI systems
+mappings:
+  - framework: mitRisk
+    value: 1.1 Unfair discrimination and misrepresentation
+  - framework: atlas
+    value: AML.T0020 Poison Training Data
+  - framework: attack
+    value: T1195 Supply Chain Compromise
+  - framework: euAiAct
+    value: Art. 10
+  - framework: nistRmf
+    value: MAP; MEASURE
+  - framework: iso42001
+    value: A.7, A.6.2

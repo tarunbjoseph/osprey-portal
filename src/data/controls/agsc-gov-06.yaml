@@ -1,15 +1,54 @@
-code: "GOV-06"
-name: "Model Continuous Improvement & Drift Management"
-framework: "agsc"
-pillar: "Governance"
-tier: "T3"
-purpose: "Ensure production models are monitored for performance drift and improved through a governed cycle."
+code: GOV-06
+name: Model Continuous Improvement & Drift Management
+framework: agsc
+pillar: Governance
+tier: T3
+purpose: >-
+  Ensure production models are monitored for performance drift and improved through a governed
+  cycle.
 evidence:
-  - "Drift monitoring records"
-  - "Retraining and improvement decisions"
+  - Drift or performance monitoring dashboard
+  - Threshold configuration and alert records
+  - Drift, degradation, or incident investigation records
+  - Retraining or adjustment logs
+  - Post-retraining validation results
 surfaces:
-  - "model"
-  - "learning-loop"
-ospreyCoverage: "indirect"
-coverageNote: "Detection-quality trends over time feed this control, but model drift itself is measured by the evaluation workstream."
+  - model
+  - learning-loop
+ospreyCoverage: indirect
+coverageNote: >-
+  Detection-quality trends over time feed this control, but model drift itself is measured by the
+  evaluation workstream.
 order: 36
+appliesTo: >-
+  AI systems in production where performance, data patterns, user behaviour, operating conditions,
+  or business requirements may change over time.
+requirements:
+  - Define production performance and drift thresholds
+  - Monitor performance trends and input/output changes over time
+  - Set triggers for investigation, retraining, adjustment, or rollback
+  - Validate the model after retraining or material adjustment
+  - Track improvement actions and lifecycle decisions
+reviewCadence:
+  - Real-time or periodic monitoring with automated alerts where applicable
+  - Weekly performance trend analysis where needed
+  - Monthly drift assessment
+  - Quarterly improvement planning
+  - Annual model lifecycle review
+example: >-
+  Business data changes after a process update, and the model's accuracy declines for months without
+  detection. This control helps prevent that failure by requiring drift thresholds, monitoring,
+  alerts, and retraining triggers.
+origin: Adapted
+applicability: AI systems
+mappings:
+  - framework: mitRisk
+    value: 7.3 Lack of capability or robustness
+  - framework: atlas
+    value: AML.T0031 Erode ML Model Integrity
+  - framework: euAiAct
+    value: Art. 72
+  - framework: nistRmf
+    value: MANAGE 4.1
+  - framework: iso42001
+    value: A.6.2, A.9

@@ -1,16 +1,60 @@
-code: "SAF-03"
-name: "Content Safety & Misuse Prevention"
-framework: "agsc"
-pillar: "Safety"
-tier: "T1"
-purpose: "Ensure the AI system has appropriate content safety protections, misuse prevention measures, and escalation paths before it is used in a real business setting."
+code: SAF-03
+name: Content Safety & Misuse Prevention
+framework: agsc
+pillar: Safety
+tier: T1
+purpose: >-
+  Ensure the AI system has appropriate content safety protections, misuse prevention measures, and
+  escalation paths before it is used in a real business setting.
 evidence:
-  - "Documented content safety rules or policy"
-  - "Evidence of implemented safeguards"
-  - "Results of misuse and safety testing"
-  - "Defined process for handling unsafe outputs"
+  - Documented content safety rules or policy
+  - Evidence of implemented safeguards
+  - Results of misuse and safety testing
+  - Records of escalations or reviews where applicable
+  - Defined process for handling unsafe outputs
 surfaces:
-  - "safety-layer"
-ospreyCoverage: "partial"
-coverageNote: "Only partly covered. OSPREY governs actions rather than generated content, so content classification sits outside the current scope. This is the one Tier 1 control the build does not fully reach."
+  - safety-layer
+ospreyCoverage: partial
+coverageNote: >-
+  Only partly covered. OSPREY governs actions rather than generated content, so content
+  classification sits outside the current scope. This is the one Tier 1 control the build does not
+  fully reach.
 order: 13
+appliesTo: >-
+  AI systems that create or respond with content, especially when the output is used by external
+  users.
+requirements:
+  - Define clear boundaries for acceptable and prohibited content
+  - Implement safeguards to reduce harmful or policy-violating outputs
+  - Test for misuse and attempts to bypass controls before deployment
+  - Establish clear actions for handling unsafe outputs, including escalation where needed
+  - Enable reporting of problematic outputs where appropriate
+  - Reassess safeguards after significant system or use changes
+reviewCadence:
+  - Pre-deployment content safety and misuse testing
+  - Periodic output review based on risk tier and exposure
+  - Monthly review for high-risk, public-facing, or externally exposed systems
+  - >-
+    Additional review after model changes, prompt changes, policy updates, jailbreak attempts, or
+    unsafe output incidents
+example: >-
+  A customer-facing assistant is manipulated into producing unsafe or prohibited instructions that
+  fall outside the approved use case. Because content safety safeguards were not properly tested,
+  the response is delivered to the user without being blocked, escalated, or reviewed. This control
+  helps prevent that type of failure by requiring clear content boundaries, misuse testing, output
+  safeguards, and escalation paths before deployment.
+origin: AI-native
+applicability: GenAI
+mappings:
+  - framework: mitRisk
+    value: 1.2 Exposure to toxic content
+  - framework: atlas
+    value: AML.T0054 LLM Jailbreak
+  - framework: attack
+    value: T1587 Develop Capabilities
+  - framework: euAiAct
+    value: Art. 15
+  - framework: nistRmf
+    value: MEASURE 2.6, 2.7; MANAGE 2.x
+  - framework: iso42001
+    value: A.6.2

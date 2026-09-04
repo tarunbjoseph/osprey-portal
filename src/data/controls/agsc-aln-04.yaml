@@ -1,15 +1,53 @@
-code: "ALN-04"
-name: "Model Explainability"
-framework: "agsc"
-pillar: "Alignment"
-tier: "T3"
-purpose: "Ensure the AI system has an explanation approach appropriate to its risk, use case and audience, including decision traces and tool-use records for agentic systems."
+code: ALN-04
+name: Model Explainability
+framework: agsc
+pillar: Alignment
+tier: T3
+purpose: >-
+  Ensure the AI system has an explanation approach appropriate to its risk, use case and audience,
+  including decision traces and tool-use records for agentic systems.
 evidence:
-  - "Documented explanation method"
-  - "Decision traces, tool-use records or action history"
-  - "Records of explanation-quality or audit reviews"
+  - Documented explanation method
+  - Sample explanations or rationale summaries
+  - Model or system documentation describing intended use and limitations
+  - Sample citations, grounding records, decision traces, or action logs where applicable
+  - Records of explanation-quality or audit reviews
 surfaces:
-  - "telemetry"
-ospreyCoverage: "indirect"
-coverageNote: "The session trace OSPREY needs for detection is the same trace this control needs for explanation. Shared dependency, different consumer."
+  - telemetry
+ospreyCoverage: indirect
+coverageNote: >-
+  The session trace OSPREY needs for detection is the same trace this control needs for explanation.
+  Shared dependency, different consumer.
 order: 24
+appliesTo: >-
+  AI systems where teams need to understand, audit, validate, troubleshoot, or improve how outputs,
+  recommendations, or actions are produced.
+requirements:
+  - Define an explanation approach based on system type and risk level
+  - Document the main factors, logic, evidence, or sources used by the system
+  - Provide rationale, citations, or grounding where appropriate
+  - Maintain decision traces, tool-use records, or action history for agentic systems
+  - Review explanation quality to support audit, accountability, and error correction
+reviewCadence:
+  - Pre-deployment explainability validation
+  - Periodic explanation quality review
+  - Stakeholder comprehension review for higher-risk systems
+  - Annual compliance or governance review where applicable
+example: >-
+  An AI system produces an important output, but the team cannot explain how it was generated or
+  what influenced the result. This makes it difficult to correct errors, respond to audit questions,
+  or determine whether the system is operating as intended. This control helps prevent that failure
+  by requiring a clear and risk-appropriate explanation approach.
+origin: Adapted
+applicability: AI systems
+mappings:
+  - framework: mitRisk
+    value: 7.4 Lack of transparency or interpretability
+  - framework: atlas
+    value: N/A — transparency and accountability control
+  - framework: euAiAct
+    value: Art. 13
+  - framework: nistRmf
+    value: MEASURE 2.9
+  - framework: iso42001
+    value: A.8
