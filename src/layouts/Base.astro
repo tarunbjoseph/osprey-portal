@@ -37,10 +37,12 @@ const current = section ?? new URL(Astro.request.url).pathname;
     />
     <script is:inline>
       // Apply the stored theme before first paint so there is no flash.
+      // Light is the default regardless of system preference; dark is
+      // applied only when the visitor has explicitly toggled it.
       try {
         const t = localStorage.getItem('osprey-theme');
         if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t;
-      } catch (e) { /* storage unavailable — fall back to system */ }
+      } catch (e) { /* storage unavailable — fall back to light default */ }
     </script>
   </head>
 
@@ -133,9 +135,7 @@ const current = section ?? new URL(Astro.request.url).pathname;
       const btn = document.getElementById('theme');
       btn?.addEventListener('click', () => {
         const root = document.documentElement;
-        const now =
-          root.dataset.theme ??
-          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const now = root.dataset.theme ?? 'light';
         const next = now === 'dark' ? 'light' : 'dark';
         root.dataset.theme = next;
         try { localStorage.setItem('osprey-theme', next); } catch (e) { /* ignore */ }
@@ -184,10 +184,6 @@ const current = section ?? new URL(Astro.request.url).pathname;
       .theme .moon { display: none; }
       :root[data-theme='dark'] .theme .sun { display: none; }
       :root[data-theme='dark'] .theme .moon { display: block; }
-      @media (prefers-color-scheme: dark) {
-        :root:not([data-theme='light']) .theme .sun { display: none; }
-        :root:not([data-theme='light']) .theme .moon { display: block; }
-      }
 
       @media (max-width: 900px) {
         .mast-in { flex-wrap: wrap; padding-top: 10px; padding-bottom: 10px; gap: var(--sp-3); }

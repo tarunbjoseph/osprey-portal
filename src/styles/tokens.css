@@ -1,10 +1,11 @@
 /* ==========================================================================
    OSPREY Governance Portal — design tokens
 
-   One palette, three theme states: bare :root is light, the media query
-   handles the un-stamped "system" default, and [data-theme] handles an
-   explicit choice. Every colour is declared in :root first so nothing is
-   defined only inside a conditional block.
+   One palette, two theme states: bare :root is light and is the default
+   regardless of system preference; [data-theme="dark"] is an explicit
+   choice made via the theme toggle and persisted to localStorage. Every
+   colour is declared in :root first so nothing is defined only inside a
+   conditional block.
 
    Semantic severity colours are deliberately separate from the accent, so a
    Critical row never reads as "branded" and the accent never reads as alarm.
@@ -70,44 +71,6 @@
   --r-sm: 2px; --r-md: 3px; --r-lg: 6px;
   --measure: 66ch;
   --shell: 1220px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-
-    --ground:      #11151A;
-    --panel:       #181E25;
-    --panel-2:     #1F262E;
-    --panel-3:     #273039;
-
-    --ink:         #E6ECF2;
-    --ink-2:       #A7B3BF;
-    --ink-3:       #7C8894;
-    --ink-inv:     #11151A;
-
-    --rule:        #2B343E;
-    --rule-2:      #222A32;
-    --rule-strong: #E6ECF2;
-
-    --accent:      #6FA6D6;
-    --accent-2:    #9CC5E8;
-    --accent-soft: #1C2B39;
-    --accent-ink:  #9CC5E8;
-
-    --crit:        #E8798E;  --crit-bg:    #2E1A20;
-    --high:        #E0975F;  --high-bg:    #2E2018;
-    --medhigh:     #D4B34F;  --medhigh-bg: #2B2618;
-    --med:         #7FB4C6;  --med-bg:     #16262C;
-    --low:         #8FBFA2;  --low-bg:     #182420;
-
-    --ok:          #7FC49E;  --ok-bg:      #16261E;
-    --warn:        #D4B34F;  --warn-bg:    #2B2618;
-    --gapc:        #B0A0D4;  --gap-bg:     #221E2E;
-
-    --shadow-1: 0 1px 2px rgba(0, 0, 0, .35);
-    --shadow-2: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -14px rgba(0, 0, 0, .7);
-  }
 }
 
 :root[data-theme="dark"] {
