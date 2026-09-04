@@ -2,9 +2,9 @@ code: "MC-5"
 name: "Change Control"
 framework: "adg"
 pillar: "Adopt"
-purpose: "Manage changes to prompts, tools, models and retrieval sources through a governed change process."
+purpose: "Changes to prompts, tools, models and retrieval sources pass through an approval process rather than going straight to production."
 evidence:
-  - "Change log with approval records; no uncontrolled production changes"
+  - "A change log with approvals attached, and no production changes that bypassed it"
 surfaces:
   - "prompt"
   - "tools"

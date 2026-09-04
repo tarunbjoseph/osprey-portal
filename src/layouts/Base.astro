@@ -97,6 +97,11 @@ const current = section ?? new URL(Astro.request.url).pathname;
             portal adds the runtime threat layer, the EC-Council ADG mapping, and the evaluation
             evidence that shows whether the controls are operating.
           </p>
+          <p class="foot-note small">
+            Content licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/" rel="noopener noreferrer" target="_blank">CC BY-SA 4.0</a>;
+            code MIT. Referenced frameworks remain the property of their publishers under their own
+            terms — see <a href={url('/attribution')}>attribution</a>.
+          </p>
         </div>
         <div class="foot-col">
           <p class="label">Anchored to</p>
@@ -114,6 +119,7 @@ const current = section ?? new URL(Astro.request.url).pathname;
             <li><a href={url('/frameworks')}>Framework versions in use</a></li>
             <li><a href={url('/changelog')}>Changelog</a></li>
             <li><a href={url('/notes/how-to-read-this')}>How to read this</a></li>
+            <li><a href={url('/attribution')}>Attribution &amp; terms</a></li>
           </ul>
           <p class="foot-note small">
             Every framework reference on this site carries the version it was validated against.

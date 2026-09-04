@@ -81,6 +81,7 @@ const grouped = ['internal-anchor', 'external-validation', 'regulatory'].map((ro
               <div><dt class="label">Publisher</dt><dd>{f.data.publisher}</dd></div>
               {f.data.released && <div><dt class="label">Released</dt><dd class="mono">{f.data.released}</dd></div>}
               {f.data.validated && <div><dt class="label">Anchors validated</dt><dd class="mono">{f.data.validated}</dd></div>}
+              <div><dt class="label">Terms</dt><dd>{f.data.licence.name}</dd></div>
               <div><dt class="label">Referenced by</dt><dd class="mono">
                 {countFor(f.id)} anchor{countFor(f.id) === 1 ? '' : 's'}
                 {controlsFor(f.id) > 0 && ` · ${controlsFor(f.id)} controls`}

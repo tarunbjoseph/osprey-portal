@@ -2,9 +2,9 @@ code: "MC-9"
 name: "AI Incident Response"
 framework: "adg"
 pillar: "Defend"
-purpose: "Maintain AI-specific incident response procedures with replayable evidence capture."
+purpose: "There is a procedure for AI incidents specifically, and it captures enough evidence to reconstruct afterwards what the system actually did."
 evidence:
-  - "Documented playbook; at least one tabletop exercise per year"
+  - "A written playbook that has been exercised at least once a year rather than only written"
 surfaces:
   - "telemetry"
 ospreyCoverage: "direct"

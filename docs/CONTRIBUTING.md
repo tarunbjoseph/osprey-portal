@@ -100,6 +100,26 @@ reader judge the material, so keep them.
 
 ---
 
+## Licensing rules that bind contributions
+
+Contributions are accepted under the repository's terms: MIT for code, CC BY-SA 4.0 for content.
+Two rules follow from what the referenced frameworks permit, and both matter more than they look.
+
+**Never paste framework text into a data file.** The EC-Council ADG white paper carries no licence
+grant, and ISO/IEC 42001 is a copyrighted standard sold by ISO. Read what the control requires,
+then write what it requires in your own words. Identifiers and element names are fine — a
+crosswalk cannot work without them — but the prose has to be yours.
+
+**Check the terms before adding a framework.** The `licence` field on a framework entry is
+required, so the schema will stop you, but the schema cannot tell you what the answer is. Find the
+publisher's terms, record them, and set `reuse` honestly. If no licence exists, `identifiers-only`
+is the correct answer and the descriptions have to be written from scratch.
+
+When in doubt, [`NOTICE.md`](../NOTICE.md) has the reasoning for every source already in the
+project.
+
+---
+
 ## Code changes
 
 Adding a *kind* of data means adding a collection to `src/content.config.ts` and a page to render

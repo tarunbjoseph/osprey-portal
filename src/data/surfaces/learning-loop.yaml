@@ -3,8 +3,8 @@ framework: "adg"
 pillars:
   - "Govern"
   - "Adopt"
-scope: "Pre-training sources, post-training alignment, feedback loops, retraining updates, RLHF data."
-objective: "Control data provenance, drift, alignment stability, and undocumented behaviour change."
+scope: "Everything that changes the model over time: pre-training sources, post-training alignment, feedback loops, retraining, and the preference data behind it."
+objective: "Data origin is known, drift is tracked, alignment holds, and behaviour never changes without a record of why."
 coverage: "out-of-scope"
 coverageNote: "Largely outside the runtime scope. It is reached only where poisoned context persists into memory and influences later sessions; training-time governance belongs to the model workstream."
 order: 90

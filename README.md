@@ -144,6 +144,24 @@ truth** — edit those, not the seeders.
 
 ---
 
+## Licensing — read before republishing
+
+Code is **MIT**. Content under `src/data/` and `docs/` is **CC BY-SA 4.0**.
+
+The ShareAlike term is not decorative: parts of the content derive from the OWASP Top 10 lists,
+which are themselves CC BY-SA 4.0, and that condition carries forward. The practical consequence is
+that this content can be published, linked and used commercially, but cannot later be made
+proprietary.
+
+One referenced framework — the EC-Council ADG white paper — carries **no licence grant at all**.
+This project uses its identifiers and element names as mapping targets and writes every
+description independently. **Do not paste ADG or ISO/IEC 42001 text into a data file.**
+
+[`NOTICE.md`](NOTICE.md) records every source, its terms, and what is reproduced here on what
+basis. Read it before extracting content into another work.
+
+---
+
 ## Built with
 
 Astro with React islands, static output, no runtime dependencies in the published site. Type

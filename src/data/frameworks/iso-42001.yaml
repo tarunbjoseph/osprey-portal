@@ -8,5 +8,10 @@ url: "https://www.iso.org/standard/42001"
 citation: "ISO/IEC 42001:2023, Information technology — Artificial intelligence — Management system."
 role: "regulatory"
 idPattern: "A."
+licence:
+  name: "Copyrighted \u2014 sold by ISO"
+  url: "https://www.iso.org/standard/42001"
+  reuse: "citation-only"
+  note: "ISO standards are copyrighted works sold by ISO and may not be reproduced. This project cites clause identifiers only. Do not add clause text or clause summaries to this repository \u2014 an identifier is a citation, a summary is a derivative work."
 order: 80
 summary: "A certifiable management-system standard for AI, whose Annex A control groups both AGSC and ADG map into. Referenced here for traceability: a detection that produces evidence for an AGSC control also produces evidence toward the Annex A group that control maps to."

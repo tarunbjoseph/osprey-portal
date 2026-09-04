@@ -2,9 +2,9 @@ code: "MC-12"
 name: "Shared Responsibility Documentation"
 framework: "adg"
 pillar: "Govern"
-purpose: "For vendor or SaaS AI, document accountability boundaries, contractual obligations and assurance requirements."
+purpose: "Where AI arrives from a vendor, it is written down who is accountable for what, what the contract obliges them to do, and what assurance is expected in return."
 evidence:
-  - "Signed responsibility matrix; vendor due diligence records"
+  - "A signed responsibility matrix and the vendor due-diligence records behind it"
 surfaces:
   - "tools"
   - "model"

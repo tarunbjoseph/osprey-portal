@@ -2,8 +2,8 @@ name: "Tools"
 framework: "adg"
 pillars:
   - "Defend"
-scope: "APIs, plugins, actions, code execution, file access, transactional endpoints, MCP capabilities."
-objective: "Enforce least privilege, strong validation, sandboxing, and full audit logging."
+scope: "Everything the agent can act through: APIs, plugins, code execution, file access, transactional endpoints and MCP capabilities."
+objective: "Each tool runs with the least access it needs, validates what it is handed, executes where it can be contained, and leaves a record behind."
 coverage: "direct"
 coverageNote: "Strong coverage, conditional on a machine-readable statement of what each agent is allowed to call - the artifact ADG names an Agent Authority Statement. With it, several of these checks are exact rather than probabilistic."
 order: 40

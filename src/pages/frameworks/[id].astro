@@ -56,7 +56,22 @@ const threatByCode = new Map(threats.map((t) => [t.data.code, t]));
       {f.validated && <div><dt class="label">Anchors validated</dt><dd class="mono">{f.validated}</dd></div>}
       <div><dt class="label">Referenced by</dt><dd class="mono">{anchors.length} anchors</dd></div>
       <div><dt class="label">Source</dt><dd><a href={f.url} rel="noopener noreferrer" target="_blank">Publisher site ↗</a></dd></div>
+      <div><dt class="label">Terms</dt><dd>
+        {f.licence.url
+          ? <a href={f.licence.url} rel="noopener noreferrer" target="_blank">{f.licence.name} ↗</a>
+          : f.licence.name}
+      </dd></div>
     </dl>
+
+    <div class="panel panel--note terms" data-reuse={f.licence.reuse}>
+      <p class="label">
+        {f.licence.reuse === 'open' && 'Open — reproduced with attribution'}
+        {f.licence.reuse === 'share-alike' && 'Share-alike — condition attached'}
+        {f.licence.reuse === 'identifiers-only' && 'No licence granted — identifiers only'}
+        {f.licence.reuse === 'citation-only' && 'Cited, not reproduced'}
+      </p>
+      <p>{f.licence.note}</p>
+    </div>
     {f.supersededBy && (
       <div class="panel panel--note warn">
         <p class="label">Newer release available</p>
@@ -176,6 +191,11 @@ const threatByCode = new Map(threats.map((t) => [t.data.code, t]));
   .facts div { display: flex; flex-direction: column; gap: 3px; }
   .facts dd { margin: 0; font-size: 12px; color: var(--ink-2); }
   .warn { margin-top: var(--sp-4); border-left-color: var(--warn); }
+  .terms { margin-top: var(--sp-4); }
+  .terms p:last-child { font-size: 13px; color: var(--ink-2); margin-top: 6px; max-width: var(--measure); }
+  .terms[data-reuse='identifiers-only'] { border-left-color: var(--crit); }
+  .terms[data-reuse='share-alike'] { border-left-color: var(--warn); }
+  .terms[data-reuse='citation-only'] { border-left-color: var(--ink-3); }
 
   .sec { margin-top: var(--sp-7); }
   .sec h2 { margin-bottom: 6px; }

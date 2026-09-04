@@ -2,9 +2,9 @@ code: "MC-2"
 name: "Risk Classification"
 framework: "adg"
 pillar: "Govern"
-purpose: "Classify each AI system by data sensitivity, autonomy, external exposure, harm potential, and business criticality."
+purpose: "Each system is graded on the dimensions that decide how much governance it needs: how sensitive its data is, how autonomously it acts, who can reach it, what it could damage, and how far the business depends on it."
 evidence:
-  - "Documented classification per system using a standardized risk taxonomy"
+  - "A recorded classification for each system, produced against a consistent scheme rather than decided case by case"
 surfaces:
   - "model"
 ospreyCoverage: "indirect"

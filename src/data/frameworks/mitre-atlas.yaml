@@ -7,5 +7,10 @@ url: "https://atlas.mitre.org/"
 citation: "MITRE ATLAS (Adversarial Threat Landscape for AI Systems), distribution reporting version 5.6.0."
 role: "external-validation"
 idPattern: "AML.T / AML.TA"
+licence:
+  name: "Apache License 2.0"
+  url: "https://www.apache.org/licenses/LICENSE-2.0"
+  reuse: "open"
+  note: "ATLAS data is distributed under Apache 2.0, released publicly with distribution unlimited. Only tactic and technique identifiers and names are referenced here."
 order: 50
 summary: "The adversarial-ML counterpart to ATT&CK: sixteen tactics and a growing technique catalogue, with recent releases adding heavily to agent, tool and supply-chain coverage. Note that ATLAS ships under two version schemes — the primary distribution reports 5.6.0, while OWASP 2026 pins a dated content distribution (v2026.06, format-version 6.0.0). Both are real; this portal anchors tactics against the primary distribution and marks technique identifiers individually."

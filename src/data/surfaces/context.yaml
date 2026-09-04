@@ -3,8 +3,8 @@ framework: "adg"
 pillars:
   - "Govern"
   - "Defend"
-scope: "Retrieval sources, session state, memory, hidden context, user metadata, cross-session data."
-objective: "Prevent poisoning, leakage, cross-session contamination, and privacy violations."
+scope: "Everything the model reads that is not the current message: retrieved documents, session state, persistent memory, hidden orchestration context, and anything carried between sessions."
+objective: "Nothing malicious enters through what the model reads, and nothing private escapes through it."
 coverage: "direct"
 coverageNote: "Well covered in principle and entirely dependent on one telemetry field in practice: whether a span can be attributed to the user, a retrieval, a tool response or memory. That field is what ADG MC-6 exists to establish, and without it the detections here degrade to guessing."
 order: 30

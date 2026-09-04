@@ -2,9 +2,9 @@ code: "MC-11"
 name: "Fairness and Bias Evaluation"
 framework: "adg"
 pillar: "Govern"
-purpose: "Evaluate AI systems for discriminatory outcomes using representative test data and established fairness metrics."
+purpose: "Systems are tested for discriminatory outcomes against representative data, using fairness measures that already exist rather than ones invented for the occasion."
 evidence:
-  - "Fairness evaluation report; re-evaluation after model or data changes"
+  - "A fairness evaluation report, repeated whenever the model or its data changes"
 surfaces:
   - "model"
 ospreyCoverage: "none"

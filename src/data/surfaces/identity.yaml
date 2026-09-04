@@ -3,8 +3,8 @@ framework: "adg"
 pillars:
   - "Govern"
   - "Defend"
-scope: "Credentials, service accounts, delegated authority, secrets, trust relationships, agent identity."
-objective: "Prevent privilege misuse, preserve accountability, trace agent actions to human authority."
+scope: "Who an agent is and what it may act as: credentials, service accounts, delegated authority, secrets, and the trust relationships between them."
+objective: "Privilege is not misused, accountability survives the handoff, and every agent action traces back to a human who authorised it."
 coverage: "direct"
 coverageNote: "Deterministic and exact once an agent identity register exists. The highest-value quick win on the board: no model training, no labelled data, and it produces the evidence that every agent action traces back to a human authority."
 order: 60

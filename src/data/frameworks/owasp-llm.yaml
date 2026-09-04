@@ -8,5 +8,10 @@ url: "https://genai.owasp.org/"
 citation: "OWASP Top 10 for LLM Applications 2026 v1.0, OWASP GenAI Security Project."
 role: "external-validation"
 idPattern: "LLM"
+licence:
+  name: "CC BY-SA 4.0"
+  url: "https://creativecommons.org/licenses/by-sa/4.0/"
+  reuse: "share-alike"
+  note: "Published under Creative Commons Attribution-ShareAlike 4.0. Some anchor rationales here derive from the framework-mapping appendix, which is permitted; the ShareAlike condition is why this project licenses its own content under the same terms."
 order: 30
 summary: "The 2026 release is the first built on incident evidence as well as practitioner vote — 7,714 real incidents scored against the community ranking. Ordering moved materially: Excessive Agency climbed to third because agentic deployments are where damage lands, Unbounded Consumption rose four places, and System Prompt Leakage was re-scoped into the broader Hidden Context Exposure. The list owns risk where the model is a component inside an application; once the model becomes an actor with tools and memory, risk moves to the Agentic Top 10."

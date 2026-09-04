@@ -2,9 +2,9 @@ code: "MC-7"
 name: "Tool and MCP Register"
 framework: "adg"
 pillar: "Defend"
-purpose: "Maintain a register of all tools and MCP capabilities with trust tiering and invocation controls."
+purpose: "Every tool and MCP capability an agent can call is registered, graded for how far it can be trusted, and governed by a rule about when it may be invoked."
 evidence:
-  - "Published register with per-tool risk assessment and approval status"
+  - "A published register carrying a risk assessment and an approval decision for each tool"
 surfaces:
   - "tools"
 ospreyCoverage: "direct"

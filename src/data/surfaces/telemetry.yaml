@@ -3,8 +3,8 @@ framework: "adg"
 pillars:
   - "Defend"
   - "Govern"
-scope: "Logs, traces, evaluations, replay data, alerts, governance evidence, fairness metrics."
-objective: "Make behaviour observable, reviewable, provable, and measurable."
+scope: "Logs, traces, evaluation results, replay data, alerts, and the evidence a governance review depends on."
+objective: "Behaviour can be observed as it happens, reviewed afterwards, proven to a third party, and measured over time."
 coverage: "foundational"
 coverageNote: "Not a threat surface so much as the substrate every other one depends on. It is also the single largest determinant of whether the rest of the register is detectable at all."
 order: 80

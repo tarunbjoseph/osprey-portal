@@ -3,8 +3,8 @@ framework: "adg"
 pillars:
   - "Adopt"
   - "Defend"
-scope: "System prompts, templates, policies, agent instructions, prompt libraries, multimodal input validation."
-objective: "Prevent unmanaged behaviour changes and unsafe instruction patterns."
+scope: "Everything that tells a model what it is and how to behave: system prompts, templates, agent instructions and prompt libraries, including validation of non-text inputs."
+objective: "Behaviour does not change without someone deciding it should, and unsafe instruction patterns never reach the model."
 coverage: "direct"
 coverageNote: "The strongest coverage in the current build. Instruction-boundary attacks arrive as text, which is the one thing a classifier is unambiguously good at, and synthetic training data for them is cheap to produce."
 order: 20

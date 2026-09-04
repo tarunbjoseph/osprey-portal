@@ -2,9 +2,9 @@ code: "MC-3"
 name: "Separation of Duties"
 framework: "adg"
 pillar: "Govern"
-purpose: "Separate deployment ownership, security validation, and approval authority across Adopt, Defend and Govern."
+purpose: "The people who ship a system, the people who test its security, and the people who authorise its release are not the same people."
 evidence:
-  - "RACI matrix per AI system; no single function holding all three roles"
+  - "A responsibility map per system showing that no single function holds delivery, validation and approval together"
 surfaces:
   - "identity"
   - "orchestration"

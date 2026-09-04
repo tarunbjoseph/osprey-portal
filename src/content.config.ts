@@ -96,6 +96,19 @@ const frameworks = defineCollection({
     url: z.string().url(),
     /** How to cite it in prose. */
     citation: z.string(),
+    /**
+     * Licence terms, and what this project is therefore allowed to reproduce.
+     * Required — a framework cannot be added without stating them, because
+     * "we never checked" is how a public repository acquires a problem.
+     */
+    licence: z.object({
+      /** Short name: "CC BY-SA 4.0", "Apache 2.0", "None granted". */
+      name: z.string(),
+      url: z.string().url().optional(),
+      /** What this project reproduces, and on what basis. */
+      reuse: z.enum(['open', 'share-alike', 'identifiers-only', 'citation-only']),
+      note: z.string(),
+    }),
     /** Where it sits in OSPREY's anchoring order. */
     role: z.enum(['internal-anchor', 'external-validation', 'regulatory']),
     /** One paragraph: what this framework is for and why OSPREY uses it. */

@@ -3,8 +3,8 @@ framework: "adg"
 pillars:
   - "Adopt"
   - "Defend"
-scope: "Planners, workflow graphs, retry logic, multi-agent flows, model routing, agent-to-agent communication."
-objective: "Bound agent behaviour, prevent cascading failures, ensure deterministic control."
+scope: "The machinery that decides what happens next: planners, workflow graphs, retry logic, model routing, and how agents hand work to one another."
+objective: "Agent behaviour stays inside stated limits, one failure does not become many, and control of the sequence remains predictable."
 coverage: "direct"
 coverageNote: "The surface with the most categories and the highest telemetry cost. Everything here is a sequence or an aggregate, so none of it can be scored from isolated call records; full session trajectories are the prerequisite."
 order: 50

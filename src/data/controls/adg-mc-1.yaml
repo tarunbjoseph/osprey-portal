@@ -2,9 +2,9 @@ code: "MC-1"
 name: "AI System Inventory"
 framework: "adg"
 pillar: "Govern"
-purpose: "Maintain an inventory of all AI systems with an accountable owner, risk classification, and autonomy tier."
+purpose: "Every AI system the organisation runs is listed somewhere findable, and each entry names the person accountable for it, how risky it has been judged to be, and how much autonomy it operates with."
 evidence:
-  - "Published inventory, reviewed quarterly, with a named owner per system"
+  - "A published register, refreshed on a regular cycle, with a named accountable owner against every system"
 surfaces:
   - "model"
   - "identity"

@@ -2,8 +2,8 @@ name: "Safety Layer"
 framework: "adg"
 pillars:
   - "Defend"
-scope: "Guardrails, policy engines, semantic filters, classifiers, circuit breakers, harm detectors."
-objective: "Block unsafe content, unfair outputs, and unauthorized actions before impact."
+scope: "The controls sitting between an agent and its consequences: guardrails, policy engines, semantic filters, classifiers, circuit breakers and harm detectors."
+objective: "Unsafe content, unfair outputs and unauthorised actions are stopped before they land rather than reported after."
 coverage: "partial"
 coverageNote: "Partial by design. The platform governs what an agent does rather than what it writes, so action-level safeguards are covered while content-level ones are not. Whether that split is acceptable is an open scoping question rather than a defect."
 order: 70

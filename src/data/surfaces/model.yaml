@@ -3,8 +3,8 @@ framework: "adg"
 pillars:
   - "Adopt"
   - "Govern"
-scope: "Foundation models, fine-tuned models, adapters, routers, versions, diffusion models, composite model chains."
-objective: "Use only approved models with known risk posture, provenance, and change traceability."
+scope: "The models themselves and everything that varies them: base models, fine-tunes, adapters, routers, pinned versions, and chains that combine several."
+objective: "Only approved models run, and each one’s origin, risk posture and change history is known."
 coverage: "indirect"
 coverageNote: "Runtime behaviour is what this platform observes; model provenance and approval are established before deployment. Detections reach this surface only where an observed component diverges from what the registry says should be running."
 order: 10

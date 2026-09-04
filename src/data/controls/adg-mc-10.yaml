@@ -2,9 +2,9 @@ code: "MC-10"
 name: "Periodic Governance Review"
 framework: "adg"
 pillar: "Govern"
-purpose: "Conduct governance reviews with exception handling and board reporting for high-risk systems."
+purpose: "Governance is reviewed on a schedule, exceptions are dispositioned explicitly rather than left to accumulate, and high-risk systems are reported upward."
 evidence:
-  - "Review records with findings, decisions and exception dispositions"
+  - "Review records showing what was found, what was decided, and what happened to each open exception"
 surfaces:
   - "telemetry"
 ospreyCoverage: "none"

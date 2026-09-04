@@ -1,0 +1,184 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { allFrameworks, url } from '@/lib/data';
+
+const frameworks = await allFrameworks();
+
+const REUSE_LABEL: Record<string, string> = {
+  open: 'Open — reproduced with attribution',
+  'share-alike': 'Share-alike — condition attached',
+  'identifiers-only': 'No licence granted — identifiers only',
+  'citation-only': 'Cited, not reproduced',
+};
+
+const software = [
+  ['Astro', 'MIT'],
+  ['React', 'MIT'],
+  ['Zod', 'MIT'],
+  ['js-yaml', 'MIT'],
+  ['TypeScript', 'Apache 2.0'],
+  ['IBM Plex Sans · IBM Plex Mono', 'SIL Open Font License 1.1'],
+  ['Archivo', 'SIL Open Font License 1.1'],
+];
+---
+
+<Base
+  title="Attribution"
+  section="/attribution"
+  description="The frameworks this portal references, the terms each one is published under, and what is reproduced here on what basis."
+>
+  <PageHeader
+    eyebrow="Provenance"
+    title="Attribution and terms"
+    lede="This portal maps onto external frameworks whose licensing terms are not uniform. One of them permits no reuse at all. Recording that here rather than assuming it is how the mapping stays defensible."
+    facts={[
+      { k: 'Frameworks referenced', v: String(frameworks.length) },
+      { k: 'Code', v: 'MIT' },
+      { k: 'Content', v: 'CC BY-SA 4.0', href: 'https://creativecommons.org/licenses/by-sa/4.0/' },
+    ]}
+  />
+
+  <div class="prose intro">
+    <p>
+      Mapping onto a framework means naming its elements. That is ordinary interoperability
+      practice, and it is what makes a crosswalk useful. Reproducing a framework's prose is a
+      different act, and whether it is permitted depends entirely on how that framework is
+      published.
+    </p>
+    <p>
+      The table below records which is which. Where a publisher grants no reuse, this portal uses
+      identifiers and element names as mapping targets and states what the control requires in its
+      own words.
+    </p>
+  </div>
+
+  <section class="sec">
+    <h2>Frameworks</h2>
+    <div class="tablewrap">
+      <table class="data">
+        <thead>
+          <tr><th>Framework</th><th>Publisher</th><th>Terms</th><th>Basis for use here</th></tr>
+        </thead>
+        <tbody>
+          {frameworks.map((f) => (
+            <tr>
+              <td>
+                <a href={url(`/frameworks/${f.id}`)}><strong>{f.data.shortName}</strong></a>
+                <div class="ver mono">{f.data.version}</div>
+              </td>
+              <td>{f.data.publisher}</td>
+              <td>
+                {f.data.licence.url
+                  ? <a href={f.data.licence.url} rel="noopener noreferrer" target="_blank">{f.data.licence.name}</a>
+                  : f.data.licence.name}
+                <div class="reuse" data-reuse={f.data.licence.reuse}>{REUSE_LABEL[f.data.licence.reuse]}</div>
+              </td>
+              <td>{f.data.licence.note}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>How to cite the primary sources</h2>
+    <div class="cites">
+      {frameworks.map((f) => (
+        <div class="cite">
+          <p class="label">{f.data.shortName}</p>
+          <p class="mono">{f.data.citation}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>Two constraints worth knowing about</h2>
+
+    <div class="panel panel--note flag">
+      <h3>Share-alike carries forward</h3>
+      <p>
+        The OWASP lists are published under CC BY-SA 4.0. Some of the mapping rationales here are
+        derived from OWASP's own framework-mapping appendix, which is permitted — and the
+        ShareAlike condition is why the content of this portal is licensed under the same terms.
+        Publishing it, linking to it and using it commercially are all fine. Relicensing it under
+        closed terms is not.
+      </p>
+    </div>
+
+    <div class="panel panel--note flag danger">
+      <h3>One framework grants no reuse</h3>
+      <p>
+        The EC-Council ADG white paper carries no licence, no copyright notice and no terms of use,
+        so default copyright applies. This portal treats its identifiers and element names as
+        mapping targets and writes every description independently. Contributors should not paste
+        ADG text into a data file — read what the control requires, then state it in your own words.
+      </p>
+      <p>
+        The same rule applies more strictly to ISO/IEC 42001, whose text is sold rather than
+        published. Clause identifiers are cited here; clause text and clause summaries are not, and
+        should not be added.
+      </p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>Software and typefaces</h2>
+    <div class="tablewrap">
+      <table class="data">
+        <thead><tr><th>Component</th><th>Licence</th></tr></thead>
+        <tbody>
+          {software.map(([n, l]) => <tr><td><strong>{n}</strong></td><td>{l}</td></tr>)}
+        </tbody>
+      </table>
+    </div>
+    <p class="sub">
+      Typefaces are loaded from Google Fonts rather than bundled, so no font files are
+      redistributed with this project.
+    </p>
+  </section>
+
+  <section class="sec">
+    <div class="panel">
+      <h3>Not legal advice</h3>
+      <p>
+        This page records what the publishers state and how this project has interpreted it. It is
+        a careful reading, not a legal opinion. Anyone republishing this content commercially, or
+        extracting parts of it into another product, should have it reviewed.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .intro { padding: var(--sp-6) 0 0; }
+  .sec { margin-top: var(--sp-7); }
+  .sec h2 { margin-bottom: var(--sp-4); }
+  .sub { font-size: 13px; color: var(--ink-3); margin-top: var(--sp-3); max-width: var(--measure); }
+
+  table.data a { text-decoration: none; color: var(--ink-2); }
+  table.data a:hover { color: var(--accent); }
+  .ver { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
+  .reuse {
+    font-family: var(--f-mono); font-size: 10px; letter-spacing: .04em;
+    margin-top: 5px; color: var(--ink-3);
+  }
+  .reuse[data-reuse='open'] { color: var(--ok); }
+  .reuse[data-reuse='share-alike'] { color: var(--warn); }
+  .reuse[data-reuse='identifiers-only'] { color: var(--crit); }
+
+  .cites { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--sp-3); }
+  .cite { background: var(--panel); border: 1px solid var(--rule); border-radius: var(--r-md); padding: var(--sp-4); }
+  .cite .mono { font-size: 12px; color: var(--ink-2); margin-top: 6px; line-height: 1.5; }
+
+  .flag { margin-bottom: var(--sp-3); }
+  .flag h3 { font-size: var(--t-md); margin-bottom: 7px; }
+  .flag p { font-size: 13.5px; color: var(--ink-2); max-width: var(--measure); }
+  .flag p + p { margin-top: var(--sp-3); }
+  .flag.danger { border-left-color: var(--crit); }
+
+  .panel h3 { font-size: var(--t-md); margin-bottom: 7px; }
+  .panel p { font-size: 13.5px; color: var(--ink-2); max-width: var(--measure); }
+</style>

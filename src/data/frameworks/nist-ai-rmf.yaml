@@ -8,5 +8,9 @@ url: "https://airc.nist.gov/airmf-resources/airmf/"
 citation: "NIST AI Risk Management Framework (AI 100-1) v1.0, 2023."
 role: "regulatory"
 idPattern: "GOVERN / MAP / MEASURE / MANAGE"
+licence:
+  name: "US Government work \u2014 public domain"
+  reuse: "open"
+  note: "A work of the United States government, not subject to domestic copyright. Function names are cited."
 order: 70
 summary: "Four functions — Govern, Map, Measure, Manage — that organize AI risk work without prescribing controls. Both AGSC and ADG publish a crosswalk into these functions, so OSPREY inherits the mapping rather than deriving its own."

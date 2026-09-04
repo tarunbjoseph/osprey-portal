@@ -2,9 +2,9 @@ code: "MC-4"
 name: "Pre-Production Evaluation"
 framework: "adg"
 pillar: "Adopt"
-purpose: "Complete quality, safety, security, fairness and failure-mode testing before any production deployment."
+purpose: "Nothing reaches production before it has been tested for quality, safety, security, fairness, and how it behaves when it fails."
 evidence:
-  - "Signed evaluation report covering all four harm classes before go-live"
+  - "A signed evaluation report covering every harm class, dated before the system went live"
 surfaces:
   - "model"
   - "safety-layer"

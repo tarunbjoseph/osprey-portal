@@ -2,9 +2,9 @@ code: "MC-8"
 name: "Runtime Monitoring"
 framework: "adg"
 pillar: "Defend"
-purpose: "Monitor for abuse, drift, data leakage, unsafe actions, bias emergence and configuration drift in production."
+purpose: "Production systems are watched for the failures that only appear after launch: misuse, behavioural drift, data leaking out, unsafe actions, bias emerging, and configuration changing underneath."
 evidence:
-  - "Active monitoring with defined alert thresholds and response SLAs"
+  - "Monitoring that is actually running, with thresholds that trigger something and a stated time to respond"
 surfaces:
   - "telemetry"
   - "safety-layer"

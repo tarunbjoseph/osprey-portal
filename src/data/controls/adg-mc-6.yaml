@@ -2,9 +2,9 @@ code: "MC-6"
 name: "Context Policy"
 framework: "adg"
 pillar: "Govern"
-purpose: "Define provenance, retention, access restrictions, and trust ordering for all context inputs."
+purpose: "Every input the model can read has a stated origin, a retention period, an access rule, and a defined position in a trust order."
 evidence:
-  - "Published context policy per system; annual review"
+  - "A published context policy for each system, revisited on a set cycle"
 surfaces:
   - "context"
 ospreyCoverage: "direct"
