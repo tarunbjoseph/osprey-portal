@@ -15,23 +15,31 @@ const gate = threats.filter((t) => t.data.detection.inGate1);
 
 <Base description={site.description}>
   <section class="hero">
-    <p class="eyebrow">Project OSPREY · SafeAlign AI</p>
-    <h1>Agentic threat detection,<br />mapped to the controls that govern it.</h1>
-    <p class="lede hero-lede">
-      Enterprise AI agents plan, call tools and trigger actions on their own. Conventional
-      monitoring tracks latency and errors, and misses the failures that matter — an agent
-      drifting off task, reading instructions out of a poisoned document, or chaining permitted
-      tools into something no single call would have been allowed to do.
-    </p>
-    <p class="lede hero-lede">
-      This portal is the reference layer for that problem: the behaviours the platform detects,
-      the governance and security controls each detection provides evidence for, and the
-      benchmarks used to show whether any of it works.
-    </p>
+    <div class="hero-layout">
+      <div class="hero-copy">
+        <p class="eyebrow">Project OSPREY · SafeAlign AI</p>
+        <h1>Agentic threat detection,<br />mapped to the controls that govern it.</h1>
+        <p class="lede hero-lede">
+          Enterprise AI agents plan, call tools and trigger actions on their own. Conventional
+          monitoring tracks latency and errors, and misses the failures that matter — an agent
+          drifting off task, reading instructions out of a poisoned document, or chaining permitted
+          tools into something no single call would have been allowed to do.
+        </p>
+        <p class="lede hero-lede">
+          This portal is the reference layer for that problem: the behaviours the platform detects,
+          the governance and security controls each detection provides evidence for, and the
+          benchmarks used to show whether any of it works.
+        </p>
 
-    <div class="cta">
-      <a class="btn btn--p" href={url('/threats')}>Open the threat register</a>
-      <a class="btn" href={url('/frameworks')}>How the frameworks stack up</a>
+        <div class="cta">
+          <a class="btn btn--p" href={url('/threats')}>Open the threat register</a>
+          <a class="btn" href={url('/frameworks')}>How the frameworks stack up</a>
+        </div>
+      </div>
+      <div class="hero-brand" aria-hidden="true">
+        <img src={url('/brand/osprey-mark.png')} alt="" width="190" height="190" class="hero-emblem hero-emblem--light" />
+        <img src={url('/brand/osprey-mark-dark.png')} alt="" width="190" height="190" class="hero-emblem hero-emblem--dark" />
+      </div>
     </div>
   </section>
 
@@ -134,9 +142,38 @@ const gate = threats.filter((t) => t.data.detection.inGate1);
 </Base>
 
 <style>
-  .hero { padding: var(--sp-8) 0 var(--sp-6); max-width: 800px; }
+  .hero { padding: var(--sp-8) 0 var(--sp-6); }
+  .hero-layout {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--sp-7);
+  }
+  .hero-copy { max-width: 740px; }
   .hero h1 { margin: var(--sp-3) 0 var(--sp-4); }
   .hero-lede + .hero-lede { margin-top: var(--sp-3); }
+  .hero-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sp-2);
+  }
+  .hero-emblem {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 24px rgba(0, 210, 106, 0.16));
+  }
+  .hero-emblem--dark { display: none; }
+  :root[data-theme='dark'] .hero-emblem--light { display: none; }
+  :root[data-theme='dark'] .hero-emblem--dark { display: block; filter: drop-shadow(0 10px 24px rgba(0, 210, 106, 0.24)); }
+
+  @media (max-width: 880px) {
+    .hero-layout { grid-template-columns: 1fr; }
+    .hero-brand { order: -1; justify-content: flex-start; }
+    .hero-emblem { width: 100px; height: 100px; }
+  }
+
   .cta { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-5); }
   .btn {
     display: inline-block; font-size: 13.5px; font-weight: 500; text-decoration: none;
