@@ -21,6 +21,7 @@ export const nav: readonly { href: string; label: string; exact?: boolean }[] = 
   { href: '/', label: 'Overview', exact: true },
   { href: '/threats', label: 'Threat register' },
   { href: '/crosswalk', label: 'Crosswalk' },
+  { href: '/tracker', label: 'Sprint Tracker' },
   { href: '/frameworks', label: 'Frameworks' },
   { href: '/coverage', label: 'Coverage' },
   { href: '/benchmarks', label: 'Benchmarks' },

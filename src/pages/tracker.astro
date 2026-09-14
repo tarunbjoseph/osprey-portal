@@ -1,0 +1,705 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { url } from '@/lib/data';
+
+interface Workstream {
+  id: string;
+  name: string;
+  owners: string;
+  status: 'in-progress' | 'planned' | 'stable';
+  deliverables: string[];
+  dependency: string;
+}
+
+const workstreams: Workstream[] = [
+  {
+    id: 'WS-1',
+    name: 'Ingest & Feature Normalization Pipeline',
+    owners: 'Tarun Joseph / Ali',
+    status: 'in-progress',
+    deliverables: [
+      'Deterministic event timestamping from monotonic suffix: event_time = t0 + (suffix - 4521) * k (synthetic_time = true)',
+      'Agent ID decomposition: agent_role (behavioral unit) + agent_instance (deployment unit), unblocking A ↔ D join',
+      'Automated leakage drop list: strictly purge policy_gate_verdict and threat_detected before feature vectorization',
+      'Automated mapping of raw dataset labels to the 16 canonical OSP threat buckets',
+    ],
+    dependency: 'Unblocks all downstream feature extraction and evaluation code.',
+  },
+  {
+    id: 'WS-2',
+    name: 'Sequence Feature Layer & Trajectory Baselining',
+    owners: 'Danial / Mansi',
+    status: 'in-progress',
+    deliverables: [
+      'Multi-event grouping: GROUP BY (pipeline_id, agent_role, stage) ORDER BY derived event_time',
+      'Sliding-window tool-call n-gram extractor (pairs/triplets) and Markovian transition probability matrices',
+      'Deviation scoring against approved role profiles (detecting tool_chain_deviation, inter_agent_hijack, session_hijack)',
+      'Unlocks the 34.6% of positive anomalies structurally unlearnable on isolated point rows',
+    ],
+    dependency: 'Requires WS-1 normalized event streams.',
+  },
+  {
+    id: 'WS-3',
+    name: 'Dual-Scoring Evaluation Harness',
+    owners: 'Tarun Joseph / Ali',
+    status: 'in-progress',
+    deliverables: [
+      'Stratified holdout splitter on (vertical, anomaly_type)',
+      'Mandatory single-feature rule-baseline comparator: evaluates latency_ms > 320 and confidence_score < 0.90 on exact test split',
+      'Dual reporting engine: outputs [Model F1] vs [Rule-Baseline F1] side-by-side; enforces baseline beat margin',
+      'Gate 1 accuracy scope constraint: restricts classifier evaluation strictly to the 5 Gate 1 labels (OSP-02, 03, 07, 08, 15)',
+    ],
+    dependency: 'Requires WS-1 normalized labels and baseline threshold formulas.',
+  },
+  {
+    id: 'WS-4',
+    name: 'OPA Policy-as-Code Stub Harness',
+    owners: 'Danial / Mansi',
+    status: 'in-progress',
+    deliverables: [
+      'Local Open Policy Agent (OPA) runner interface consuming modular Rego policy bundles',
+      'Mock FSI credit-underwriting policy bundle defining deterministic gate conditions',
+      'Decision logger producing structured audit justification artifacts per PRD §5',
+      'Eliminates label circularity: evaluates policy rules independently rather than copying anomaly labels',
+    ],
+    dependency: 'Independent build; will swap mock bundle for real SafeAlign FSI bundle upon delivery.',
+  },
+  {
+    id: 'WS-5',
+    name: 'Dataset C Rebuild & Dataset D Gym Isolation',
+    owners: 'Joint (MLA Team & SafeAlign / Himanshu)',
+    status: 'in-progress',
+    deliverables: [
+      'Rebuilding Dataset C as a verified control registry with stable alphanumeric IDs (retiring Bill C-27 / AIDA)',
+      'Remapping compliance references to OWASP Top 10 for LLM Applications 2025 and PIPEDA / OSFI E-23',
+      'Partitioning Dataset D into two disjoint technique pools: CyberGym (known families) vs ExploitGym (held-out novel families)',
+      'Validating SafeAlign regenerated synthetic pool containing ~35% benign and near-miss scenarios',
+    ],
+    dependency: 'Coordinated with SafeAlign data engineering team.',
+  },
+];
+
+interface Escalation {
+  item: string;
+  whyBlocks: string;
+  owner: string;
+  targetDate: string;
+  status: 'active' | 'in-progress' | 'pending';
+}
+
+const escalations: Escalation[] = [
+  {
+    item: 'GCP & DGX Spark Sandbox Credentials',
+    whyBlocks: 'Blocks on-premise fine-tuning environment setup, QLoRA 4-bit scripts, and GPU memory profiling.',
+    owner: 'Himanshu / Tarun / Dmytro',
+    targetDate: '15 Sep 2026',
+    status: 'active',
+  },
+  {
+    item: 'Regenerated Synthetic Extract v2',
+    whyBlocks: 'Overlapping latency distributions (removing F1 0.979 shortcut), ~35% negatives in D, corrected model roster in B.',
+    owner: 'SafeAlign Data Team',
+    targetDate: '16 Sep 2026',
+    status: 'active',
+  },
+  {
+    item: 'Draft OPA Policy Bundle (FSI First)',
+    whyBlocks: 'Provides real Rego rules to replace the WS-4 stub and enforce independent policy decisions.',
+    owner: 'Himanshu Joshi',
+    targetDate: '18 Sep 2026',
+    status: 'in-progress',
+  },
+  {
+    item: 'Real Production Telemetry Cohort',
+    whyBlocks: 'Synthetic data cannot clear Gate 1. Real trace streams (trace_id, session_id, tool arrays) needed for defensible model validation.',
+    owner: 'Himanshu (Anchor Client)',
+    targetDate: '22 Sep 2026',
+    status: 'pending',
+  },
+];
+---
+
+<Base
+  title="Sprint Execution Tracker"
+  section="/tracker"
+  description="Operational sprint execution tracker and architecture reference for Project OSPREY: translating crosswalk alignment into weekly build workstreams, paired with v4 runtime and evaluation blueprints."
+  contained={false}
+>
+  <div class="shell">
+    <PageHeader
+      eyebrow="Execution & Architecture Hub"
+      title="Sprint execution plan & architecture reference"
+      lede="Live operational hub for Project OSPREY. This page tracks weekly sprint progress, active engineering workstreams, and dependency escalations, grounded in the settled four-dataset crosswalk and the v4 architecture blueprints."
+      facts={[
+        { k: 'Current Sprint', v: 'Sprint 3 (Sept 14–18)' },
+        { k: 'Operating Phase', v: 'Phase 3 (Build & Pipeline)' },
+        { k: 'Active Workstreams', v: '5' },
+        { k: 'Tracked Escalations', v: '4' },
+      ]}
+    />
+
+    <!-- Sprint Progression Timeline & Workstreams -->
+    <section class="sec">
+      <div class="sec-head">
+        <h2>Sprint progression &amp; active build workstreams</h2>
+        <p class="sub">
+          Weekly sprint status tracking what was completed, what is actively being built, and upcoming milestones.
+        </p>
+      </div>
+
+      <div class="sprint-grid">
+        <!-- Sprint 2 Summary Card -->
+        <article class="panel sprint-card sprint-card--done">
+          <div class="sprint-card-header">
+            <div>
+              <span class="pill" data-status="stable">Sprint 2 · Completed</span>
+              <h3 class="sprint-title">Foundation &amp; Data Validation</h3>
+              <p class="sprint-dates mono">Aug 31 – Sep 11, 2026</p>
+            </div>
+            <span class="sprint-badge">Sign-off Complete</span>
+          </div>
+
+          <div class="sprint-body">
+            <h4 class="subhead">Accomplishments &amp; Grounding Deliverables</h4>
+            <ul class="check-list">
+              <li><strong>Canonical Threat Taxonomy:</strong> Codified the 16 standard threat buckets (<code>OSP-01…16</code>) aligned with AGSC and MITRE ATLAS.</li>
+              <li><strong>Four-Dataset Crosswalk:</strong> Successfully mapped all 10,040 sample records across Datasets A, B, C, and D into canonical buckets.</li>
+              <li><strong>12 Settled Architectural Decisions:</strong> Enforced training vs evaluation boundaries, deterministic timestamps, and no A↔B join.</li>
+              <li><strong>Two Critical Discoveries:</strong> Uncovered the synthetic latency shortcut (F1 = 0.979) and the 34.6% sequence property blindspot.</li>
+              <li><strong>16 Data Defects Cataloged:</strong> Categorized defects D-01 through D-16 across P1, P2, and P3 priorities with clear operational owners.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Sprint 3 Active Card -->
+        <article class="panel sprint-card sprint-card--active">
+          <div class="sprint-card-header">
+            <div>
+              <span class="pill" data-status="in-progress">Sprint 3 · Active Build</span>
+              <h3 class="sprint-title">Pipeline Ingest &amp; Feature Layer</h3>
+              <p class="sprint-dates mono">Sep 14 – Sep 18, 2026</p>
+            </div>
+            <span class="sprint-badge sprint-badge--active">Current Focus</span>
+          </div>
+
+          <div class="sprint-body">
+            <div class="callout-mandate-banner">
+              <strong>Sprint 3 Core Mandate:</strong> "Build the pipeline, not the proof." Deliver the ingest normalizer, sequence feature extractor, dual-scoring eval harness, and OPA policy stub.
+            </div>
+
+            <div class="workstreams-wrap">
+              {workstreams.map((ws) => (
+                <div class="ws-block" id={ws.id.toLowerCase()}>
+                  <div class="ws-top">
+                    <div class="ws-meta">
+                      <span class="chip chip--accent"><span class="k">{ws.id}</span>{ws.name}</span>
+                      <span class="ws-owners mono">Owners: {ws.owners}</span>
+                    </div>
+                    <span class="pill" data-status={ws.status}>{ws.status.replace('-', ' ')}</span>
+                  </div>
+                  <ul class="ws-tasks">
+                    {ws.deliverables.map((d) => (
+                      <li>{d}</li>
+                    ))}
+                  </ul>
+                  <p class="ws-dep mono"><strong>Dependency:</strong> {ws.dependency}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </article>
+
+        <!-- Sprint 4+ Lookahead Card -->
+        <article class="panel sprint-card sprint-card--future">
+          <div class="sprint-card-header">
+            <div>
+              <span class="pill" data-status="planned">Sprint 4–7 · Lookahead</span>
+              <h3 class="sprint-title">Fine-Tuning, Quarantine &amp; Full Loop</h3>
+              <p class="sprint-dates mono">Sep 21 – Oct 30, 2026</p>
+            </div>
+            <span class="sprint-badge sprint-badge--future">Roadmap</span>
+          </div>
+
+          <div class="sprint-body">
+            <div class="roadmap-phases">
+              <div class="phase-item">
+                <span class="phase-badge mono">P3 · Classify</span>
+                <div>
+                  <strong>SLM Fine-Tuning &amp; Gate 1 (Wk 5–6):</strong>
+                  <p>Fine-tune Mistral 7B / Cohere on DGX Spark using normalized telemetry. Evaluate Gate 1 against CyberGym golden pool (F1 &ge; 0.82 &rarr; 0.88).</p>
+                </div>
+              </div>
+              <div class="phase-item">
+                <span class="phase-badge mono">P4 · Quarantine</span>
+                <div>
+                  <strong>Automated Policy Quarantine (Wk 7–8):</strong>
+                  <p>Connect Harness policy gates to live OPA bundle. Sub-60s autonomous isolation for high-confidence threats; FNR &lt; 5% on critical threats.</p>
+                </div>
+              </div>
+              <div class="phase-item">
+                <span class="phase-badge mono">P5 · Act &amp; Repair</span>
+                <div>
+                  <strong>Frontier Claude Escalation &amp; Attestation (Wk 9–10):</strong>
+                  <p>Incorporate Tier 2 Claude escalation for high-severity/OOD events. Connect MOM human reviewer queues and auto-remediation patches.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Architecture Reference Hub -->
+    <section class="sec">
+      <div class="sec-head">
+        <h2>Architecture Reference Hub (v4 Blueprints)</h2>
+        <p class="sub">
+          Official architecture blueprints grounding the OSPREY platform: the continuous runtime operating loop and the multi-phase build &amp; evaluation promotion cycle.
+        </p>
+      </div>
+
+      <!-- Diagram 1: Runtime Operating Loop -->
+      <article class="panel arch-card">
+        <div class="arch-card-header">
+          <div class="arch-title-group">
+            <span class="label">Artboard 1 · Runtime Architecture</span>
+            <h3>The Five-Stage Operating Loop &amp; Two-Tier Model Split</h3>
+          </div>
+          <a href={url('/diagrams/runtime-loop-v4.png')} target="_blank" rel="noopener noreferrer" class="chip chip--accent">
+            View Full Resolution ↗
+          </a>
+        </div>
+
+        <div class="diagram-display">
+          <img
+            src={url('/diagrams/runtime-loop-v4.png')}
+            alt="OSPREY Runtime Architecture showing the five-stage operating loop and two-tier model hierarchy"
+            class="arch-img"
+            loading="lazy"
+          />
+        </div>
+
+        <div class="arch-walkthrough">
+          <h4>End-User Architecture Walkthrough</h4>
+          <div class="arch-points-grid">
+            <div class="arch-point">
+              <strong>1. The 5-Stage Operating Loop (Continuous):</strong>
+              <p>
+                Events move continuously through five security primitives: <strong>Detect</strong> (behavioral baselining &amp; anomaly scoring) →
+                <strong>Classify</strong> (semantic taxonomy assignment into OSP-01…16) → <strong>Quarantine</strong> (confidence-gated autonomous isolation) →
+                <strong>Act</strong> (SIEM/SOAR incident packets &amp; human escalation) → <strong>Repair</strong> (remediation diffs &amp; compliance attestation).
+              </p>
+            </div>
+
+            <div class="arch-point">
+              <strong>2. Two-Tier Model Split (~95% / ~5%):</strong>
+              <p>
+                <strong>Tier 1 (On-Prem SLMs):</strong> Handles ~95% of pipeline events on NVIDIA DGX Spark (QLoRA 4-bit via Unsloth) for strict data residency and low latency.
+                Lightweight Phi-3/Gemma scores Detect; specialized Mistral 7B/Cohere Command R7B performs Classify.
+                <strong>Tier 2 (Frontier Claude):</strong> Escalates high-severity, ambiguous, or out-of-distribution threats in Act &amp; Repair with sanitized context.
+              </p>
+            </div>
+
+            <div class="arch-point">
+              <strong>3. Ingest &amp; Leakage Boundary:</strong>
+              <p>
+                Sits between raw enterprise event streams and the Detect stage. Enforces deterministic timestamp derivation, splits agent IDs into role + instance, and strictly purges leakage fields (<code>policy_gate_verdict</code> and <code>threat_detected</code>).
+              </p>
+            </div>
+
+            <div class="arch-point">
+              <strong>4. Governance &amp; Security (GS) Wrapper:</strong>
+              <p>
+                Enforces independent OPA policy-as-code rules, generates one immutable audit justification artifact per decision, maintains human-in-the-loop (HITL) authorization gates, and instruments MOM observability metrics.
+              </p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Diagram 2: Build & Eval Plan -->
+      <article class="panel arch-card">
+        <div class="arch-card-header">
+          <div class="arch-title-group">
+            <span class="label">Artboard 2 · Build &amp; Evaluation Plan</span>
+            <h3>7-Phase Roadmap &amp; The Two-Gate Promotion Cycle</h3>
+          </div>
+          <a href={url('/diagrams/build-eval-plan-v4.png')} target="_blank" rel="noopener noreferrer" class="chip chip--accent">
+            View Full Resolution ↗
+          </a>
+        </div>
+
+        <div class="diagram-display">
+          <img
+            src={url('/diagrams/build-eval-plan-v4.png')}
+            alt="OSPREY Build and Evaluation Plan showing 7 phases, two-gate promotion cycle, and Minimum Viable Defense scope"
+            class="arch-img"
+            loading="lazy"
+          />
+        </div>
+
+        <div class="arch-walkthrough">
+          <h4>End-User Architecture Walkthrough</h4>
+          <div class="arch-points-grid">
+            <div class="arch-point">
+              <strong>1. The 7 Project Phases:</strong>
+              <p>
+                Phase progression: <strong>P1 Foundation</strong> (wk 1–2: setup &amp; dataset init) → <strong>P2 Baseline</strong> (wk 3–4: telemetry &amp; Detect operational) →
+                <strong>P3 Classify</strong> (wk 5–6: SLM fine-tuning &amp; Gate 1) → <strong>P4 Quarantine</strong> (wk 7–8: sub-60s autonomous isolation) →
+                <strong>P5 Act &amp; Repair</strong> (wk 9–10: Claude escalation &amp; Gate 2) → <strong>P6 Compliance</strong> (wk 11–12: audit attestation) →
+                <strong>P7 Production</strong> (wk 13–14+: shadow eval &amp; CI/CD promotion).
+              </p>
+            </div>
+
+            <div class="arch-point">
+              <strong>2. Disjoint CyberGym &amp; ExploitGym Separation:</strong>
+              <p>
+                Dataset D scenarios are separated by construction: <strong>CyberGym</strong> draws known technique families to test in-distribution classification accuracy (training-safe);
+                <strong>ExploitGym</strong> draws held-out technique families and novel compositions to test pipeline containment rate (eval-only, isolated). Never random-split.
+              </p>
+            </div>
+
+            <div class="arch-point">
+              <strong>3. Two-Gate Model Promotion Cycle:</strong>
+              <p>
+                <strong>Gate 1 (CyberGym):</strong> Requires F1 &ge; 0.88 on golden test set and FNR &lt; 5% on critical threats. A model failing Gate 1 triggers mandatory rewrite and returns to fine-tuning.
+                <strong>Gate 2 (Prod Shadow):</strong> Validates live production telemetry performance, human reviewer acceptance $\ge 90\%$, and latency SLA compliance.
+              </p>
+            </div>
+
+            <div class="arch-point">
+              <strong>4. Minimum Viable Defense (MVD) Scope:</strong>
+              <p>
+                <strong>In Scope:</strong> Canonical taxonomy crosswalk, ingest feature contract, sequence feature layer, rule-baseline eval harness, negative scenario generation, Dataset C rebuild, and policy stub harness.
+                <strong>Out of Scope:</strong> Declaring Gate 1 pass on synthetic data, fine-tuning on Dataset B, publishing premature MTTD/MTTQ numbers, or Claude escalation (deferred to Phase 5).
+              </p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Active Escalations & Dependencies -->
+    <section class="sec">
+      <div class="sec-head">
+        <h2>Active Dependencies &amp; External Escalations</h2>
+        <p class="sub">
+          Critical platform requirements actively tracked with SafeAlign lead Himanshu Joshi and client stakeholders.
+        </p>
+      </div>
+
+      <div class="tablewrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th style="min-width: 220px;">External Dependency</th>
+              <th style="min-width: 320px;">Why It Blocks the Build</th>
+              <th style="min-width: 170px;">Escalation Owner</th>
+              <th style="min-width: 120px;">Target Date</th>
+              <th style="min-width: 110px;">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {escalations.map((e) => (
+              <tr>
+                <td><strong>{e.item}</strong></td>
+                <td class="prose-txt">{e.whyBlocks}</td>
+                <td class="mono">{e.owner}</td>
+                <td class="mono">{e.targetDate}</td>
+                <td>
+                  <span class="pill" data-status={e.status === 'active' ? 'in-progress' : e.status === 'in-progress' ? 'draft' : 'planned'}>
+                    {e.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .sec { margin-top: var(--sp-7); }
+  .sec-head { margin-bottom: var(--sp-4); }
+  .sec-head h2 { font-size: var(--t-xl); }
+  .sub { font-size: var(--t-sm); color: var(--ink-2); max-width: var(--measure); margin-top: var(--sp-1); }
+
+  /* Sprint Cards Grid */
+  .sprint-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-5);
+  }
+
+  .sprint-card {
+    border: 1px solid var(--rule);
+    border-radius: var(--r-md);
+    background: var(--panel);
+    padding: var(--sp-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+  .sprint-card--done {
+    border-left: 4px solid var(--ok);
+  }
+  .sprint-card--active {
+    border-left: 4px solid var(--accent);
+    background: color-mix(in srgb, var(--accent-soft) 20%, var(--panel));
+  }
+  .sprint-card--future {
+    border-left: 4px solid var(--rule);
+    opacity: 0.92;
+  }
+
+  .sprint-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: var(--sp-3);
+  }
+  .sprint-title {
+    font-size: var(--t-lg);
+    font-weight: 700;
+    margin: var(--sp-1) 0 2px;
+    color: var(--ink);
+  }
+  .sprint-dates {
+    font-size: 11.5px;
+    color: var(--ink-3);
+  }
+  .sprint-badge {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    padding: 4px 10px;
+    border-radius: var(--r-sm);
+    background: var(--ok-bg);
+    color: var(--ok);
+  }
+  .sprint-badge--active {
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+  }
+  .sprint-badge--future {
+    background: var(--panel-2);
+    color: var(--ink-3);
+  }
+
+  .sprint-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+  .subhead {
+    font-size: var(--t-sm);
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  .check-list {
+    margin: 0;
+    padding-left: 1.2em;
+    font-size: var(--t-sm);
+    color: var(--ink-2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .check-list li { line-height: 1.5; }
+
+  .callout-mandate-banner {
+    background: var(--panel-2);
+    border-left: 3px solid var(--accent);
+    padding: var(--sp-3) var(--sp-4);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    font-size: 13px;
+    color: var(--ink);
+  }
+
+  /* Workstreams Inside Active Card */
+  .workstreams-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    margin-top: var(--sp-2);
+  }
+  .ws-block {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-sm);
+    padding: var(--sp-3) var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .ws-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ws-meta {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+  .ws-owners {
+    font-size: 11px;
+    color: var(--ink-3);
+  }
+  .ws-tasks {
+    margin: 0;
+    padding-left: 1.15em;
+    font-size: 12.5px;
+    color: var(--ink-2);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .ws-dep {
+    font-size: 11px;
+    color: var(--ink-3);
+    margin: 0;
+    padding-top: 4px;
+    border-top: 1px dashed var(--rule);
+  }
+
+  /* Roadmap Lookahead */
+  .roadmap-phases {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+  .phase-item {
+    display: flex;
+    gap: var(--sp-3);
+    align-items: flex-start;
+  }
+  .phase-badge {
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--panel-2);
+    padding: 3px 8px;
+    border-radius: var(--r-sm);
+    color: var(--ink);
+    white-space: nowrap;
+    border: 1px solid var(--rule);
+  }
+  .phase-item p {
+    font-size: 12.5px;
+    color: var(--ink-2);
+    margin: 2px 0 0;
+  }
+
+  /* Architecture Reference Cards */
+  .arch-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-6);
+  }
+  .arch-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: var(--sp-3);
+  }
+  .arch-title-group h3 {
+    font-size: var(--t-lg);
+    font-weight: 700;
+    margin: 2px 0 0;
+    color: var(--ink);
+  }
+
+  .diagram-display {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--sp-2);
+  }
+  .arch-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--r-sm);
+  }
+
+  .arch-walkthrough {
+    background: var(--panel-2);
+    border-radius: var(--r-sm);
+    padding: var(--sp-4);
+    border: 1px solid var(--rule);
+  }
+  .arch-walkthrough h4 {
+    font-size: var(--t-sm);
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 var(--sp-3);
+  }
+
+  .arch-points-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-4);
+  }
+  @media (max-width: 860px) {
+    .arch-points-grid { grid-template-columns: 1fr; }
+  }
+  .arch-point {
+    font-size: 12.5px;
+    color: var(--ink-2);
+    line-height: 1.45;
+  }
+  .arch-point strong {
+    color: var(--ink);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* Table styling */
+  .tablewrap {
+    overflow-x: auto;
+    border: 1px solid var(--rule);
+    border-radius: var(--r-md);
+    background: var(--panel);
+  }
+  table.data {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    text-align: left;
+  }
+  table.data th {
+    background: var(--panel-2);
+    color: var(--ink-3);
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  table.data td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  table.data tr:hover {
+    background: var(--panel-2);
+  }
+</style>
