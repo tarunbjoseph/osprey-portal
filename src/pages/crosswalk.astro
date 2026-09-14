@@ -1,0 +1,662 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { url } from '@/lib/data';
+
+interface CrosswalkRow {
+  code: string;
+  name: string;
+  scope: 'core' | 'secondary' | 'baseline';
+  gate1: boolean;
+  datasetA: string;
+  datasetACount: string;
+  datasetB: string;
+  datasetBCount: string;
+  datasetC: string;
+  datasetCCount: string;
+  datasetD: string;
+  datasetDCount: string;
+  mappingNote: string;
+  isMissingB?: boolean;
+  isSequence?: boolean;
+}
+
+const crosswalk: CrosswalkRow[] = [
+  {
+    code: 'BENIGN',
+    name: 'Normal baseline',
+    scope: 'baseline',
+    gate1: false,
+    datasetA: 'none',
+    datasetACount: '1,645',
+    datasetB: 'none',
+    datasetBCount: '1,679',
+    datasetC: 'not modeled',
+    datasetCCount: '—',
+    datasetD: '0 negatives (regenerating ~35%)',
+    datasetDCount: '0',
+    mappingNote: 'Clean operational baseline for behavioral profiling and anomaly detection.',
+  },
+  {
+    code: 'OSP-01',
+    name: 'Intent / Goal Drift',
+    scope: 'core',
+    gate1: false,
+    datasetA: 'sequence-derived',
+    datasetACount: '—',
+    datasetB: 'unmodeled',
+    datasetBCount: '0',
+    datasetC: 'unmodeled',
+    datasetCCount: '0',
+    datasetD: 'unmodeled',
+    datasetDCount: '0',
+    mappingNote: 'Session-trajectory property; no single-row label. Coverage gap.',
+    isSequence: true,
+  },
+  {
+    code: 'OSP-02',
+    name: 'Direct Prompt Injection',
+    scope: 'core',
+    gate1: true,
+    datasetA: 'prompt_injection',
+    datasetACount: '101',
+    datasetB: 'prompt_injection',
+    datasetBCount: '156',
+    datasetC: 'Prompt Injection via Tool Input (159); Adversarial Prompt Chaining (130)',
+    datasetCCount: '289',
+    datasetD: 'prompt_injection',
+    datasetDCount: '222',
+    mappingNote: '1:1 in A, B, D. Dataset C splits tool-input vs chained injection.',
+  },
+  {
+    code: 'OSP-03',
+    name: 'Indirect / Context Poisoning',
+    scope: 'core',
+    gate1: true,
+    datasetA: 'context_poisoning',
+    datasetACount: '95',
+    datasetB: 'context_poisoning',
+    datasetBCount: '128',
+    datasetC: 'Inter-Agent Context Poisoning (131); Retrieval Poisoning (143); Memory Injection (145); Fine-Tune Poisoning (146)',
+    datasetCCount: '565',
+    datasetD: 'context_poisoning (263); model_poisoning (265)',
+    datasetDCount: '528',
+    mappingNote: 'Dataset D model_poisoning folded here; C decomposes by vector. See open question G-1.',
+  },
+  {
+    code: 'OSP-04',
+    name: 'Tool-Chain Exploitation',
+    scope: 'core',
+    gate1: false,
+    datasetA: 'tool_chain_deviation',
+    datasetACount: '99',
+    datasetB: 'tool_chain_deviation',
+    datasetBCount: '157',
+    datasetC: 'Tool-Chain Deviation (124); Insecure Tool Permission Grant (166)',
+    datasetCCount: '290',
+    datasetD: 'tool_chain_exploit',
+    datasetDCount: '240',
+    mappingNote: 'Name reconciliation: D exploit ≡ A deviation. Multi-event sequence property.',
+    isSequence: true,
+  },
+  {
+    code: 'OSP-05',
+    name: 'Privilege & Identity Abuse',
+    scope: 'core',
+    gate1: false,
+    datasetA: 'privilege_escalation (98); session_hijack (109)',
+    datasetACount: '207',
+    datasetB: 'privilege_escalation (129); session_hijack (141)',
+    datasetBCount: '270',
+    datasetC: 'Privilege Escalation via Role (149); Cross-Agent Privilege Leak (176); Session Hijacking (151)',
+    datasetCCount: '476',
+    datasetD: 'privilege_escalation (238); session_hijack (252)',
+    datasetDCount: '490',
+    mappingNote: 'Session hijack = credential compromise gating escalation. Deterministic OPA check.',
+    isSequence: true,
+  },
+  {
+    code: 'OSP-06',
+    name: 'Anomalous Tool Misuse',
+    scope: 'core',
+    gate1: false,
+    datasetA: 'partial in tool_chain_deviation',
+    datasetACount: '—',
+    datasetB: 'unmodeled',
+    datasetBCount: '0',
+    datasetC: 'Insecure Tool Permission Grant',
+    datasetCCount: '166',
+    datasetD: 'unmodeled',
+    datasetDCount: '0',
+    mappingNote: 'Invoked tool vs authorised role profile. Statistical anomaly detection.',
+  },
+  {
+    code: 'OSP-07',
+    name: 'Unsafe Output & Code Execution',
+    scope: 'core',
+    gate1: true,
+    datasetA: 'implicit at exec stage',
+    datasetACount: '—',
+    datasetB: 'unmodeled',
+    datasetBCount: '0',
+    datasetC: 'Output Manipulation',
+    datasetCCount: '129',
+    datasetD: 'payload-dependent',
+    datasetDCount: '—',
+    mappingNote: 'Container execution / output filter boundary. Weak Dataset A coverage.',
+  },
+  {
+    code: 'OSP-08',
+    name: 'Sensitive Data Exposure',
+    scope: 'secondary',
+    gate1: true,
+    datasetA: 'data_exfiltration',
+    datasetACount: '91',
+    datasetB: 'data_exfiltration',
+    datasetBCount: '120',
+    datasetC: 'PII Exfiltration via Output',
+    datasetCCount: '128',
+    datasetD: 'data_exfiltration',
+    datasetDCount: '241',
+    mappingNote: '1:1 in A, B, D. Dataset C scopes explicitly to output PII.',
+  },
+  {
+    code: 'OSP-09',
+    name: 'Inter-Agent Trust Abuse',
+    scope: 'secondary',
+    gate1: false,
+    datasetA: 'inter_agent_hijack',
+    datasetACount: '91',
+    datasetB: 'MISSING (0)',
+    datasetBCount: '0',
+    datasetC: 'Inter-Agent Context Poisoning (131); Cross-Agent Privilege Leak (176)',
+    datasetCCount: '307',
+    datasetD: 'inter_agent_hijack',
+    datasetDCount: '237',
+    mappingNote: 'Completely absent in Dataset B. Multi-agent trace property requiring sequence telemetry.',
+    isMissingB: true,
+    isSequence: true,
+  },
+  {
+    code: 'OSP-10',
+    name: 'Cascading Failure',
+    scope: 'secondary',
+    gate1: false,
+    datasetA: 'correlated failures',
+    datasetACount: '—',
+    datasetB: 'unmodeled',
+    datasetBCount: '0',
+    datasetC: 'unmodeled',
+    datasetCCount: '0',
+    datasetD: 'unmodeled',
+    datasetDCount: '0',
+    mappingNote: 'Correlation metric across agent scores. Multi-agent coverage gap.',
+  },
+  {
+    code: 'OSP-11',
+    name: 'Human-Agent Trust Exploitation',
+    scope: 'secondary',
+    gate1: false,
+    datasetA: 'unmodeled',
+    datasetACount: '0',
+    datasetB: 'unmodeled',
+    datasetBCount: '0',
+    datasetC: 'unmodeled',
+    datasetCCount: '0',
+    datasetD: 'unmodeled',
+    datasetDCount: '0',
+    mappingNote: 'MOM Assistant UI (summary vs executed trace comparison). Coverage gap.',
+  },
+  {
+    code: 'OSP-12',
+    name: 'Supply Chain & Tool Integrity',
+    scope: 'secondary',
+    gate1: false,
+    datasetA: 'supply_chain_poison',
+    datasetACount: '78',
+    datasetB: 'MISSING (0)',
+    datasetBCount: '0',
+    datasetC: 'Supply Chain Poisoning via Dependency',
+    datasetCCount: '160',
+    datasetD: 'supply_chain_attack',
+    datasetDCount: '274',
+    mappingNote: 'Name reconciliation: D attack ≡ A poison. Absent in B. Deterministic SBOM check.',
+    isMissingB: true,
+  },
+  {
+    code: 'OSP-13',
+    name: 'Sandbox / Host Escape',
+    scope: 'core',
+    gate1: false,
+    datasetA: 'unmodeled',
+    datasetACount: '0',
+    datasetB: 'unmodeled',
+    datasetBCount: '0',
+    datasetC: 'Inference Endpoint Exploit',
+    datasetCCount: '160',
+    datasetD: 'host-execution payload',
+    datasetDCount: '—',
+    mappingNote: 'Deterministic runtime check. Peak action: Kill. See open question G-2.',
+  },
+  {
+    code: 'OSP-14',
+    name: 'Resource Exhaustion / Denial of Wallet',
+    scope: 'core',
+    gate1: false,
+    datasetA: 'unmodeled',
+    datasetACount: '0',
+    datasetB: 'unmodeled',
+    datasetBCount: '0',
+    datasetC: 'unmodeled',
+    datasetCCount: '0',
+    datasetD: 'unmodeled',
+    datasetDCount: '0',
+    mappingNote: 'Token / retry / fan-out budget counters. Statistical coverage gap.',
+  },
+  {
+    code: 'OSP-15',
+    name: 'Hidden Context & Instruction Exposure',
+    scope: 'secondary',
+    gate1: true,
+    datasetA: 'model_inversion',
+    datasetACount: '103',
+    datasetB: 'MISSING (0)',
+    datasetBCount: '0',
+    datasetC: 'Model Inversion Attack',
+    datasetCCount: '156',
+    datasetD: 'model_inversion',
+    datasetDCount: '278',
+    mappingNote: 'Model/feature extraction and system prompt leakage. Absent in B. See open question G-3.',
+    isMissingB: true,
+  },
+  {
+    code: 'OSP-16',
+    name: 'Fabricated Completion & Evidence',
+    scope: 'secondary',
+    gate1: false,
+    datasetA: 'unmodeled',
+    datasetACount: '0',
+    datasetB: 'unmodeled',
+    datasetBCount: '0',
+    datasetC: 'Audit Trail Tampering',
+    datasetCCount: '157',
+    datasetD: 'unmodeled',
+    datasetDCount: '0',
+    mappingNote: 'Trace reconciliation of completion claims against executed tool calls.',
+  },
+];
+---
+
+<Base
+  title="Four-Dataset Crosswalk Matrix"
+  section="/crosswalk"
+  description="Master crosswalk mapping all four 10K dataset vocabularies (Pipeline Telemetry, SLM Logs, Threat Corpus, Red-Team Scenarios) into the canonical 16-threat OSPREY taxonomy."
+  contained={false}
+>
+  <div class="shell">
+    <PageHeader
+      eyebrow="Taxonomy & Crosswalk"
+      title="Four-dataset crosswalk matrix"
+      lede="One canonical OSPREY threat vocabulary (OSP-01…16), with every raw label across the four sample datasets mapped into it. This is the unblocking foundation for Sprint 3: it bridges the operational labels the classifier predicts with the governance controls the platform is judged against."
+      facts={[
+        { k: 'Canonical threats', v: '16' },
+        { k: 'Sample records mapped', v: '10,040' },
+        { k: 'Gate 1 classifier targets', v: '5' },
+        { k: 'Sequence-dependent classes', v: '3 (34.6%)' },
+      ]}
+    />
+
+    <!-- Two Foundational Findings -->
+    <section class="sec">
+      <div class="findings-grid">
+        <article class="panel panel--finding">
+          <div class="panel-tag label">Finding 1 · Defect D-01</div>
+          <h3>The Synthetic Latency Shortcut</h3>
+          <p class="prose-txt">
+            In Dataset A, normal events run <strong>80–320 ms</strong>; anomalous events run <strong>300–750 ms</strong>.
+            The single rule <code>latency_ms &gt; 320</code> scores <strong>Precision 1.000, Recall 0.958, F1 0.979</strong> with no model at all.
+            A second leak runs the other way: <code>confidence_score &lt; 0.90</code> scores <strong>F1 0.853</strong> (Precision 1.000, Recall 0.743).
+          </p>
+          <div class="callout-mandate">
+            <strong>Project Mandate:</strong> No Gate 1 pass may be declared on synthetic data. Every evaluation run must report a single-feature threshold rule baseline beside the model score.
+          </div>
+        </article>
+
+        <article class="panel panel--finding">
+          <div class="panel-tag label">Finding 2 · Defect D-07 / Q4</div>
+          <h3>The Sequence-Property Blindspot</h3>
+          <p class="prose-txt">
+            Three of Dataset A's nine anomaly classes — <code>tool_chain_deviation</code>, <code>inter_agent_hijack</code>, and <code>session_hijack</code> — are <strong>sequence properties</strong>, not point properties.
+            Together they account for <strong>299 of 865 anomalous events (34.6%)</strong>.
+          </p>
+          <div class="callout-mandate">
+            <strong>Architecture Rule:</strong> Evaluated on single-tool rows without trace/session IDs, sequence classes are structurally unlearnable. Sprint 3 builds the sequence feature layer grouped on <code>(pipeline_id, agent_role, stage)</code>.
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Master Crosswalk Table -->
+    <section class="sec">
+      <div class="sec-head">
+        <h2>Master crosswalk matrix</h2>
+        <p class="sub">
+          Every raw label across the four sample sheets (2,510 rows each) mapped to its canonical OSP threat with exact row counts.
+          <code>MISSING (0)</code> marks a class absent from that dataset; <code>unmodeled</code> marks a canonical threat not exercised by point telemetry in this extract.
+        </p>
+      </div>
+
+      <div class="tablewrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th style="min-width: 190px;">Canonical OSP threat</th>
+              <th style="min-width: 90px;">Scope / Gate</th>
+              <th style="min-width: 170px;">A · Pipeline (2,510)</th>
+              <th style="min-width: 160px;">B · SLM Logs (2,510)</th>
+              <th style="min-width: 220px;">C · Threat Corpus (2,510)</th>
+              <th style="min-width: 170px;">D · Red-Team (2,510)</th>
+              <th style="min-width: 240px;">Mapping note &amp; resolution</th>
+            </tr>
+          </thead>
+          <tbody>
+            {crosswalk.map((r) => (
+              <tr class={r.code === 'BENIGN' ? 'tr-benign' : undefined}>
+                <td>
+                  <div class="threat-cell">
+                    {r.code !== 'BENIGN' ? (
+                      <a href={url(`/threats/${r.code.toLowerCase()}`)} class="chip chip--accent">
+                        <span class="k">{r.code}</span>
+                      </a>
+                    ) : (
+                      <span class="chip"><span class="k">{r.code}</span></span>
+                    )}
+                    <span class="threat-cell-name">{r.name}</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="scope-cell">
+                    {r.gate1 && <span class="pill" data-status="in-progress">Gate 1</span>}
+                    {r.scope === 'core' && <span class="pill" data-cov="direct">Core</span>}
+                    {r.scope === 'secondary' && <span class="pill" data-cov="indirect">Secondary</span>}
+                    {r.scope === 'baseline' && <span class="pill" data-status="stable">Baseline</span>}
+                    {r.isSequence && <span class="pill pill-seq">Sequence</span>}
+                  </div>
+                </td>
+                <td>
+                  <div class="raw-cell">
+                    <code class="raw-val">{r.datasetA}</code>
+                    <span class="raw-count mono">{r.datasetACount}</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="raw-cell">
+                    <code class={r.isMissingB ? 'raw-val raw-val--missing' : 'raw-val'}>{r.datasetB}</code>
+                    <span class="raw-count mono">{r.datasetBCount}</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="raw-cell">
+                    <span class="raw-desc">{r.datasetC}</span>
+                    <span class="raw-count mono">{r.datasetCCount}</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="raw-cell">
+                    <code class="raw-val">{r.datasetD}</code>
+                    <span class="raw-count mono">{r.datasetDCount}</span>
+                  </div>
+                </td>
+                <td>
+                  <p class="mapping-note">{r.mappingNote}</p>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Methodology & Open Questions -->
+    <section class="sec">
+      <div class="grid-2">
+        <article class="panel">
+          <h3>How the crosswalk was generated</h3>
+          <ol class="steps-list">
+            <li>
+              <strong>Grounded Source of Truth:</strong> Every category and row count was extracted directly from <code>OSPREY_Dataset_10K (1).xlsx</code> (four sheets, 2,510 records each) using reproducible verification scripts.
+            </li>
+            <li>
+              <strong>Vocabulary Reconciliation:</strong> Surface naming discrepancies were collapsed by semantic meaning rather than string matching:
+              <ul>
+                <li><code>D: tool_chain_exploit (240)</code> ≡ <code>A: tool_chain_deviation (99)</code> ≡ <code>C: Tool-Chain Deviation (124)</code> → <strong>OSP-04</strong>.</li>
+                <li><code>D: supply_chain_attack (274)</code> ≡ <code>A: supply_chain_poison (78)</code> ≡ <code>C: Supply Chain Poisoning (160)</code> → <strong>OSP-12</strong>.</li>
+                <li><code>D: model_poisoning (265)</code> folded into <strong>OSP-03</strong> alongside <code>context_poisoning (263)</code>.</li>
+              </ul>
+            </li>
+            <li>
+              <strong>Strict Feature Leakage Exclusion:</strong> <code>policy_gate_verdict</code> in Dataset A (1:1 clone of <code>output_classification</code>) and <code>threat_detected</code> in Dataset B are excluded duplicate labels.
+            </li>
+            <li>
+              <strong>Agent Role Join Dimension:</strong> Stripping the instance suffix from <code>A.agent_id</code> matches <code>D.agent_target</code> for <strong>19 of 20 agent roles</strong>, unblocking scenario-to-telemetry cross-validation.
+            </li>
+          </ol>
+        </article>
+
+        <article class="panel">
+          <h3>Open taxonomy questions (to settle before training)</h3>
+          <div class="gaps-list">
+            <div class="gap-item">
+              <span class="gap-code">G-1 · Data &amp; Model Poisoning</span>
+              <p>
+                <code>model_poisoning</code> (D: 265) and <code>Fine-Tune Dataset Poisoning</code> (C: 146) are training-time attacks currently folded into OSP-03 (a runtime context attack). OWASP LLM04 has no dedicated OSP code.
+                <em>Recommendation: Add provisional <strong>OSP-17: Data &amp; Model Poisoning</strong> before Classify training.</em>
+              </p>
+            </div>
+            <div class="gap-item">
+              <span class="gap-code">G-2 · Inference Endpoint Exploit</span>
+              <p>
+                Dataset C's <code>Inference Endpoint Exploit</code> (160) is provisionally mapped to OSP-13 (Sandbox / Host Escape). Confirm whether it is a host breakout or a distinct model-endpoint attack.
+              </p>
+            </div>
+            <div class="gap-item">
+              <span class="gap-code">G-3 · Model Inversion Placement</span>
+              <p>
+                <code>model_inversion</code> (A: 103, D: 278, C: 156) is mapped to OSP-15 (Hidden Context &amp; Instruction Exposure). It arguably also fits OSP-08 (Sensitive Data Exposure). Confirm single intended home.
+              </p>
+            </div>
+            <div class="gap-item">
+              <span class="gap-code">G-4 · Canonical Naming Convention</span>
+              <p>
+                Where a portal threat name and a Dataset A label differ, the canonical name follows the portal (governance-facing) while the literal A value is preserved as the operational anchor.
+              </p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .sec { margin-top: var(--sp-7); }
+  .sec-head { margin-bottom: var(--sp-4); }
+  .sec-head h2 { font-size: var(--t-xl); }
+  .sub { font-size: var(--t-sm); color: var(--ink-2); max-width: var(--measure); margin-top: var(--sp-1); }
+
+  .findings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-5);
+  }
+  @media (max-width: 860px) {
+    .findings-grid { grid-template-columns: 1fr; }
+  }
+
+  .panel--finding {
+    border-top: 3px solid var(--accent);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .panel-tag { color: var(--accent); font-weight: 600; }
+  .panel--finding h3 { font-size: var(--t-md); font-weight: 600; margin: 0; }
+  .prose-txt { font-size: var(--t-sm); color: var(--ink-2); line-height: 1.5; }
+  .callout-mandate {
+    margin-top: auto;
+    background: var(--panel-2);
+    border-left: 3px solid var(--warn);
+    padding: var(--sp-2) var(--sp-3);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    font-size: 12px;
+    color: var(--ink);
+  }
+
+  .tablewrap {
+    overflow-x: auto;
+    border: 1px solid var(--rule);
+    border-radius: var(--r-md);
+    background: var(--panel);
+  }
+  table.data {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    text-align: left;
+  }
+  table.data th {
+    background: var(--panel-2);
+    color: var(--ink-3);
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  table.data td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  table.data tr:hover {
+    background: var(--panel-2);
+  }
+  .tr-benign {
+    background: color-mix(in srgb, var(--ok-bg) 30%, transparent);
+  }
+
+  .threat-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .threat-cell-name {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 13px;
+  }
+
+  .scope-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+  }
+  .pill-seq {
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    color: var(--accent-ink);
+  }
+
+  .raw-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .raw-val {
+    font-family: var(--f-mono);
+    font-size: 11.5px;
+    color: var(--ink);
+    background: var(--panel-2);
+    padding: 2px 5px;
+    border-radius: var(--r-sm);
+    word-break: break-word;
+  }
+  .raw-val--missing {
+    color: var(--crit);
+    font-weight: 600;
+    background: var(--crit-bg);
+  }
+  .raw-desc {
+    font-size: 11.5px;
+    color: var(--ink-2);
+    line-height: 1.35;
+  }
+  .raw-count {
+    font-size: 11px;
+    color: var(--ink-3);
+  }
+
+  .mapping-note {
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-5);
+  }
+  @media (max-width: 860px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  .steps-list {
+    padding-left: 1.2em;
+    font-size: var(--t-sm);
+    color: var(--ink-2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    margin-top: var(--sp-3);
+  }
+  .steps-list ul {
+    margin-top: 4px;
+    padding-left: 1.1em;
+  }
+  .steps-list li { line-height: 1.5; }
+
+  .gaps-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+    margin-top: var(--sp-3);
+  }
+  .gap-item {
+    background: var(--panel-2);
+    border-radius: var(--r-sm);
+    padding: var(--sp-3);
+    border: 1px solid var(--rule);
+  }
+  .gap-code {
+    display: block;
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .gap-item p {
+    font-size: 12.5px;
+    color: var(--ink-2);
+    margin: 0;
+    line-height: 1.45;
+  }
+  .gap-item code {
+    font-size: 11px;
+  }
+</style>
