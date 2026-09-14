@@ -326,11 +326,23 @@ const crosswalk: CrosswalkRow[] = [
           <div class="panel-tag label">Finding 2 · Defect D-07 / Q4</div>
           <h3>The Sequence-Property Blindspot</h3>
           <p class="prose-txt">
-            Three of Dataset A's nine anomaly classes — <code>tool_chain_deviation</code>, <code>inter_agent_hijack</code>, and <code>session_hijack</code> — are <strong>sequence properties</strong>, not point properties.
+            Three of Dataset A's nine anomaly classes — <code>tool_chain_deviation</code> (99), <code>inter_agent_hijack</code> (91), and <code>session_hijack</code> (109) — are <strong>sequence properties</strong>, not point properties.
             Together they account for <strong>299 of 865 anomalous events (34.6%)</strong>.
           </p>
           <div class="callout-mandate">
             <strong>Architecture Rule:</strong> Evaluated on single-tool rows without trace/session IDs, sequence classes are structurally unlearnable. Sprint 3 builds the sequence feature layer grouped on <code>(pipeline_id, agent_role, stage)</code>.
+          </div>
+        </article>
+
+        <article class="panel panel--finding">
+          <div class="panel-tag label">Resolution · Sprint 3 Strategy</div>
+          <h3>Sequence vs. Point Imbalance Resolution</h3>
+          <p class="prose-txt">
+            Single-row classifiers fail on sequence threats because individual tool calls (e.g. <code>read_file</code>) are benign in isolation.
+            We resolve this structurally by grouping on <code>(pipeline_id, agent_role, stage)</code>, extracting sliding n-grams ($k=3, 5$) and Markov transition probabilities, and reporting <strong>Two-Stream Evaluation Metrics</strong> (Point-Wise vs Sequence-Wise F1) in WS-3.
+          </p>
+          <div class="callout-mandate" style="border-left-color: var(--ok);">
+            <strong>Evaluation Discipline:</strong> Synthetic Dataset A provides plumbing checks only; true Gate 1 promotion evaluates on CyberGym (Dataset D) and regenerated v2 scenarios.
           </div>
         </article>
       </div>
@@ -440,6 +452,9 @@ const crosswalk: CrosswalkRow[] = [
             <li>
               <strong>Agent Role Join Dimension:</strong> Stripping the instance suffix from <code>A.agent_id</code> matches <code>D.agent_target</code> for <strong>19 of 20 agent roles</strong>, unblocking scenario-to-telemetry cross-validation.
             </li>
+            <li>
+              <strong>Sequence vs. Point Threat Isolation:</strong> Categorized each threat bucket as a point-in-time property (e.g., prompt injection, PII leak) or multi-event sequence property (e.g., goal drift, tool-chain deviation, session hijack, inter-agent trust abuse), establishing the required feature contract for WS-2.
+            </li>
           </ol>
         </article>
 
@@ -486,11 +501,8 @@ const crosswalk: CrosswalkRow[] = [
 
   .findings-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
     gap: var(--sp-5);
-  }
-  @media (max-width: 860px) {
-    .findings-grid { grid-template-columns: 1fr; }
   }
 
   .panel--finding {

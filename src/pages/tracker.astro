@@ -15,68 +15,67 @@ interface Workstream {
 const workstreams: Workstream[] = [
   {
     id: 'WS-1',
-    name: 'Ingest & Feature Normalization Pipeline',
-    owners: 'Tarun Joseph / Ali',
+    name: 'Telemetry Ingest, Normalization & Environment Readiness',
+    owners: 'Danial',
     status: 'in-progress',
     deliverables: [
-      'Deterministic event timestamping from monotonic suffix: event_time = t0 + (suffix - 4521) * k (synthetic_time = true)',
-      'Agent ID decomposition: agent_role (behavioral unit) + agent_instance (deployment unit), unblocking A ↔ D join',
-      'Automated leakage drop list: strictly purge policy_gate_verdict and threat_detected before feature vectorization',
-      'Automated mapping of raw dataset labels to the 16 canonical OSP threat buckets',
+      'Parse and normalize flat workbook extracts for Datasets A, B, C, and D into clean tabular formats (osprey_data_ingest_v0).',
+      'Normalize column names, coerce data types, remove workbook title/header artifacts, and flag malformed timestamps in a data-quality log.',
+      'Environment smoke test: validate GCP, DGX Spark GPU sandbox, code repository, and Python execution environments.',
+      'Exploration: benchmark explainable clustering-based behavioral anomaly detection (Isolation Forest / Mahalanobis outlier detection) as a lightweight Detect baseline.',
     ],
-    dependency: 'Unblocks all downstream feature extraction and evaluation code.',
+    dependency: 'Blocks downstream feature extraction and model fine-tuning environments.',
   },
   {
     id: 'WS-2',
-    name: 'Sequence Feature Layer & Trajectory Baselining',
-    owners: 'Danial / Mansi',
+    name: 'Sequence Feature Layer & Canonical Crosswalk',
+    owners: 'Tarun',
     status: 'in-progress',
     deliverables: [
-      'Multi-event grouping: GROUP BY (pipeline_id, agent_role, stage) ORDER BY derived event_time',
-      'Sliding-window tool-call n-gram extractor (pairs/triplets) and Markovian transition probability matrices',
-      'Deviation scoring against approved role profiles (detecting tool_chain_deviation, inter_agent_hijack, session_hijack)',
-      'Unlocks the 34.6% of positive anomalies structurally unlearnable on isolated point rows',
+      'Deliver OSPREY Canonical Taxonomy Crosswalk v0.1 reconciling inconsistent threat labels across Datasets A, B, C, and D.',
+      'Decompose agent_id into behavioral unit (agent_role) and deployment unit (agent_instance), unblocking scenario joins.',
+      'Derive synthetic event_time from monotonic ID suffix and flag synthetic_time = true.',
+      'Engineer multi-event sequence features grouped on (pipeline_id, agent_role, stage) with sliding n-grams and Markov transition matrices to unlock the 34.6% sequence anomalies (Finding 2).',
     ],
-    dependency: 'Requires WS-1 normalized event streams.',
+    dependency: 'Requires WS-1 normalized event feeds; unblocks WS-3 sequence evaluation.',
   },
   {
     id: 'WS-3',
-    name: 'Dual-Scoring Evaluation Harness',
-    owners: 'Tarun Joseph / Ali',
+    name: 'Detect Baseline & Honest Evaluation Harness',
+    owners: 'Ali',
     status: 'in-progress',
     deliverables: [
-      'Stratified holdout splitter on (vertical, anomaly_type)',
-      'Mandatory single-feature rule-baseline comparator: evaluates latency_ms > 320 and confidence_score < 0.90 on exact test split',
-      'Dual reporting engine: outputs [Model F1] vs [Rule-Baseline F1] side-by-side; enforces baseline beat margin',
-      'Gate 1 accuracy scope constraint: restricts classifier evaluation strictly to the 5 Gate 1 labels (OSP-02, 03, 07, 08, 15)',
+      'Build OSPREY Detect Eval Harness v0.1 using Dataset A with output_classification as the binary label.',
+      'Mandatory single-feature rule-baseline comparator: evaluate latency_ms > 320 and confidence_score < 0.90 alongside every model result.',
+      'Report full confusion matrix, F1, recall, FNR, FPR, and per-class recall across all anomaly_type values.',
+      'Enforce evaluation discipline: strictly mark synthetic workbook scores as internal plumbing checks only — no Gate 1 promotion pass on synthetic data.',
     ],
-    dependency: 'Requires WS-1 normalized labels and baseline threshold formulas.',
+    dependency: 'Requires WS-1 normalized labels and WS-2 sequence feature groups.',
   },
   {
     id: 'WS-4',
-    name: 'OPA Policy-as-Code Stub Harness',
-    owners: 'Danial / Mansi',
+    name: 'Feature Contract, Policy Harness & MOM Assistant Portal',
+    owners: 'Mansi',
     status: 'in-progress',
     deliverables: [
-      'Local Open Policy Agent (OPA) runner interface consuming modular Rego policy bundles',
-      'Mock FSI credit-underwriting policy bundle defining deterministic gate conditions',
-      'Decision logger producing structured audit justification artifacts per PRD §5',
-      'Eliminates label circularity: evaluates policy rules independently rather than copying anomaly labels',
+      'Document OSPREY Feature Contract v0.1: explicitly whitelist model features and purge label leakages (policy_gate_verdict, threat_detected, output_classification).',
+      'Define OSPREY Policy Harness Stub v0.1: create verdict schema, decision log, structured audit justification artifact, and evidence output for SafeAlign OPA bundle.',
+      'Deliver MOM Assistant frontend dashboard (Detect & Quarantine Overview, KPIs, anomaly distribution, vertical breakdown, live event feed with SYNTHETIC badges).',
+      'Implement FastAPI dashboard backend (GET /events/recent, GET /events/queue, GET /pipelines/summary, POST /events/{event_id}/review) for model feed and human-in-the-loop review routing.',
     ],
-    dependency: 'Independent build; will swap mock bundle for real SafeAlign FSI bundle upon delivery.',
+    dependency: 'Independent build; connects to WS-1/WS-3 model telemetry and feeds MOM reviewer queues.',
   },
   {
     id: 'WS-5',
-    name: 'Dataset C Rebuild & Dataset D Gym Isolation',
+    name: 'Dataset C Control Rebuild & Dataset D Gym Isolation',
     owners: 'Joint (MLA Team & SafeAlign / Himanshu)',
     status: 'in-progress',
     deliverables: [
-      'Rebuilding Dataset C as a verified control registry with stable alphanumeric IDs (retiring Bill C-27 / AIDA)',
-      'Remapping compliance references to OWASP Top 10 for LLM Applications 2025 and PIPEDA / OSFI E-23',
-      'Partitioning Dataset D into two disjoint technique pools: CyberGym (known families) vs ExploitGym (held-out novel families)',
-      'Validating SafeAlign regenerated synthetic pool containing ~35% benign and near-miss scenarios',
+      'Rebuild Dataset C control mapping table: assign stable alphanumeric IDs, retire Bill C-27 / AIDA, and remap to OWASP Top 10 for LLM 2025 and PIPEDA / OSFI E-23.',
+      'Partition Dataset D into disjoint technique pools: CyberGym (known technique families for Gate 1 eval) vs ExploitGym (held-out novel families for containment testing).',
+      'Validate regenerated synthetic extract v2 containing ~35% benign / near-miss negative scenarios.',
     ],
-    dependency: 'Coordinated with SafeAlign data engineering team.',
+    dependency: 'Coordinated with SafeAlign data engineering team (Himanshu Joshi).',
   },
 ];
 
@@ -91,28 +90,28 @@ interface Escalation {
 const escalations: Escalation[] = [
   {
     item: 'GCP & DGX Spark Sandbox Credentials',
-    whyBlocks: 'Blocks on-premise fine-tuning environment setup, QLoRA 4-bit scripts, and GPU memory profiling.',
-    owner: 'Himanshu / Tarun / Dmytro',
+    whyBlocks: 'Blocks on-premise fine-tuning environment setup, QLoRA 4-bit Unsloth scripts, and GPU memory profiling for Tier 1 SLMs.',
+    owner: 'Himanshu / Ehsan / Danial',
     targetDate: '15 Sep 2026',
     status: 'active',
   },
   {
     item: 'Regenerated Synthetic Extract v2',
-    whyBlocks: 'Overlapping latency distributions (removing F1 0.979 shortcut), ~35% negatives in D, corrected model roster in B.',
-    owner: 'SafeAlign Data Team',
+    whyBlocks: 'Overcomes the D-01 latency shortcut (overlapping latency distributions), provides ~35% negatives in D, and fixes the model roster in B.',
+    owner: 'SafeAlign Data Team / Himanshu',
     targetDate: '16 Sep 2026',
     status: 'active',
   },
   {
     item: 'Draft OPA Policy Bundle (FSI First)',
-    whyBlocks: 'Provides real Rego rules to replace the WS-4 stub and enforce independent policy decisions.',
+    whyBlocks: 'Provides real enterprise Rego rules to replace the WS-4 mock bundle, enforcing deterministic policy-as-code gate verdicts.',
     owner: 'Himanshu Joshi',
     targetDate: '18 Sep 2026',
     status: 'in-progress',
   },
   {
     item: 'Real Production Telemetry Cohort',
-    whyBlocks: 'Synthetic data cannot clear Gate 1. Real trace streams (trace_id, session_id, tool arrays) needed for defensible model validation.',
+    whyBlocks: 'Synthetic data cannot clear Gate 1. Real trace streams (trace_id, session_id, tool payloads) needed for defensible model validation and Gate 2 shadow promotion.',
     owner: 'Himanshu (Anchor Client)',
     targetDate: '22 Sep 2026',
     status: 'pending',
@@ -134,8 +133,9 @@ const escalations: Escalation[] = [
       facts={[
         { k: 'Current Sprint', v: 'Sprint 3 (Sept 14–18)' },
         { k: 'Operating Phase', v: 'Phase 3 (Build & Pipeline)' },
-        { k: 'Active Workstreams', v: '5' },
-        { k: 'Tracked Escalations', v: '4' },
+        { k: 'MLA Team', v: 'Danial · Ali · Tarun · Mansi' },
+        { k: 'Technical Lead', v: 'Ehsan' },
+        { k: 'Functional Manager', v: 'Dhari Gandhi' },
       ]}
     />
 
@@ -243,6 +243,162 @@ const escalations: Escalation[] = [
                   <strong>Frontier Claude Escalation &amp; Attestation (Wk 9–10):</strong>
                   <p>Incorporate Tier 2 Claude escalation for high-severity/OOD events. Connect MOM human reviewer queues and auto-remediation patches.</p>
                 </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Sprint 2 Retro & Architecture Resolutions -->
+    <section class="sec" id="retro-resolutions">
+      <div class="sec-head">
+        <h2>Sprint 2 Retro &amp; Key Architecture Resolutions</h2>
+        <p class="sub">
+          Grounded engineering resolutions for technical questions raised during Sprint 2 retrospective, governing our Sprint 3 build choices.
+        </p>
+      </div>
+
+      <div class="retro-grid">
+        <!-- Resolution 1: Clustering-Based Detect Engine -->
+        <article class="panel retro-card">
+          <div class="retro-card-header">
+            <span class="pill" data-status="in-progress">Detect Stage Architecture</span>
+            <span class="mono tech-lead">Exploration: Danial</span>
+          </div>
+          <h3 class="retro-title">Clustering-Based Behavioral Anomaly Detection vs. SLM Baselining</h3>
+          <p class="prose-txt">
+            <strong>Retrospective Inquiry:</strong> <em>"Can we implement a clustering based technique to identify anomalies in Detect phase rather than using an SLM for extracting behavioural baseline anomalies? Won't this be a more cleaner and explainable approach?"</em>
+          </p>
+          <div class="resolution-content">
+            <h4 class="subhead">Architecture Assessment &amp; Feasibility</h4>
+            <ul class="check-list">
+              <li>
+                <strong>Explainability by Mathematical Construction:</strong> Unsupervised density and distance clustering (e.g., <em>Isolation Forest</em>, <em>One-Class SVM</em>, or <em>Mahalanobis Distance</em> over continuous telemetry z-scores) provides explicit feature attributions. When an anomaly triggers, the operator receives exact dimensional deviations (e.g., <code>execution_latency</code> was +4.2&sigma; or <code>payload_byte_size</code> deviated 3.8&sigma; from the role baseline centroid), whereas an SLM produces opaque token logprobs.
+              </li>
+              <li>
+                <strong>Inline Latency SLA (&lt;10ms vs ~250ms):</strong> In the v4 runtime operating loop, the <strong>Detect</strong> stage is an inline filter across 100% of event streams. Executing an SLM forward pass on every event creates a severe GPU bottleneck. Clustering algorithms evaluate in sub-10ms on CPU, preserving DGX Spark GPU capacity for the <strong>Classify</strong> stage (Tier 1 Mistral 7B / Cohere).
+              </li>
+              <li>
+                <strong>Decoupled Role-Profile Clustering:</strong> Enabled by Tarun's decomposition of <code>agent_id</code> into <code>agent_role</code> and <code>agent_instance</code>, Danial constructs distinct behavioral clusters per agent role (e.g., <code>patient-intake-agent</code> vs <code>credit-decisioning-agent</code>).
+              </li>
+              <li>
+                <strong>Sprint 3 Implementation:</strong> Danial is implementing this lightweight clustering baseline alongside telemetry normalization in WS-1. In WS-3, Ali benchmarks it directly in the evaluation harness to determine whether it feeds higher-fidelity anomaly scores into Mansi's MOM Assistant dashboard.
+              </li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Resolution 2: Gate 1 Synthetic Constraint & Class Imbalance -->
+        <article class="panel retro-card">
+          <div class="retro-card-header">
+            <span class="pill" data-status="in-progress">Evaluation Discipline</span>
+            <span class="mono tech-lead">Harness: Ali &amp; Tarun</span>
+          </div>
+          <h3 class="retro-title">Gate 1 Synthetic Constraint Mitigation &amp; Sequence Imbalance Resolution</h3>
+          <p class="prose-txt">
+            <strong>Retrospective Inquiry:</strong> <em>"Will the synthetic data used in Dataset A be a constraint in Gate 1 evaluation passing? How do we plan on mitigating this? How do we do class imbalance resolution for Finding 2 and sequence versus point properties of anomalies?"</em>
+          </p>
+          <div class="resolution-content">
+            <h4 class="subhead">Mitigation &amp; Imbalance Resolution Strategy</h4>
+            <ul class="check-list">
+              <li>
+                <strong>The Synthetic Constraint Reality:</strong> Yes, Dataset A contains Defect D-01 (the synthetic latency shortcut where <code>latency_ms &gt; 320</code> yields F1 = 0.979) and Defect D-07 (untracked session IDs). Consequently, <strong>no Gate 1 pass may be declared on Dataset A</strong>.
+              </li>
+              <li>
+                <strong>Plumbing vs Proof Boundary:</strong> In Sprint 3, Dataset A is restricted strictly to <em>internal pipeline plumbing, feature contract sanity checks, and baseline harness wiring</em>. True Gate 1 promotion will be evaluated exclusively on <strong>CyberGym (Dataset D)</strong> and the regenerated v2 synthetic extract (~35% realistic negatives).
+              </li>
+              <li>
+                <strong>Mandatory Rule-Baseline Comparator:</strong> In the WS-3 harness, every model score is printed side-by-side with the single-feature threshold rule baseline (<code>latency_ms &gt; 320</code>). A model must demonstrate significant margin on semantic features alone to be valid.
+              </li>
+              <li>
+                <strong>Resolving Finding 2 (34.6% Sequence Anomalies across 3 Classes):</strong>
+                Three anomaly classes (<code>tool_chain_deviation</code>, <code>inter_agent_hijack</code>, <code>session_hijack</code>) account for 299 of 865 anomalies and are structurally unlearnable on isolated point rows.
+                We resolve this through:
+                <ol style="margin-top: 6px; padding-left: 1.2em; display: flex; flex-direction: column; gap: 4px;">
+                  <li><em>Session Partitioning:</em> Grouping events by <code>(pipeline_id, agent_role, stage)</code> ordered by derived <code>event_time</code>.</li>
+                  <li><em>Transition Probability Modeling:</em> Constructing Markov transition matrices and sliding 3-gram/5-gram windows.</li>
+                  <li><em>Two-Stream Evaluation:</em> Reporting Point-Wise F1 (argument/prompt anomalies) separately from Sequence-Wise F1 (trajectory/state anomalies) so point accuracy cannot mask a sequence blindspot.</li>
+                </ol>
+              </li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Resolution 3: MOM Assistant Frontend & FastAPI Backend -->
+        <article class="panel retro-card retro-card--full">
+          <div class="retro-card-header">
+            <span class="pill" data-status="stable">Operational Interface</span>
+            <span class="mono tech-lead">Build: Mansi</span>
+          </div>
+          <h3 class="retro-title">MOM Assistant Frontend Portal &amp; FastAPI Backend Architecture</h3>
+          <p class="prose-txt">
+            <strong>Retrospective Inquiry:</strong> <em>"Mansi is working on the front end portal for MOM and linking it to the backend of the phases using FastAPIs for fetching feed from the models and it will look something like the images attached."</em>
+          </p>
+
+          <div class="mom-showcase-grid">
+            <div class="mom-card">
+              <div class="mom-img-wrap">
+                <img
+                  src={url('/mom/mom-dashboard-overview.png')}
+                  alt="MOM Assistant Governance Overview Dashboard showing Detect & Quarantine KPIs and Live Event Feed"
+                  class="mom-img"
+                  loading="lazy"
+                />
+              </div>
+              <div class="mom-details">
+                <h4 class="subhead">1. MOM Assistant Governance Dashboard (UI Overview)</h4>
+                <p class="prose-txt">
+                  The primary Human-in-the-Loop (HITL) interface for security operators, connecting real-time model outputs with policy enforcement.
+                </p>
+                <ul class="check-list" style="margin-top: 8px;">
+                  <li><strong>KPI Telemetry Cards:</strong> Real-time tracking of Total Events (6), Anomalies Flagged (3), Pending Review (3), and Gate-Passed (3).</li>
+                  <li><strong>Anomaly Type Distribution:</strong> Live categorical breakdown (<code>none</code> 50%, <code>data_exfiltration</code> 16.7%, <code>context_poisoning</code> 16.7%, <code>prompt_injection</code> 16.7%).</li>
+                  <li><strong>Events by Vertical:</strong> Normalized distribution across Pharma (33.3%), Retail (33.3%), and FSI (33.3%).</li>
+                  <li><strong>Live Event Feed:</strong> Displays event timestamps with <code>SYNTHETIC</code> badges, decomposed pipeline IDs, agent roles (e.g., <code>patient-intake-agent 05</code>, <code>fraud-review-agent 11</code>, <code>credit-decisioning-agent 03</code>), tools, confidence ratings, and automated verdicts (<code>QUARANTINE_TRIGGERED</code> vs <code>PASS</code>).</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mom-card">
+              <div class="mom-img-wrap">
+                <img
+                  src={url('/mom/mom-fastapi-swagger.png')}
+                  alt="MOM Assistant Dashboard API 0.1.0 Swagger documentation showing REST endpoints"
+                  class="mom-img"
+                  loading="lazy"
+                />
+              </div>
+              <div class="mom-details">
+                <h4 class="subhead">2. FastAPI Dashboard Backend (OpenAPI 3.1 Contract)</h4>
+                <p class="prose-txt">
+                  High-performance asynchronous REST API connecting the Detect/Classify pipeline, OPA policy stub, and MOM reviewer queues.
+                </p>
+                <div class="endpoint-list">
+                  <div class="endpoint-item">
+                    <span class="http-badge http-get mono">GET</span>
+                    <code>/events/recent</code>
+                    <span>Streams recent pipeline telemetry events to the live overview feed.</span>
+                  </div>
+                  <div class="endpoint-item">
+                    <span class="http-badge http-get mono">GET</span>
+                    <code>/events/queue</code>
+                    <span>Retrieves quarantined events requiring human-in-the-loop review.</span>
+                  </div>
+                  <div class="endpoint-item">
+                    <span class="http-badge http-get mono">GET</span>
+                    <code>/pipelines/summary</code>
+                    <span>Calculates aggregate event volume, anomaly ratios, and health metrics.</span>
+                  </div>
+                  <div class="endpoint-item">
+                    <span class="http-badge http-post mono">POST</span>
+                    <code>/events/{'{'}event_id{'}'}/review</code>
+                    <span>Records operator review decisions (<code>ReviewDecision</code>), generating structured audit justification logs.</span>
+                  </div>
+                </div>
+                <p class="foot-note small" style="margin-top: 10px;">
+                  Pydantic data schemas: <code>Event</code>, <code>ReviewDecision</code>, <code>PipelineAgentSummary</code>, <code>InstanceBreakdown</code>.
+                </p>
               </div>
             </div>
           </div>
@@ -701,5 +857,154 @@ const escalations: Escalation[] = [
   }
   table.data tr:hover {
     background: var(--panel-2);
+  }
+
+  /* Retro & Architecture Resolutions */
+  .retro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-5);
+  }
+  @media (max-width: 900px) {
+    .retro-grid { grid-template-columns: 1fr; }
+  }
+
+  .retro-card {
+    border: 1px solid var(--rule);
+    border-radius: var(--r-md);
+    background: var(--panel);
+    padding: var(--sp-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+  .retro-card--full {
+    grid-column: 1 / -1;
+  }
+  .retro-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--rule-2);
+    padding-bottom: var(--sp-2);
+  }
+  .tech-lead {
+    font-size: 11.5px;
+    color: var(--ink-3);
+  }
+  .retro-title {
+    font-size: var(--t-md);
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+  }
+  .resolution-content {
+    background: var(--panel-2);
+    border-radius: var(--r-sm);
+    padding: var(--sp-3) var(--sp-4);
+    border: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    margin-top: auto;
+  }
+
+  /* MOM Showcase Layout */
+  .mom-showcase-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: var(--sp-5);
+    margin-top: var(--sp-2);
+  }
+  @media (max-width: 960px) {
+    .mom-showcase-grid { grid-template-columns: 1fr; }
+  }
+  .mom-card {
+    background: var(--panel-2);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-sm);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .mom-img-wrap {
+    width: 100%;
+    background: #000;
+    border-bottom: 1px solid var(--rule);
+    overflow: hidden;
+  }
+  .mom-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+  }
+  .mom-img:hover {
+    transform: scale(1.015);
+  }
+  .mom-details {
+    padding: var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+  }
+  .mom-list {
+    margin: 0;
+    padding-left: 1.15em;
+    font-size: 12.5px;
+    color: var(--ink-2);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  /* Endpoint list */
+  .endpoint-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .endpoint-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    background: var(--panel);
+    padding: 6px 10px;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--rule);
+    flex-wrap: wrap;
+  }
+  .endpoint-item code {
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .endpoint-item span:last-child {
+    color: var(--ink-2);
+    font-size: 11.5px;
+  }
+  .http-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  .http-get {
+    background: #E1F0FF;
+    color: #0A66C2;
+  }
+  .http-post {
+    background: #E6F8ED;
+    color: #107C41;
+  }
+  :root[data-theme='dark'] .http-get {
+    background: #102A43;
+    color: #62B0FF;
+  }
+  :root[data-theme='dark'] .http-post {
+    background: #0B331D;
+    color: #57E389;
   }
 </style>
